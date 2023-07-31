@@ -53,7 +53,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (playerMovementActive)
+        if (playerMovementActive && !inCombat)
         {
             Movement();
             Rotation();
@@ -88,7 +88,6 @@ public class PlayerController : MonoBehaviour
 
         if (leftStickXAxis != 0)
         {
-            Debug.Log("MAde it");
             transform.position = Vector3.MoveTowards(transform.position, horizontalTargetPos, leftStickXAxis * movementSpeedHorizontal);
         }
     }
@@ -112,4 +111,6 @@ public class PlayerController : MonoBehaviour
             body.transform.rotation = Quaternion.RotateTowards(body.transform.rotation, cameraRotationQuat, rotationSpeed);
         }
     }
+
+
 }
