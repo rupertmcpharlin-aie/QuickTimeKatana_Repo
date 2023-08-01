@@ -30,7 +30,7 @@ public class EnemyController : MonoBehaviour
 
         if(awareOfPlayer)
         {
-            enemyAnimator.SetTrigger("SeenPlayer");
+            enemyAnimator.SetBool("Seen Player", true);
         }
     }
 
