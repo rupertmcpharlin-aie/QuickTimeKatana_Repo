@@ -6,7 +6,9 @@ using Cinemachine;
 public class PlayerController : MonoBehaviour
 {
     [Header("GameObjects")]
-    [SerializeField] public GameObject body;
+    [SerializeField] Rigidbody playerRB;
+    [SerializeField] GameObject body;
+    [SerializeField] GameObject katana;
 
 
     [Space]
@@ -53,6 +55,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (playerMovementActive && !inCombat)
         {
             Movement();

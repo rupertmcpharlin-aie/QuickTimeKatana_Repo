@@ -5,11 +5,13 @@ using UnityEngine;
 public class EnterCombatTrigger : MonoBehaviour
 {
     [SerializeField] PlayerController playerController;
+    [SerializeField] EnemyController enemyController;
 
     // Start is called before the first frame update
     void Start()
     {
         playerController = FindObjectOfType<PlayerController>();
+        enemyController = GetComponentInParent<EnemyController>();
     }
 
     // Update is called once per frame
