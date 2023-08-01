@@ -7,6 +7,7 @@ public class EnemyController : MonoBehaviour
     [Header("GameObjects")]
     [SerializeField] GameObject body;
     [SerializeField] PlayerController playerController;
+    [SerializeField] Animator enemyAnimator;
 
     [Header("Combat Variables")]
     [SerializeField] public bool awareOfPlayer;
@@ -25,6 +26,11 @@ public class EnemyController : MonoBehaviour
         if(inCombat)
         {
             EnemyCombat();
+        }
+
+        if(awareOfPlayer)
+        {
+            enemyAnimator.SetTrigger("SeenPlayer");
         }
     }
 

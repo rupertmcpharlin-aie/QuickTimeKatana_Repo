@@ -5,14 +5,16 @@ using UnityEngine;
 
 public class FieldOfView : MonoBehaviour
 {
+    [SerializeField] EnemyController enemyController;
+
     public float radius;
 
     [Range(0,360)]
     public float angle;
     [Space]
     public Collider[] rangeChecks;
-    public bool canSeePlayer;
     [Space]
+    public bool canSeePlayer;
     public GameObject playerRef;
     public LayerMask targetMask;
     public LayerMask obstructionMask;
@@ -49,35 +51,43 @@ public class FieldOfView : MonoBehaviour
     {
         rangeChecks = Physics.OverlapSphere(transform.position, radius, targetMask);
 
+        //if player is in range of circle
         if(rangeChecks.Length != 0)
         {
             Transform target = rangeChecks[0].transform;
             Vector3 directionToTarget = (target.position - target.position).normalized;
 
+            //if player is in range of circle && inbetween angle
             if(Vector3.Angle(transform.forward, directionToTarget) < angle / 2)
             {
                 float distanceToTarget = Vector3.Distance(transform.position, target.position);
                 
+                //if player can be seen directly by enemy
                 if(!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstructionMask))
                 {
                     canSeePlayer = true;
+                    enemyController.awareOfPlayer = true;
                 }
+
                 else
                 {
                     canSeePlayer = false;
+                    enemyController.awareOfPlayer = false;
                 }
             }
             else
             {
                 canSeePlayer = false;
+                enemyController.awareOfPlayer = false;
             }
         }
 
         else
         {
-            if(canSeePlayer)
+            if(enemyController.awareOfPlayer)
             {
                 canSeePlayer = false;
+                enemyController.awareOfPlayer = false;
             }
         }
     }
