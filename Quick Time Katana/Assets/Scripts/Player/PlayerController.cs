@@ -113,4 +113,133 @@ public class PlayerController : MonoBehaviour
     }
 
 
+
+
 }
+
+/*[Header("Testing")]
+[SerializeField] bool A;
+[SerializeField] bool B;
+[SerializeField] bool X;
+[SerializeField] bool Y;
+[SerializeField] bool LB;
+[SerializeField] bool RB;
+[SerializeField] bool start;
+[SerializeField] bool select;
+[SerializeField] float DPadHorizontal;
+[SerializeField] float DPadVertical;
+[SerializeField] float LeftTrigger;
+[SerializeField] float RightTrigger;*/
+
+/*private void Testing()
+{
+
+    //A
+    if (Input.GetButtonDown("A"))
+    {
+        if (A)
+        {
+            A = false;
+        }
+        else
+        {
+            A = true;
+        }
+    }
+
+    //B
+    if (Input.GetButtonDown("B"))
+    {
+        if (B)
+        {
+            B = false;
+        }
+        else
+        {
+            B = true;
+        }
+    }
+
+    //X
+    if (Input.GetButtonDown("X"))
+    {
+        if (X)
+        {
+            X = false;
+        }
+        else
+        {
+            X = true;
+        }
+    }
+
+    //Y
+    if (Input.GetButtonDown("Y"))
+    {
+        if (Y)
+        {
+            Y = false;
+        }
+        else
+        {
+            Y = true;
+        }
+    }
+
+    //LB
+    if (Input.GetButtonDown("LeftBumper"))
+    {
+        if (LB)
+        {
+            LB = false;
+        }
+        else
+        {
+            LB = true;
+        }
+    }
+
+    //RB
+    if (Input.GetButtonDown("RightBumper"))
+    {
+        if (RB)
+        {
+            RB = false;
+        }
+        else
+        {
+            RB = true;
+        }
+    }
+
+    //start
+    if (Input.GetButtonDown("Start"))
+    {
+        if (start)
+        {
+            start = false;
+        }
+        else
+        {
+            start = true;
+        }
+    }
+
+    //select
+    if (Input.GetButtonDown("Select"))
+    {
+        if (select)
+        {
+            select = false;
+        }
+        else
+        {
+            select = true;
+        }
+    }
+
+    LeftTrigger = Input.GetAxis("LeftTrigger");
+    RightTrigger = Input.GetAxis("RightTrigger");
+    DPadHorizontal = Input.GetAxis("DPadXAxis");
+    DPadVertical = Input.GetAxis("DPadYAxis");
+}*/
