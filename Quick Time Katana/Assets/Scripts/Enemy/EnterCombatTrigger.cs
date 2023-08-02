@@ -22,10 +22,9 @@ public class EnterCombatTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider collision)
     {
-        Debug.Log("Trigger enter");
-
         if (collision.gameObject.tag == "Player")
         {
+            Debug.Log(collision.gameObject.tag);
             playerController.inCombat = true;
         }
     }
