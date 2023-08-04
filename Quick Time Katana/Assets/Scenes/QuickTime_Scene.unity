@@ -6473,12 +6473,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   QTEElements:
-  - {fileID: 761525664777241719, guid: a515f44caa067ee48b31bf45585ce001, type: 3}
-  - {fileID: 8455132257568562947, guid: 78f30667d3620e747b76e8a84d8348cb, type: 3}
-  - {fileID: 2420522411590513895, guid: d6303a70ff968cd4aa0d814efd21c7eb, type: 3}
-  - {fileID: 8777673355268851964, guid: e7a8926968aa6fa46a0412fb3ee3650c, type: 3}
   - {fileID: 7707289524978108727, guid: 7aae3a4415b1a4b4d89eb0a78cbbb728, type: 3}
   - {fileID: 7707289524978108727, guid: deda65a2ffa8377408f4dafb1b40eb1e, type: 3}
+  - {fileID: 761525664777241719, guid: a515f44caa067ee48b31bf45585ce001, type: 3}
+  - {fileID: 2420522411590513895, guid: d6303a70ff968cd4aa0d814efd21c7eb, type: 3}
+  - {fileID: 8455132257568562947, guid: 78f30667d3620e747b76e8a84d8348cb, type: 3}
+  - {fileID: 8777673355268851964, guid: e7a8926968aa6fa46a0412fb3ee3650c, type: 3}
   whatHappened: {fileID: 2100492172}
   inCombat: 1
   playerStunned: 0
