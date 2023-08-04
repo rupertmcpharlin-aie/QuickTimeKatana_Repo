@@ -1573,7 +1573,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 140633480, guid: b597ae7e6aa0e194eac19e59ba92f0f8, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 725276401, guid: b597ae7e6aa0e194eac19e59ba92f0f8, type: 3}
       propertyPath: enemyAnimator
