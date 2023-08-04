@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour
     [Space]
     [SerializeField] public float leftStickXAxis;
     [SerializeField] public float leftStickYAxis;
+    [SerializeField] public float movementSpeed;
     [SerializeField] public float movementSpeedVertical;
     [SerializeField] public float movementSpeedHorizontal;
     [Space]
@@ -59,7 +60,7 @@ public class PlayerController : MonoBehaviour
         if (playerMovementActive && !inCombat)
         {
             Movement();
-            Rotation();
+            //Rotation();
         }
     }
 
@@ -69,30 +70,20 @@ public class PlayerController : MonoBehaviour
         //vertical
         //get axis
         leftStickYAxis = Input.GetAxis("LeftStickYAxis");
-
-        //get camera vector
-        cameraForwardVector = Camera.main.transform.forward;
-        //get forward target vector
-        forwardTargetPos = cameraForwardVector + transform.position;
-        forwardTargetPos.y = 0;
-
-        //movement towards and away from camera
-        if (leftStickYAxis != 0)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, forwardTargetPos, leftStickYAxis * movementSpeedVertical);
-        }
-
-        //horizontal
         leftStickXAxis = Input.GetAxis("LeftStickXAxis");
 
-        cameraHorizontalVector = Camera.main.transform.right;
-        horizontalTargetPos = cameraHorizontalVector + transform.position;
-        horizontalTargetPos.y = 0;
+        cameraForwardVector = Camera.main.transform.forward;
 
-        if (leftStickXAxis != 0)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, horizontalTargetPos, leftStickXAxis * movementSpeedHorizontal);
-        }
+        Vector3 movementDirection = new Vector3(cameraForwardVector.x * leftStickXAxis, 0, cameraForwardVector.z * leftStickYAxis);
+        movementDirection.Normalize();
+
+        transform.Translate(cameraForwardVector * movementSpeed * Time.deltaTime, Space.World);
+
+        //get camera vector
+        
+
+
+
     }
 
     private void Rotation()
