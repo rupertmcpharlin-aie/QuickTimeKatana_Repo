@@ -14,10 +14,8 @@ public class BaseQTEScript : MonoBehaviour
     [SerializeField] bool playerStunned;
     [SerializeField] float damage;
     [Space]
-    [SerializeField] GameObject nextQTEBackground;
     [SerializeField] GameObject currentQTEBackground;
     [Space]
-    [SerializeField] GameObject nextQTEElement;
     [SerializeField] GameObject currentQTEElement;
     [SerializeField] string currentQTEElementValue;
     [Space]
@@ -140,7 +138,6 @@ public class BaseQTEScript : MonoBehaviour
                 enemyAlive = false;
                 enemyPoise.GetComponent<Image>().fillAmount = 0;
                 enemyNextAttack.GetComponent<Image>().fillAmount = 0;
-                Destroy(nextQTEElement);
 
                 killSource.clip = killSFX[0];
                 killSource.Play();
@@ -174,27 +171,18 @@ public class BaseQTEScript : MonoBehaviour
 
     private void MakeQTEELements()
     {
-        //if there is no next element
-        if (nextQTEElement == null)
-        {
-            //instantiate a button at next QTEElement background
-            nextQTEElement = Instantiate(QTEElements[Random.Range(0, QTEElements.Length)], nextQTEBackground.transform.position, nextQTEBackground.transform.rotation, currentQTEBackground.transform);
-        }
 
         //if there is no current element
         if (currentQTEElement == null)
         {
-            //current element = next element
-            currentQTEElement = nextQTEElement;
+            //instantiate
+            currentQTEElement = Instantiate(QTEElements[Random.Range(0, QTEElements.Length)], currentQTEBackground.transform);
 
             //reassign value 
             currentQTEElementValue = currentQTEElement.GetComponent<QTEElementScript>().QTEElementValue;
 
             //reassign its position
             currentQTEElement.transform.position = currentQTEBackground.transform.position;
-
-            //next element is null
-            nextQTEElement = null;
         }
     }
 
