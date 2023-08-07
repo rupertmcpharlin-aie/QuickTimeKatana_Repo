@@ -501,8 +501,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4247973966161803239}
   - component: {fileID: 1838162597}
-  - component: {fileID: 1838162600}
   - component: {fileID: 1838162601}
+  - component: {fileID: 8483586790030080982}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -538,7 +538,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35cad7be161368f44bef09a8cad5c9ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerRB: {fileID: 1838162600}
   body: {fileID: 2595157478856661598}
   katana: {fileID: 4582694084314399738}
   playerCamera: {fileID: 0}
@@ -546,37 +545,13 @@ MonoBehaviour:
   camYMin: 0
   camYMax: 0
   playerMovementActive: 1
+  characterController: {fileID: 0}
   leftStickXAxis: 0
   leftStickYAxis: 0
-  movementSpeedVertical: 0.05
-  movementSpeedHorizontal: 0.025
-  cameraForwardVector: {x: 0, y: 0, z: 0}
-  cameraHorizontalVector: {x: 0, y: 0, z: 0}
-  forwardTargetPos: {x: 0, y: 0, z: 0}
-  horizontalTargetPos: {x: 0, y: 0, z: 0}
-  rotationSpeed: 2
-  cameraRotationVector: {x: 0, y: 0, z: 0}
-  bodyRotationVector: {x: 0, y: 0, z: 0}
-  cameraRotationQuat: {x: 0, y: 0, z: 0, w: 0}
-  bodyRotationQuat: {x: 0, y: 0, z: 0, w: 0}
+  movementSpeed: 5
+  rotationSpeed: 720
   inCombat: 0
   enemies: []
---- !u!54 &1838162600
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4247973966161803232}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 112
-  m_CollisionDetection: 0
 --- !u!95 &1838162601
 Animator:
   serializedVersion: 4
@@ -585,7 +560,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4247973966161803232}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 095394d36d662f9409621e24b188e589, type: 2}
   m_CullingMode: 0
@@ -597,6 +572,24 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!143 &8483586790030080982
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4247973966161803232}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Height: 2.75
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.0001
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 1.35, z: 0}
 --- !u!1 &4582694084314399738
 GameObject:
   m_ObjectHideFlags: 0

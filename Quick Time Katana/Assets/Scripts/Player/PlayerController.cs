@@ -6,7 +6,6 @@ using Cinemachine;
 public class PlayerController : MonoBehaviour
 {
     [Header("GameObjects")]
-    [SerializeField] Rigidbody playerRB;
     [SerializeField] GameObject body;
     [SerializeField] GameObject katana;
 
@@ -22,24 +21,16 @@ public class PlayerController : MonoBehaviour
     [Space]
     [Header("Movement Variables")]
     [SerializeField] public bool playerMovementActive = true;
+    [SerializeField] public CharacterController characterController;
     [Space]
     [SerializeField] public float leftStickXAxis;
     [SerializeField] public float leftStickYAxis;
     [SerializeField] public float movementSpeed;
-    [SerializeField] public float movementSpeedVertical;
-    [SerializeField] public float movementSpeedHorizontal;
-    [Space]
-    [SerializeField] public Vector3 cameraForwardVector;
-    [SerializeField] public Vector3 cameraHorizontalVector;
-    [SerializeField] public Vector3 forwardTargetPos;
-    [SerializeField] public Vector3 horizontalTargetPos;
     [Space]
     [Space]
     [SerializeField] public float rotationSpeed;
-    [SerializeField] public Vector3 cameraRotationVector;
-    [SerializeField] public Vector3 bodyRotationVector;
-    [SerializeField] public Quaternion cameraRotationQuat;
-    [SerializeField] public Quaternion bodyRotationQuat;
+    [SerializeField] public float ySpeed;
+    [SerializeField] public Transform cameraTransform;
 
     [Space]
     [Header("Combat Variables")]
@@ -50,7 +41,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        characterController = GetComponent<CharacterController>();
     }
 
     // Update is called once per frame
@@ -72,39 +63,37 @@ public class PlayerController : MonoBehaviour
         leftStickYAxis = Input.GetAxis("LeftStickYAxis");
         leftStickXAxis = Input.GetAxis("LeftStickXAxis");
 
-        cameraForwardVector = Camera.main.transform.forward;
+        //get player input
+        Vector3 movementDirection = new Vector3(leftStickXAxis, 0, leftStickYAxis);
+        float inputMagnitude = Mathf.Clamp01(movementDirection.magnitude);
 
-        Vector3 movementDirection = new Vector3(cameraForwardVector.x * leftStickXAxis, 0, cameraForwardVector.z * leftStickYAxis);
+        //if crouching half speed
+
+        float speed = inputMagnitude * movementSpeed;
+        movementDirection = Quaternion.AngleAxis(cameraTransform.rotation.eulerAngles.y, Vector3.up) * movementDirection;
         movementDirection.Normalize();
 
-        transform.Translate(cameraForwardVector * movementSpeed * Time.deltaTime, Space.World);
+        ySpeed += Physics.gravity.y * Time.deltaTime;
+
+        Vector3 velocity = movementDirection * speed;
+        velocity.y = ySpeed;
+
+        characterController.Move(velocity * Time.deltaTime);
 
         //get camera vector
         
-
-
-
-    }
-
-    private void Rotation()
-    {
-        /*if(Input.GetButtonDown("RightStickDown"))
+        if(movementDirection != Vector3.zero)
         {
-            resetCam = true;
-        }*/
+            Quaternion toRotation = Quaternion.LookRotation(movementDirection, Vector3.up);
 
-        //ROTATION
-        cameraRotationVector = Camera.main.transform.rotation.eulerAngles;
-        cameraRotationVector = new Vector3(0, cameraRotationVector.y, 0);
-        cameraRotationQuat = Quaternion.Euler(cameraRotationVector.x, cameraRotationVector.y, cameraRotationVector.z);
-
-        //forward left stick
-        if (leftStickYAxis > 0)
-        {
-            //rotate to face away from camera
-            body.transform.rotation = Quaternion.RotateTowards(body.transform.rotation, cameraRotationQuat, rotationSpeed);
+            body.transform.rotation = Quaternion.RotateTowards(body.transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
         }
+
+
+
     }
+
+    /*cameraForwardVector = Camera.main.transform.forward;*/
 
 
 
