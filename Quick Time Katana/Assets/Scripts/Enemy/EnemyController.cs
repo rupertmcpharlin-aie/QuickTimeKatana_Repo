@@ -5,14 +5,16 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour
 {
     [Header("GameObjects")]
-    [SerializeField] GameObject body;
+    [SerializeField] public GameObject body;
     [SerializeField] PlayerController playerController;
+    [SerializeField] public GameObject cameraFocus;
     //[SerializeField] Animator enemyAnimator;
 
     [Header("Combat Variables")]
     [SerializeField] public bool awareOfPlayer;
     [SerializeField] public bool inCombat;
     [SerializeField] public bool facingPlayer;
+    [SerializeField] public bool isAlive = true;
 
     // Start is called before the first frame update
     void Start()
@@ -31,6 +33,13 @@ public class EnemyController : MonoBehaviour
         if(awareOfPlayer)
         {
             //enemyAnimator.SetBool("Seen Player", true);
+        }
+
+        if(isAlive)
+        {
+            cameraFocus.transform.position = new Vector3((playerController.transform.position.x - transform.position.x)/2,
+                                                            (playerController.transform.position.y - transform.position.y)/2,
+                                                            (playerController.transform.position.z - transform.position.z)/2);
         }
     }
 

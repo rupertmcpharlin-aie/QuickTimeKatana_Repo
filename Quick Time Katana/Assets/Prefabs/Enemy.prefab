@@ -61,6 +61,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerController: {fileID: 0}
   enemyController: {fileID: 0}
+--- !u!1 &154102590
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 154102591}
+  m_Layer: 7
+  m_Name: cameraFocus
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &154102591
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 154102590}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1925670224215577910}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &330285705
 GameObject:
   m_ObjectHideFlags: 0
@@ -222,6 +253,7 @@ Transform:
   - {fileID: 3932648413759291251}
   - {fileID: 1346152336}
   - {fileID: 1555120587}
+  - {fileID: 154102591}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -239,9 +271,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   body: {fileID: 7536914346054130866}
   playerController: {fileID: 0}
+  cameraFocus: {fileID: 0}
   awareOfPlayer: 0
   inCombat: 0
   facingPlayer: 0
+  isAlive: 1
 --- !u!114 &725276402
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -254,6 +288,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a0f4a2d0f9962743a2fa85f96fa2cc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyController: {fileID: 725276401}
   radius: 11.87
   angle: 72
   rangeChecks: []
@@ -267,15 +302,15 @@ MonoBehaviour:
     m_Bits: 8
 --- !u!95 &5061823260292935507
 Animator:
-  serializedVersion: 5
+  serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1925670224215577897}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7b39b5467b05f5e468f34b671aabe3c9, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -284,8 +319,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &2447481429974014197
 GameObject:
   m_ObjectHideFlags: 0
@@ -936,7 +970,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f9cf6162e91fa384fa64dedc0c154f9a, type: 2}
+  - {fileID: 2100000, guid: 2528ea345a6809e4cb978e469a06352d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

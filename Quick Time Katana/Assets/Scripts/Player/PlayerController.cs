@@ -8,15 +8,21 @@ public class PlayerController : MonoBehaviour
     [Header("GameObjects")]
     [SerializeField] GameObject body;
     [SerializeField] GameObject katana;
-
-
     [Space]
     [Header("Camera")]
-    [SerializeField] public GameObject playerCamera;
+    [SerializeField] public CinemachineVirtualCamera freeCamera;
     [SerializeField] public bool resetCam;
     [SerializeField] public float camYMin;
     [SerializeField] public float camYMax;
-
+    [Space]
+    [SerializeField] public CinemachineVirtualCamera lockOnCamera;
+    [SerializeField] public GameObject lockedOnEnemy;
+    [SerializeField] public Vector3 target;
+    [SerializeField] public Vector3 player;
+    [SerializeField] public float lockOnDistance;
+    [SerializeField] public float lockOnOffset;
+    [Space]
+    [SerializeField] public CinemachineVirtualCamera combatCamera;
 
     [Space]
     [Header("Movement Variables")]
@@ -42,16 +48,57 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         characterController = GetComponent<CharacterController>();
+        enemies = GameObject.FindGameObjectsWithTag("Enemy");
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        //free cam movement
         if (playerMovementActive && !inCombat)
         {
             Movement();
-            //Rotation();
+        }
+
+        CameraManager();
+    }
+
+    private void CameraManager()
+    {
+        if(Input.GetButtonDown("RightStickDown") && freeCamera.Priority == 1 && enemies.Length > 0)
+        {
+            //find closest enemy;
+            float minDistance = 0;
+            foreach(GameObject enemy in enemies)
+            {
+                float tempDistance = Vector3.Distance(transform.position, enemy.transform.position);
+                if(tempDistance > minDistance)
+                {
+                    minDistance = tempDistance;
+                    lockedOnEnemy = enemy;
+                }
+            }
+
+            //set cameras;
+            freeCamera.Priority = 0;
+            lockOnCamera.Priority = 1;
+            lockOnCamera.Follow = lockedOnEnemy.GetComponent<EnemyController>().cameraFocus.transform;
+            lockOnCamera.LookAt = lockedOnEnemy.GetComponent<EnemyController>().cameraFocus.transform;
+
+            //fix later
+            //lockOnCamera.GetComponent<CinemachineOrbitalTransposer>().m_XAxis.Value = freeCamera.GetComponent<CinemachineOrbitalTransposer>().m_XAxis.Value;
+        }
+
+        if(lockOnCamera.Priority == 1)
+        {
+            //face enemy
+            Vector3 targetDirection = lockedOnEnemy.transform.position - body.transform.position;
+            Quaternion toRotation = Quaternion.LookRotation(targetDirection, Vector3.up);
+            body.transform.rotation = Quaternion.RotateTowards(body.transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
+
+            //scale distances
+            lockOnDistance = targetDirection.magnitude;
+            lockOnCamera.GetCinemachineComponent<CinemachineOrbitalTransposer>().m_FollowOffset.z = lockOnDistance;
         }
     }
 
@@ -67,37 +114,62 @@ public class PlayerController : MonoBehaviour
         Vector3 movementDirection = new Vector3(leftStickXAxis, 0, leftStickYAxis);
         float inputMagnitude = Mathf.Clamp01(movementDirection.magnitude);
 
-        //if crouching half speed
-
-        float speed = inputMagnitude * movementSpeed;
-        movementDirection = Quaternion.AngleAxis(cameraTransform.rotation.eulerAngles.y, Vector3.up) * movementDirection;
-        movementDirection.Normalize();
-
+        //gravity stuff
         ySpeed += Physics.gravity.y * Time.deltaTime;
 
-        Vector3 velocity = movementDirection * speed;
-        velocity.y = ySpeed;
 
-        characterController.Move(velocity * Time.deltaTime);
-
-        //get camera vector
-        
-        if(movementDirection != Vector3.zero)
+        //free camera
+        if (freeCamera.Priority == 1)
         {
-            Quaternion toRotation = Quaternion.LookRotation(movementDirection, Vector3.up);
+            //if crouching half speed
 
-            body.transform.rotation = Quaternion.RotateTowards(body.transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
+            float speed = inputMagnitude * movementSpeed;
+            movementDirection = Quaternion.AngleAxis(cameraTransform.rotation.eulerAngles.y, Vector3.up) * movementDirection;
+            movementDirection.Normalize();
+
+            //get velocity
+            Vector3 velocity = movementDirection * speed;
+            velocity.y = ySpeed;
+
+            //move character
+            characterController.Move(velocity * Time.deltaTime);
+
+
+            //face direction of movement
+            if (movementDirection != Vector3.zero)
+            {
+                Quaternion toRotation = Quaternion.LookRotation(movementDirection, Vector3.up);
+
+                body.transform.rotation = Quaternion.RotateTowards(body.transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
+            }
         }
 
+/*
+        if (freeCamera.Priority == 1)
+        {
+            //if crouching half speed
+
+            float speed = inputMagnitude * movementSpeed;
+            movementDirection = Quaternion.AngleAxis(cameraTransform.rotation.eulerAngles.y, Vector3.up) * movementDirection;
+            movementDirection.Normalize();
+
+            //get velocity
+            Vector3 velocity = movementDirection * speed;
+            velocity.y = ySpeed;
+
+            //move character
+            characterController.Move(velocity * Time.deltaTime);
 
 
+            //face direction of movement
+            if (movementDirection != Vector3.zero)
+            {
+                Quaternion toRotation = Quaternion.LookRotation(movementDirection, Vector3.up);
+
+                body.transform.rotation = Quaternion.RotateTowards(body.transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
+            }
+        }*/
     }
-
-    /*cameraForwardVector = Camera.main.transform.forward;*/
-
-
-
-
 }
 
 /*[Header("Testing")]
