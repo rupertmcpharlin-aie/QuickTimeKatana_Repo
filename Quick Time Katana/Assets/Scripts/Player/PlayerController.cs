@@ -17,8 +17,7 @@ public class PlayerController : MonoBehaviour
     [Space]
     [SerializeField] public CinemachineVirtualCamera lockOnCamera;
     [SerializeField] public GameObject lockedOnEnemy;
-    [SerializeField] public Vector3 target;
-    [SerializeField] public Vector3 player;
+    [SerializeField] public float rightStickXAxis;
     [SerializeField] public float lockOnDistance;
     [SerializeField] public float lockOnOffset;
     [Space]
@@ -65,6 +64,7 @@ public class PlayerController : MonoBehaviour
 
     private void CameraManager()
     {
+        //freecam -> lock on cam
         if(Input.GetButtonDown("RightStickDown") && freeCamera.Priority == 1 && enemies.Length > 0)
         {
             //find closest enemy;
@@ -82,14 +82,17 @@ public class PlayerController : MonoBehaviour
             //set cameras;
             freeCamera.Priority = 0;
             lockOnCamera.Priority = 1;
-            lockOnCamera.Follow = lockedOnEnemy.GetComponent<EnemyController>().cameraFocus.transform;
-            lockOnCamera.LookAt = lockedOnEnemy.GetComponent<EnemyController>().cameraFocus.transform;
-
-            //fix later
-            //lockOnCamera.GetComponent<CinemachineOrbitalTransposer>().m_XAxis.Value = freeCamera.GetComponent<CinemachineOrbitalTransposer>().m_XAxis.Value;
+        }
+        //lockon -> free cam
+        else if (Input.GetButtonDown("RightStickDown") && lockOnCamera.Priority == 1)
+        {
+            freeCamera.GetCinemachineComponent<CinemachineOrbitalTransposer>().m_XAxis.Value = body.transform.rotation.eulerAngles.y-180;
+            freeCamera.Priority = 1;
+            lockOnCamera.Priority = 0;
         }
 
-        if(lockOnCamera.Priority == 1)
+        //lock on cam distance
+        if (lockOnCamera.Priority == 1)
         {
             //face enemy
             Vector3 targetDirection = lockedOnEnemy.transform.position - body.transform.position;
@@ -98,7 +101,10 @@ public class PlayerController : MonoBehaviour
 
             //scale distances
             lockOnDistance = targetDirection.magnitude;
-            lockOnCamera.GetCinemachineComponent<CinemachineOrbitalTransposer>().m_FollowOffset.z = lockOnDistance;
+
+            //rightStickXAxis
+            rightStickXAxis = Input.GetAxis("test");
+            lockOnCamera.GetCinemachineComponent<Cinemachine3rdPersonFollow>().ShoulderOffset.x = rightStickXAxis;
         }
     }
 
@@ -144,13 +150,13 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-/*
-        if (freeCamera.Priority == 1)
+        //lock on cam
+        if (lockOnCamera.Priority == 1)
         {
             //if crouching half speed
 
             float speed = inputMagnitude * movementSpeed;
-            movementDirection = Quaternion.AngleAxis(cameraTransform.rotation.eulerAngles.y, Vector3.up) * movementDirection;
+            movementDirection = Quaternion.AngleAxis(body.transform.rotation.eulerAngles.y, Vector3.up) * movementDirection;
             movementDirection.Normalize();
 
             //get velocity
@@ -159,16 +165,7 @@ public class PlayerController : MonoBehaviour
 
             //move character
             characterController.Move(velocity * Time.deltaTime);
-
-
-            //face direction of movement
-            if (movementDirection != Vector3.zero)
-            {
-                Quaternion toRotation = Quaternion.LookRotation(movementDirection, Vector3.up);
-
-                body.transform.rotation = Quaternion.RotateTowards(body.transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
-            }
-        }*/
+        }
     }
 }
 
