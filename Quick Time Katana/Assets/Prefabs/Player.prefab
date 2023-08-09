@@ -540,16 +540,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   body: {fileID: 2595157478856661598}
   katana: {fileID: 4582694084314399738}
-  playerCamera: {fileID: 0}
+  freeCamera: {fileID: 0}
   resetCam: 0
   camYMin: 0
   camYMax: 0
+  lockOnCamera: {fileID: 0}
+  lockedOnEnemy: {fileID: 0}
+  rightStickXAxis: 0
+  lockOnDistance: 0
+  lockOnOffset: 5
+  combatCamera: {fileID: 0}
   playerMovementActive: 1
   characterController: {fileID: 0}
   leftStickXAxis: 0
   leftStickYAxis: 0
   movementSpeed: 5
-  rotationSpeed: 720
+  rotationSpeed: 360
+  ySpeed: 0
+  cameraTransform: {fileID: 0}
   inCombat: 0
   enemies: []
 --- !u!95 &1838162601

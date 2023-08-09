@@ -8,18 +8,24 @@ using Image = UnityEngine.UI.Image;
 
 public class BaseQTEScript : MonoBehaviour
 {
+    [Header("Player stuff")]
     [SerializeField] GameObject[] QTEElements;
     [SerializeField] TextMeshProUGUI whatHappened;
     [SerializeField] bool inCombat;
     [SerializeField] bool playerStunned;
     [SerializeField] float damage;
     [Space]
-    [SerializeField] GameObject currentQTEBackground;
+    [Header("Hidden fang")]
+    [SerializeField] bool hiddenFang;
+    [SerializeField] int hiddenFangIndex;
+    [SerializeField] GameObject[][] hiddenFangQTE;
     [Space]
+    [Header("QTE")]
+    [SerializeField] GameObject currentQTEBackground;
     [SerializeField] GameObject currentQTEElement;
     [SerializeField] string currentQTEElementValue;
     [Space]
-    [Space]
+    [Header("Enemy")]
     [SerializeField] bool enemyAlive;
     [SerializeField] GameObject enemyPoise;
     [SerializeField] float enemyPoiseRecoverySpeed;
@@ -29,6 +35,7 @@ public class BaseQTEScript : MonoBehaviour
     [Space]
     [SerializeField] ParticleSystem hitPS;
     [Space]
+    [Header("Audio")]
     [SerializeField] AudioSource swordSource;
     [SerializeField] AudioClip[] swordHits;
     [SerializeField] float swordPitchRange;
@@ -93,9 +100,7 @@ public class BaseQTEScript : MonoBehaviour
             //kill player
             whatHappened.text = "u ded lol\npress A to restart";
             inCombat = false;
-        }
-
-        
+        }        
     }
 
     public IEnumerator RespawnEnemy()
@@ -121,8 +126,6 @@ public class BaseQTEScript : MonoBehaviour
             float pitchRandom = Random.Range(-swordPitchRange, swordPitchRange);
             swordSource.pitch += pitchRandom;
             swordSource.Play();
-            
-
 
             //destroy current QTE Element
             Destroy(currentQTEElement);
@@ -167,23 +170,40 @@ public class BaseQTEScript : MonoBehaviour
                 }
             }
         }
+
+        //hidden fang
+        if(Input.GetButtonDown("LeftStickDown"))
+        {
+            Debug.Log("LEFT STICK DOWN DETECTED");
+            //reset next attack to 0
+            enemyNextAttack.GetComponent<Image>().fillAmount = 0;
+            hiddenFang = true;
+            hiddenFangIndex = 0;
+        }
     }
 
     private void MakeQTEELements()
     {
-
         //if there is no current element
-        if (currentQTEElement == null)
+        if (currentQTEElement == null && !hiddenFang)
         {
             //instantiate
             currentQTEElement = Instantiate(QTEElements[Random.Range(0, QTEElements.Length)], currentQTEBackground.transform);
-
-            //reassign value 
-            currentQTEElementValue = currentQTEElement.GetComponent<QTEElementScript>().QTEElementValue;
-
-            //reassign its position
-            currentQTEElement.transform.position = currentQTEBackground.transform.position;
         }
+        else if(currentQTEElement == null && hiddenFang)
+        {
+            //instantiate
+            currentQTEElement = Instantiate(hiddenFangQTE[hiddenFangIndex][Random.Range(0, hiddenFangQTE[hiddenFangIndex].Length)], currentQTEBackground.transform);
+            hiddenFangIndex++;
+        }
+
+        //reassign value 
+        currentQTEElementValue = currentQTEElement.GetComponent<QTEElementScript>().QTEElementValue;
+
+        //reassign its position
+        currentQTEElement.transform.position = currentQTEBackground.transform.position;
+
+
     }
 
     public void StartCombat()

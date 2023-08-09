@@ -485,7 +485,7 @@ MonoBehaviour:
   CameraDistance: 4
   CameraCollisionFilter:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 0
   IgnoreTag: 
   CameraRadius: 0.2
   DampingIntoCollision: 0
@@ -1649,7 +1649,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1274133619}
-  m_LocalRotation: {x: 0.11274521, y: 0.6793935, z: -0.10680934, w: 0.7171505}
+  m_LocalRotation: {x: 0.112745196, y: 0.67939353, z: -0.10680933, w: 0.71715045}
   m_LocalPosition: {x: 40.982113, y: 35.32353, z: 55.39919}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2408,18 +2408,6 @@ PrefabInstance:
       propertyPath: lockOnCamera
       value: 
       objectReference: {fileID: 1966309995}
-    - target: {fileID: 1838162597, guid: 77ed5f56bfefcb74eb09b4612ca54606, type: 3}
-      propertyPath: lockOnOffset
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1838162597, guid: 77ed5f56bfefcb74eb09b4612ca54606, type: 3}
-      propertyPath: playerCamera
-      value: 
-      objectReference: {fileID: 1975840298}
-    - target: {fileID: 1838162597, guid: 77ed5f56bfefcb74eb09b4612ca54606, type: 3}
-      propertyPath: rotationSpeed
-      value: 360
-      objectReference: {fileID: 0}
     - target: {fileID: 1838162597, guid: 77ed5f56bfefcb74eb09b4612ca54606, type: 3}
       propertyPath: cameraTransform
       value: 
