@@ -6,8 +6,10 @@ using Cinemachine;
 public class PlayerController : MonoBehaviour
 {
     [Header("GameObjects")]
-    [SerializeField] GameObject body;
-    [SerializeField] GameObject katana;
+    [SerializeField] public GameObject playerMeshes;
+    [SerializeField] public GameObject torsoe;
+    [SerializeField] public GameObject head;
+    [SerializeField] public GameObject katana;
     [Space]
     [Header("Camera")]
     [SerializeField] public CinemachineVirtualCamera freeCamera;
@@ -22,6 +24,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] public float lockOnOffset;
     [Space]
     [SerializeField] public CinemachineVirtualCamera combatCamera;
+    [SerializeField] public float combatCameraRotationSpeed;
 
     [Space]
     [Header("Movement Variables")]
@@ -42,7 +45,13 @@ public class PlayerController : MonoBehaviour
     [Space]
     [Header("Combat Variables")]
     [SerializeField] public bool inCombat;
+    [SerializeField] public GameObject engagedEnemy;
     [SerializeField] public GameObject[] enemies;
+
+    [Space]
+    [Header("QTE")]
+    [SerializeField] public Vector2 engagedEnemyScreenSpacePos;
+
 
 
     // Start is called before the first frame update
@@ -61,7 +70,36 @@ public class PlayerController : MonoBehaviour
             Movement();
         }
 
+        if(inCombat)
+        {
+            Combat();
+        }
+
         CameraManager();
+    }
+
+    public void Combat()
+    {
+        //face enemy
+        Vector3 direction = engagedEnemy.transform.position - transform.position;
+        Quaternion toRotation = Quaternion.LookRotation(direction, Vector3.up);
+        playerMeshes.transform.rotation = Quaternion.RotateTowards(playerMeshes.transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
+
+        //transition to combat camera
+        freeCamera.Priority = 0;
+        lockOnCamera.Priority = 0;
+        combatCamera.Priority = 1;
+
+        //slowly rotate camera
+        combatCamera.GetCinemachineComponent<CinemachineOrbitalTransposer>().m_XAxis.Value += combatCameraRotationSpeed * Time.deltaTime;
+
+        //set background active
+        engagedEnemy.GetComponent<EnemyController>().currentQTEBackground.SetActive(true);
+
+        //set position of QTE background
+        engagedEnemyScreenSpacePos = RectTransformUtility.WorldToScreenPoint(Camera.main, engagedEnemy.GetComponent<EnemyController>().torsoe.transform.position);
+        engagedEnemy.GetComponent<EnemyController>().currentQTEBackground.transform.position = new Vector3(engagedEnemyScreenSpacePos.x, engagedEnemyScreenSpacePos.y, 0);
+
     }
 
     private void CameraManager()
@@ -88,7 +126,7 @@ public class PlayerController : MonoBehaviour
         //lockon -> free cam
         else if (Input.GetButtonDown("RightStickDown") && lockOnCamera.Priority == 1)
         {
-            freeCamera.GetCinemachineComponent<CinemachineOrbitalTransposer>().m_XAxis.Value = body.transform.rotation.eulerAngles.y-180;
+            freeCamera.GetCinemachineComponent<CinemachineOrbitalTransposer>().m_XAxis.Value = playerMeshes.transform.rotation.eulerAngles.y-180;
             freeCamera.Priority = 1;
             lockOnCamera.Priority = 0;
         }
@@ -97,9 +135,9 @@ public class PlayerController : MonoBehaviour
         if (lockOnCamera.Priority == 1)
         {
             //face enemy
-            Vector3 targetDirection = lockedOnEnemy.transform.position - body.transform.position;
+            Vector3 targetDirection = lockedOnEnemy.transform.position - playerMeshes.transform.position;
             Quaternion toRotation = Quaternion.LookRotation(targetDirection, Vector3.up);
-            body.transform.rotation = Quaternion.RotateTowards(body.transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
+            playerMeshes.transform.rotation = Quaternion.RotateTowards(playerMeshes.transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
 
             //scale distances
             lockOnDistance = targetDirection.magnitude;
@@ -147,8 +185,7 @@ public class PlayerController : MonoBehaviour
             if (movementDirection != Vector3.zero)
             {
                 Quaternion toRotation = Quaternion.LookRotation(movementDirection, Vector3.up);
-
-                body.transform.rotation = Quaternion.RotateTowards(body.transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
+                playerMeshes.transform.rotation = Quaternion.RotateTowards(playerMeshes.transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
             }
         }
 
@@ -158,7 +195,7 @@ public class PlayerController : MonoBehaviour
             //if crouching half speed
 
             float speed = inputMagnitude * movementSpeed;
-            movementDirection = Quaternion.AngleAxis(body.transform.rotation.eulerAngles.y, Vector3.up) * movementDirection;
+            movementDirection = Quaternion.AngleAxis(playerMeshes.transform.rotation.eulerAngles.y, Vector3.up) * movementDirection;
             movementDirection.Normalize();
 
             //get velocity

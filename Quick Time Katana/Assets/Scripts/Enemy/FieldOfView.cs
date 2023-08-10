@@ -7,10 +7,11 @@ public class FieldOfView : MonoBehaviour
 {
     [SerializeField] EnemyController enemyController;
 
-    public float radius;
+    public float FOVradius;
 
     [Range(0,360)]
-    public float angle;
+    public float FOVangle;
+    public float combatDistance;
     [Space]
     public Collider[] rangeChecks;
     [Space]
@@ -49,45 +50,33 @@ public class FieldOfView : MonoBehaviour
 
     private void FieldOfViewCheck()
     {
-        rangeChecks = Physics.OverlapSphere(transform.position, radius, targetMask);
+        rangeChecks = Physics.OverlapSphere(transform.position, FOVradius, targetMask);
 
         //if player is in range of circle
-        if(rangeChecks.Length != 0)
+        if (rangeChecks.Length != 0)
         {
             Transform target = rangeChecks[0].transform;
-            Vector3 directionToTarget = (target.position - target.position).normalized;
+            Debug.Log(target.transform);
+
+            Vector3 directionToTarget = (target.position - transform.position).normalized;
+            float angleToTarget = Vector3.Angle(transform.forward, directionToTarget);
+            Debug.Log(angleToTarget);
 
             //if player is in range of circle && inbetween angle
-            if(Vector3.Angle(transform.forward, directionToTarget) < angle / 2)
+            if (angleToTarget < FOVangle / 2)
             {
                 float distanceToTarget = Vector3.Distance(transform.position, target.position);
-                
+
                 //if player can be seen directly by enemy
-                if(!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstructionMask))
+                if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstructionMask))
                 {
-                    canSeePlayer = true;
                     enemyController.awareOfPlayer = true;
-                }
 
-                else
-                {
-                    canSeePlayer = false;
-                    enemyController.awareOfPlayer = false;
+                    if(distanceToTarget <= combatDistance)
+                    {
+                        enemyController.Engage();
+                    }
                 }
-            }
-            else
-            {
-                canSeePlayer = false;
-                enemyController.awareOfPlayer = false;
-            }
-        }
-
-        else
-        {
-            if(enemyController.awareOfPlayer)
-            {
-                canSeePlayer = false;
-                enemyController.awareOfPlayer = false;
             }
         }
     }

@@ -1,14 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyController : MonoBehaviour
 {
     [Header("GameObjects")]
-    [SerializeField] public GameObject body;
+    [SerializeField] public GameObject torsoe;
     [SerializeField] public GameObject head;
     [SerializeField] PlayerController playerController;
     [SerializeField] public GameObject cameraFocus;
+    [SerializeField] public NavMeshAgent agent;
     //[SerializeField] Animator enemyAnimator;
 
     [Header("Combat Variables")]
@@ -29,6 +31,9 @@ public class EnemyController : MonoBehaviour
     [SerializeField] public float chaseSpeed;
     [SerializeField] public float facePlayerRotationSpeed;
 
+    [Space]
+    [Header("QTE")]
+    [SerializeField] public GameObject currentQTEBackground;
 
 
     // Start is called before the first frame update
@@ -52,22 +57,39 @@ public class EnemyController : MonoBehaviour
 
         if (isAlive)
         {
-            cameraFocus.transform.position = new Vector3((playerController.transform.position.x - transform.position.x)/2,
-                                                            (playerController.transform.position.y - transform.position.y)/2,
-                                                            (playerController.transform.position.z - transform.position.z)/2);
+            cameraFocus.transform.position = new Vector3((transform.position.x + playerController.transform.position.x) / 2,
+                                                         (transform.position.y + playerController.transform.position.y) / 2,
+                                                         (transform.position.z + playerController.transform.position.z) / 2);
         }
     }
 
     private void AwareOfPlayerBehaviour()
     {
         //face player
-        Vector3 targetDirection = playerController.transform.position - body.transform.position;
+        Vector3 targetDirection = playerController.head.transform.position - head.transform.position;
         Quaternion toRotationHead = Quaternion.LookRotation(targetDirection, Vector3.up);
         head.transform.rotation = Quaternion.RotateTowards(head.transform.rotation, toRotationHead, facePlayerRotationSpeed * Time.deltaTime);
+
+        targetDirection = playerController.torsoe.transform.position - torsoe.transform.position;
+        Quaternion toRotationTorsoe = Quaternion.LookRotation(targetDirection, Vector3.up);
+        toRotationTorsoe.eulerAngles = new Vector3(0, toRotationTorsoe.eulerAngles.y, 0);
+        torsoe.transform.rotation = Quaternion.RotateTowards(torsoe.transform.rotation, toRotationTorsoe, facePlayerRotationSpeed * Time.deltaTime);
+
+        agent.SetDestination(playerController.transform.position);
     }
 
     public void EnemyCombat()
     { 
         
+    }
+
+    public void Engage()
+    {
+        if(!playerController.inCombat)
+        {
+            playerController.inCombat = true;
+            playerController.engagedEnemy = gameObject;
+            inCombat = true;
+        }
     }
 }
