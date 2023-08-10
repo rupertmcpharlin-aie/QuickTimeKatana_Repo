@@ -57,11 +57,15 @@ public class BaseQTEScript : MonoBehaviour
     /// </summary>
     void Update()
     {
-        //runs while the player is in combat and not stunned
+        //runs while the player is in combat and not stunned and the enemy is aware of the player
         if (!playerStunned && inCombat)
         {
             //gets inputs from the player
             CombatInputManager();
+        }
+        else if(!playerStunned && inCombat)
+        {
+
         }
 
 

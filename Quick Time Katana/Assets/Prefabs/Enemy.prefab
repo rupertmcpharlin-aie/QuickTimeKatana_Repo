@@ -73,7 +73,7 @@ GameObject:
   m_Layer: 7
   m_Name: cameraFocus
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -271,11 +271,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   body: {fileID: 7536914346054130866}
   playerController: {fileID: 0}
-  cameraFocus: {fileID: 0}
-  awareOfPlayer: 0
-  inCombat: 0
-  facingPlayer: 0
+  cameraFocus: {fileID: 154102590}
   isAlive: 1
+  inCombat: 0
+  isPatrolling: 0
+  patrolTransforms: []
+  patrolSpeed: 0
+  awareOfPlayer: 0
+  noticePlayerWaitTime: 0
+  chaseSpeed: 1
+  facePlayerRotationSpeed: 400
 --- !u!114 &725276402
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -347,12 +352,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2447481429974014197}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.25, z: 0.3}
+  m_LocalPosition: {x: 0, y: 0, z: 0.30000007}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 4676832603395500534}
-  m_RootOrder: 2
+  m_Father: {fileID: 8841876607126619247}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6026678100610434492
 MeshFilter:
@@ -578,7 +583,6 @@ Transform:
   m_Children:
   - {fileID: 8841876607126619247}
   - {fileID: 8810974992249468915}
-  - {fileID: 7579279888165071312}
   m_Father: {fileID: 3932648413759291251}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -710,7 +714,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 2.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 7579279888165071312}
   m_Father: {fileID: 4676832603395500534}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

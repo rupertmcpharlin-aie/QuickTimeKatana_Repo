@@ -28,7 +28,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] public bool playerMovementActive = true;
     [SerializeField] public CharacterController characterController;
     [Space]
+    [Range(-1,1)]
     [SerializeField] public float leftStickXAxis;
+    [Range(-1, 1)]
     [SerializeField] public float leftStickYAxis;
     [SerializeField] public float movementSpeed;
     [Space]
