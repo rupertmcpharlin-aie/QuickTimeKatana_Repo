@@ -236,20 +236,24 @@ public class BaseQTEScript : MonoBehaviour
     private void KillEnemy()
     {        
         DestroyCurrentQTEElement();
+        currentQTEBackground.SetActive(false);
 
         enemyController.enemyAlive = false;
         enemyController.enemyPoise = 0;
         enemyController.enemyNextAttack = 0;
+
+        enemyController.enemyMeshes.SetActive(false);
+        enemyController.cutBody.SetActive(true);
     }
 
     //KILLS THE PLAYER
     private void KillPlayer()
     {
         DestroyCurrentQTEElement();
-
-        Debug.Log("in combat = false 1");
         playerController.inCombat = false;
-        currentQTEBackground.GetComponent<Image>().color = Color.black;
+        currentQTEBackground.SetActive(false);
+
+        //run death animation
     }
 
     //STARTS COMBAT

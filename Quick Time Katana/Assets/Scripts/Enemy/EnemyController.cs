@@ -6,6 +6,7 @@ using UnityEngine.AI;
 public class EnemyController : MonoBehaviour
 {
     [Header("GameObjects")]
+    [SerializeField] public GameObject enemyMeshes;
     [SerializeField] public GameObject torsoe;
     [SerializeField] public GameObject head;
     [SerializeField] PlayerController playerController;
@@ -24,6 +25,8 @@ public class EnemyController : MonoBehaviour
     [Range(0, 1)]
     [SerializeField] public float enemyNextAttack;
     [SerializeField] public float enemyNextAttackSpeed;
+    [Space]
+    [SerializeField] public GameObject cutBody;
 
     [Space]
     [Header("Patrol Variables")]
