@@ -8,41 +8,32 @@ using Image = UnityEngine.UI.Image;
 
 public class BaseQTEScript : MonoBehaviour
 {
+    [Header("Scripts")]
+    [SerializeField] PlayerController playerController;
+    [SerializeField] EnemyController enemyController;
+
+    [Space]
     [Header("QTE System")]
     [SerializeField] GameObject[] QTEElements;
     [SerializeField] GameObject currentQTEBackground;
     [SerializeField] GameObject currentQTEElement;
     [SerializeField] string currentQTEElementValue;
-    [Header("Player")]
-    [SerializeField] bool inCombat;
-    [SerializeField] bool playerStunned;
-    [SerializeField] float damage;
+
     [Space]
     [Header("Hidden fang")]
     [SerializeField] bool isHiddenFangActive;
     [SerializeField] int hiddenFangIndex;
-    [SerializeField] HiddenFang hiddenFangScript;
-    [Space]
-    [Header("Enemy")]
-    [SerializeField] bool enemyAlive;
-    [SerializeField] bool enemyAwareOfPlayer;
-    [SerializeField] GameObject enemyPoise;
-    [SerializeField] float enemyPoiseRecoverySpeed;
-    [Space]
-    [SerializeField] GameObject enemyNextAttack;
-    [SerializeField] float enemyNextAttackSpeed;
+    [SerializeField] HiddenFang hiddenFangScript;   
+    
 
-    [Space]
+    /*[Space]
     [Space]
     [Header("Audio")]
     [SerializeField] AudioSource swordSource;
     [SerializeField] AudioClip[] swordHits;
     [SerializeField] float swordPitchRange;
     [SerializeField] AudioSource killSource;
-    [SerializeField] AudioClip[] killSFX;
-    [Header("UI")]
-    [SerializeField] TextMeshProUGUI whatHappened;
-    [SerializeField] ParticleSystem hitPS;
+    [SerializeField] AudioClip[] killSFX;*/
 
     /// <summary>
     /// START
@@ -58,44 +49,20 @@ public class BaseQTEScript : MonoBehaviour
     void Update()
     {
         //runs while the player is in combat and not stunned and the enemy is aware of the player
-        if (!playerStunned && inCombat)
+        if (!playerController.playerStunned && playerController.inCombat)
         {
             //gets inputs from the player
             CombatInputManager();
         }
-        else if(!playerStunned && inCombat)
-        {
-
-        }
-
-
 
         //runs while enemy is alive
-        if(enemyAlive)
+        if(enemyController.enemyAlive && enemyController.enemyInCombat)
         {
             //enemy behaviours
             EnemyBehaviour();
 
             //manages qte
             MakeQTEELements();
-        }
-
-        //TESTING STUFF
-        //Restart combat
-        if(!inCombat && Input.GetButtonDown("ButtonDown"))
-        {
-            //restarts combat
-            RestartCombat();
-        }
-        //respawn enemy
-        if(!enemyAlive)
-        {
-            if (Input.GetButtonDown("ButtonDown"))
-            {
-                //makes a new enemy on defeat
-                whatHappened.text = "";
-                StartCoroutine("RespawnEnemy");
-            }
         }
     }
 
@@ -105,18 +72,21 @@ public class BaseQTEScript : MonoBehaviour
     //controls the enemies behaviour
     private void EnemyBehaviour()
     {
+
         //while the enemy is alive
-        if (enemyAlive)
+        if (enemyController.enemyAlive && enemyController.enemyInCombat)
         {
             //refill poise
-            enemyPoise.GetComponent<Image>().fillAmount += Time.deltaTime / enemyPoiseRecoverySpeed;
+            enemyController.enemyPoise += Time.deltaTime / enemyController.enemyPoiseRecoverySpeed;
+            enemyController.enemyPoise = Mathf.Clamp01(enemyController.enemyPoise);
 
             //ready next attack
-            enemyNextAttack.GetComponent<Image>().fillAmount += Time.deltaTime / enemyNextAttackSpeed;
+            enemyController.enemyNextAttack += Time.deltaTime / enemyController.enemyNextAttackSpeed;
+            enemyController.enemyNextAttack = Mathf.Clamp01(enemyController.enemyNextAttack);
         }
 
         //if next attack reaches completion
-        if (enemyNextAttack.GetComponent<Image>().fillAmount == 1)
+        if (enemyController.enemyNextAttack == 1)
         {
             //kill player
             KillPlayer();
@@ -129,6 +99,7 @@ public class BaseQTEScript : MonoBehaviour
         //if there is no current element
         if (currentQTEElement == null && !isHiddenFangActive)
         {
+            Debug.Log("TEST");
             //instantiate
             currentQTEElement = Instantiate(QTEElements[Random.Range(0, QTEElements.Length)], currentQTEBackground.transform);
         }
@@ -155,15 +126,14 @@ public class BaseQTEScript : MonoBehaviour
         //CORRECT INPUT
         if (Input.GetButtonDown(currentQTEElementValue))
         {
-            //play particle system
-            hitPS.Play();
+            StartCoroutine("CorrectInputFeedback");
 
-            //play metal SFX
+            /*//play metal SFX
             swordSource.pitch = 1;
             swordSource.clip = swordHits[Random.Range(0, swordHits.Length)];
             float pitchRandom = Random.Range(-swordPitchRange, swordPitchRange);
             swordSource.pitch += pitchRandom;
-            swordSource.Play();
+            swordSource.Play();*/
 
             //destroy current QTE Element and reset value
             DestroyCurrentQTEElement();
@@ -171,24 +141,24 @@ public class BaseQTEScript : MonoBehaviour
             //NORMAL BENHAVIOUR
             if (!isHiddenFangActive)
             {
-                //DAMAGE
-                //if damage is greater than the amount of poise enemy has left
-                if (enemyPoise.GetComponent<Image>().fillAmount < damage)
+                //playerController.damage
+                //if playerController.damage is greater than the amount of poise enemy has left
+                if (enemyController.enemyPoise < playerController.damage)
                 {
                     //kill enemy
                     KillEnemy();
                 }
                 else
                 {
-                    //do damage
-                    enemyPoise.GetComponent<Image>().fillAmount -= damage;
-                    enemyNextAttack.GetComponent<Image>().fillAmount = 0;
+                    //do playerController.damage
+                    enemyController.enemyPoise -= playerController.damage;
+                    enemyController.enemyNextAttack = 0;
                 }
             }
             //HIDDEN FANG BEHAVIOUR
             else
             {
-                if(hiddenFangIndex == hiddenFangScript.hiddenFangs.Length && enemyNextAttack.GetComponent<Image>().fillAmount > 0)
+                if(hiddenFangIndex == hiddenFangScript.hiddenFangs.Length && enemyController.enemyNextAttack > 0)
                 {
                     hiddenFangIndex = 0;
                     isHiddenFangActive = false;
@@ -221,11 +191,13 @@ public class BaseQTEScript : MonoBehaviour
         //hidden fang
         if(Input.GetButtonDown("LeftStickDown"))
         {
+            StartCoroutine("CorrectInputFeedback");
+
             //destroy current QTEElement
             DestroyCurrentQTEElement();
 
             //reset enemy next attack buffer
-            enemyNextAttack.GetComponent<Image>().fillAmount = 0;
+            enemyController.enemyNextAttack = 0;
 
             //set hidden fang variables
             isHiddenFangActive = true;
@@ -243,16 +215,14 @@ public class BaseQTEScript : MonoBehaviour
     //stuns the player if they press the wrong input
     public IEnumerator WrongInput()
     {
-        enemyPoise.GetComponent<Image>().fillAmount = 1;
+        enemyController.enemyPoise = 1;
         currentQTEBackground.GetComponent<Image>().color = Color.red;
-        whatHappened.text = "oops wrong input";
-        playerStunned = true;
+        playerController.playerStunned = true;
 
         yield return new WaitForSeconds(.5f);
 
         currentQTEBackground.GetComponent<Image>().color = Color.black;
-        whatHappened.text = "";
-        playerStunned = false;
+        playerController.playerStunned = false;
     }
 
     /// <summary>
@@ -267,54 +237,35 @@ public class BaseQTEScript : MonoBehaviour
 
     //KILLS THE ENEMY
     private void KillEnemy()
-    {
-        //TESTING-TO-REMOVE
-        whatHappened.text = "Enemy killed, press A to restart";
-        
+    {        
         DestroyCurrentQTEElement();
 
-        enemyAlive = false;
-        enemyPoise.GetComponent<Image>().fillAmount = 0;
-        enemyNextAttack.GetComponent<Image>().fillAmount = 0;
-
-        killSource.clip = killSFX[0];
-        killSource.Play();
+        enemyController.enemyAlive = false;
+        enemyController.enemyPoise = 0;
+        enemyController.enemyNextAttack = 0;
     }
 
     //KILLS THE PLAYER
     private void KillPlayer()
     {
-        //TESTING-TO-REMOVE
-        whatHappened.text = "u ded lol, press A to restart";
-
         DestroyCurrentQTEElement();
-        inCombat = false;
+
+        Debug.Log("in combat = false 1");
+        playerController.inCombat = false;
         currentQTEBackground.GetComponent<Image>().color = Color.black;
     }
 
     //STARTS COMBAT
     public void StartCombat()
     {
-        inCombat = true;
+        playerController.inCombat = true;
     }
 
-    //resets variables
-    private void RestartCombat()
+    //player feedback correct input
+    IEnumerator CorrectInputFeedback()
     {
-        inCombat = true;
-        enemyAlive = true;
-        enemyPoise.GetComponent<Image>().fillAmount = 1;
-        enemyNextAttack.GetComponent<Image>().fillAmount = 0;
-        whatHappened.text = "";
-    }
-
-    //RESPAWNS ENEMY 
-    public IEnumerator RespawnEnemy()
-    {
-        yield return new WaitForSeconds(1f);
-        enemyAlive = true;
-        inCombat = true;
-        enemyPoise.GetComponent<Image>().fillAmount = 1;
-        enemyNextAttack.GetComponent<Image>().fillAmount = 0;
+        currentQTEBackground.GetComponent<Image>().color = Color.green;
+        yield return new WaitForSeconds(0.1f);
+        currentQTEBackground.GetComponent<Image>().color = Color.black;
     }
 }

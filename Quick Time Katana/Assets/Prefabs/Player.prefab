@@ -207,7 +207,7 @@ GameObject:
   - component: {fileID: 1852044690}
   m_Layer: 8
   m_Name: Katana
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -469,6 +469,8 @@ GameObject:
   - component: {fileID: 1838162597}
   - component: {fileID: 1838162601}
   - component: {fileID: 8483586790030080982}
+  - component: {fileID: 1838162602}
+  - component: {fileID: 1838162603}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -504,8 +506,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35cad7be161368f44bef09a8cad5c9ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  body: {fileID: 2595157478856661598}
-  head: {fileID: 0}
+  playerMeshes: {fileID: 2595157478856661598}
+  torsoe: {fileID: 5690664233181461959}
+  head: {fileID: 6017735100830055825}
   katana: {fileID: 4582694084314399738}
   freeCamera: {fileID: 0}
   resetCam: 0
@@ -517,6 +520,7 @@ MonoBehaviour:
   lockOnDistance: 0
   lockOnOffset: 5
   combatCamera: {fileID: 0}
+  combatCameraRotationSpeed: 10
   playerMovementActive: 1
   characterController: {fileID: 0}
   leftStickXAxis: 0
@@ -526,7 +530,9 @@ MonoBehaviour:
   ySpeed: 0
   cameraTransform: {fileID: 0}
   inCombat: 0
+  engagedEnemy: {fileID: 0}
   enemies: []
+  engagedEnemyScreenSpacePos: {x: 0, y: 0}
 --- !u!95 &1838162601
 Animator:
   serializedVersion: 4
@@ -565,6 +571,60 @@ CharacterController:
   m_SkinWidth: 0.0001
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1.35, z: 0}
+--- !u!114 &1838162602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4247973966161803232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abc8922d0126251458bdc3a713c2afda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  module0:
+  - {fileID: 761525664777241719, guid: a515f44caa067ee48b31bf45585ce001, type: 3}
+  module1:
+  - {fileID: 2420522411590513895, guid: d6303a70ff968cd4aa0d814efd21c7eb, type: 3}
+  module2:
+  - {fileID: 8777673355268851964, guid: e7a8926968aa6fa46a0412fb3ee3650c, type: 3}
+  module3:
+  - {fileID: 8455132257568562947, guid: 78f30667d3620e747b76e8a84d8348cb, type: 3}
+--- !u!114 &1838162603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4247973966161803232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce1bab50615398c419656447fb2e4275, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  QTEElements:
+  - {fileID: 761525664777241719, guid: a515f44caa067ee48b31bf45585ce001, type: 3}
+  - {fileID: 2420522411590513895, guid: d6303a70ff968cd4aa0d814efd21c7eb, type: 3}
+  - {fileID: 8455132257568562947, guid: 78f30667d3620e747b76e8a84d8348cb, type: 3}
+  - {fileID: 8777673355268851964, guid: e7a8926968aa6fa46a0412fb3ee3650c, type: 3}
+  - {fileID: 7707289524978108727, guid: 7aae3a4415b1a4b4d89eb0a78cbbb728, type: 3}
+  - {fileID: 7707289524978108727, guid: deda65a2ffa8377408f4dafb1b40eb1e, type: 3}
+  currentQTEBackground: {fileID: 0}
+  currentQTEElement: {fileID: 0}
+  currentQTEElementValue: 
+  inCombat: 0
+  playerStunned: 0
+  damage: 0.3
+  isHiddenFangActive: 0
+  hiddenFangIndex: 0
+  hiddenFangScript: {fileID: 1838162602}
+  enemyAlive: 1
+  enemyAwareOfPlayer: 1
+  enemyPoise: 0
+  enemyPoiseRecoverySpeed: 10
+  enemyNextAttack: 0
+  enemyNextAttackSpeed: 10
 --- !u!1 &4582694084314399738
 GameObject:
   m_ObjectHideFlags: 0

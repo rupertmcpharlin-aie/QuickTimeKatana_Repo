@@ -56,11 +56,9 @@ public class FieldOfView : MonoBehaviour
         if (rangeChecks.Length != 0)
         {
             Transform target = rangeChecks[0].transform;
-            Debug.Log(target.transform);
 
             Vector3 directionToTarget = (target.position - transform.position).normalized;
             float angleToTarget = Vector3.Angle(transform.forward, directionToTarget);
-            Debug.Log(angleToTarget);
 
             //if player is in range of circle && inbetween angle
             if (angleToTarget < FOVangle / 2)
@@ -70,7 +68,7 @@ public class FieldOfView : MonoBehaviour
                 //if player can be seen directly by enemy
                 if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstructionMask))
                 {
-                    enemyController.awareOfPlayer = true;
+                    enemyController.enemyAwareOfPlayer = true;
 
                     if(distanceToTarget <= combatDistance)
                     {

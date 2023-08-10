@@ -14,8 +14,16 @@ public class EnemyController : MonoBehaviour
     //[SerializeField] Animator enemyAnimator;
 
     [Header("Combat Variables")]
-    [SerializeField] public bool isAlive = true;
-    [SerializeField] public bool inCombat;    
+    [SerializeField] public bool enemyAlive = true;
+    [SerializeField] public bool enemyInCombat;
+    [Space]
+    [Range(0, 1)]
+    [SerializeField] public float enemyPoise;
+    [SerializeField] public float enemyPoiseRecoverySpeed;
+    [Space]
+    [Range(0, 1)]
+    [SerializeField] public float enemyNextAttack;
+    [SerializeField] public float enemyNextAttackSpeed;
 
     [Space]
     [Header("Patrol Variables")]
@@ -26,7 +34,7 @@ public class EnemyController : MonoBehaviour
 
     [Space]
     [Header("Aware of player variables")]
-    [SerializeField] public bool awareOfPlayer;
+    [SerializeField] public bool enemyAwareOfPlayer;
     [SerializeField] public float noticePlayerWaitTime;
     [SerializeField] public float chaseSpeed;
     [SerializeField] public float facePlayerRotationSpeed;
@@ -45,17 +53,17 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(inCombat)
+        if(enemyInCombat)
         {
             EnemyCombat();
         }
 
-        if(awareOfPlayer)
+        if(enemyAwareOfPlayer)
         {
             AwareOfPlayerBehaviour();
         }
 
-        if (isAlive)
+        if (enemyAlive)
         {
             cameraFocus.transform.position = new Vector3((transform.position.x + playerController.transform.position.x) / 2,
                                                          (transform.position.y + playerController.transform.position.y) / 2,
@@ -85,11 +93,12 @@ public class EnemyController : MonoBehaviour
 
     public void Engage()
     {
-        if(!playerController.inCombat)
+        if (!playerController.inCombat)
         {
+            Debug.Log("Engage!");
             playerController.inCombat = true;
             playerController.engagedEnemy = gameObject;
-            inCombat = true;
+            enemyInCombat = true;
         }
     }
 }

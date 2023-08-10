@@ -45,11 +45,15 @@ public class PlayerController : MonoBehaviour
     [Space]
     [Header("Combat Variables")]
     [SerializeField] public bool inCombat;
+    [SerializeField] public bool playerStunned;
+    [SerializeField] public float damage;
+    [Space]
     [SerializeField] public GameObject engagedEnemy;
-    [SerializeField] public GameObject[] enemies;
+    [SerializeField] public GameObject[] enemies;   
 
     [Space]
     [Header("QTE")]
+    [SerializeField] public BaseQTEScript QTEScript;
     [SerializeField] public Vector2 engagedEnemyScreenSpacePos;
 
 
