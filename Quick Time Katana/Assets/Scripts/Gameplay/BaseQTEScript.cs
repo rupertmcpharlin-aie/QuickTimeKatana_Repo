@@ -56,7 +56,7 @@ public class BaseQTEScript : MonoBehaviour
         }
 
         //runs while enemy is alive
-        if(enemyController.enemyAlive && enemyController.enemyInCombat)
+        if (enemyController.enemyAlive && enemyController.enemyInCombat)
         {
             //enemy behaviours
             EnemyBehaviour();
@@ -99,7 +99,6 @@ public class BaseQTEScript : MonoBehaviour
         //if there is no current element
         if (currentQTEElement == null && !isHiddenFangActive)
         {
-            Debug.Log("TEST");
             //instantiate
             currentQTEElement = Instantiate(QTEElements[Random.Range(0, QTEElements.Length)], currentQTEBackground.transform);
         }
@@ -191,8 +190,6 @@ public class BaseQTEScript : MonoBehaviour
         //hidden fang
         if(Input.GetButtonDown("LeftStickDown"))
         {
-            StartCoroutine("CorrectInputFeedback");
-
             //destroy current QTEElement
             DestroyCurrentQTEElement();
 

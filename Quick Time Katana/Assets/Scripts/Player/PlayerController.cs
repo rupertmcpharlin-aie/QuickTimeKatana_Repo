@@ -84,26 +84,31 @@ public class PlayerController : MonoBehaviour
 
     public void Combat()
     {
+        //things to do once
+        if (combatCamera.Priority != 1  && inCombat)
+        {
+            Debug.Log("Made it into combat run once");
+
+            //transition to combat camera
+            freeCamera.Priority = 0;
+            lockOnCamera.Priority = 0;
+            combatCamera.Priority = 1;
+
+            //set background active
+            engagedEnemy.GetComponent<EnemyController>().currentQTEBackground.SetActive(true);
+        }
+
         //face enemy
         Vector3 direction = engagedEnemy.transform.position - transform.position;
         Quaternion toRotation = Quaternion.LookRotation(direction, Vector3.up);
         playerMeshes.transform.rotation = Quaternion.RotateTowards(playerMeshes.transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
 
-        //transition to combat camera
-        freeCamera.Priority = 0;
-        lockOnCamera.Priority = 0;
-        combatCamera.Priority = 1;
-
         //slowly rotate camera
         combatCamera.GetCinemachineComponent<CinemachineOrbitalTransposer>().m_XAxis.Value += combatCameraRotationSpeed * Time.deltaTime;
-
-        //set background active
-        engagedEnemy.GetComponent<EnemyController>().currentQTEBackground.SetActive(true);
 
         //set position of QTE background
         engagedEnemyScreenSpacePos = RectTransformUtility.WorldToScreenPoint(Camera.main, engagedEnemy.GetComponent<EnemyController>().torsoe.transform.position);
         engagedEnemy.GetComponent<EnemyController>().currentQTEBackground.transform.position = new Vector3(engagedEnemyScreenSpacePos.x, engagedEnemyScreenSpacePos.y, 0);
-
     }
 
     private void CameraManager()
