@@ -70,9 +70,9 @@ public class FieldOfView : MonoBehaviour
                 {
                     enemyController.enemyAwareOfPlayer = true;
 
-                    if(distanceToTarget <= combatDistance)
+                    if(distanceToTarget <= combatDistance && enemyController.enemyAlive)
                     {
-                        enemyController.Engage();
+                        enemyController.enemyInCombat = true;
                     }
                 }
             }

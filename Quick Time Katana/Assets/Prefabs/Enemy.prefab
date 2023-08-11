@@ -12,7 +12,7 @@ GameObject:
   m_Layer: 7
   m_Name: cameraFocus
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -5035,7 +5035,7 @@ GameObject:
   - component: {fileID: 3785501257191713056}
   m_Layer: 7
   m_Name: Blade
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5132,7 +5132,7 @@ GameObject:
   - component: {fileID: 7997693756038638031}
   - component: {fileID: 4961087787822434908}
   - component: {fileID: 51074939}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SlicedBodyBottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5282,7 +5282,7 @@ GameObject:
   - component: {fileID: 3605834348025470582}
   m_Layer: 7
   m_Name: Handle
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5512,7 +5512,7 @@ GameObject:
   - component: {fileID: 1941167690695241605}
   m_Layer: 7
   m_Name: Sheath
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5704,7 +5704,7 @@ GameObject:
   - component: {fileID: 3891057004904443590}
   m_Layer: 7
   m_Name: Katana
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5737,7 +5737,7 @@ GameObject:
   - component: {fileID: 4299880881013701254}
   m_Layer: 7
   m_Name: Katana
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5771,7 +5771,7 @@ GameObject:
   - component: {fileID: 2576464496299775571}
   m_Layer: 7
   m_Name: Katana & Sheath (1)
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5873,6 +5873,8 @@ MonoBehaviour:
   enemyNextAttack: 0
   enemyNextAttackSpeed: 10
   cutBodies:
+  - {fileID: 3194120793537977889}
+  - {fileID: 2584383577977328006}
   - {fileID: 622449637430551954}
   isPatrolling: 0
   patrolTransforms: []
@@ -5963,7 +5965,7 @@ GameObject:
   - component: {fileID: 7968809956100575529}
   m_Layer: 7
   m_Name: Blade
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10874,7 +10876,7 @@ GameObject:
   - component: {fileID: 8350377164736500561}
   m_Layer: 7
   m_Name: Blade
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11003,7 +11005,7 @@ GameObject:
   - component: {fileID: 1843080953141602543}
   - component: {fileID: 1513907203105902309}
   - component: {fileID: 1738232762125726920}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PS
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11170,7 +11172,7 @@ ParticleSystem:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  moveWithTransform: 0
+  moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
   randomSeed: 0
@@ -15817,7 +15819,7 @@ GameObject:
   - component: {fileID: 780650998781888246}
   m_Layer: 7
   m_Name: Katana & Sheath (1)
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15903,7 +15905,7 @@ GameObject:
   - component: {fileID: 4514272289509213873}
   m_Layer: 7
   m_Name: Head
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -16492,7 +16494,7 @@ GameObject:
   - component: {fileID: 6124643335137386868}
   m_Layer: 7
   m_Name: Katana
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -16626,7 +16628,7 @@ GameObject:
   - component: {fileID: 83478478438399592}
   m_Layer: 7
   m_Name: Face
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -16724,7 +16726,7 @@ GameObject:
   - component: {fileID: 397783979}
   - component: {fileID: 397783981}
   - component: {fileID: 397783980}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SlicedBodyTop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21620,7 +21622,7 @@ GameObject:
   - component: {fileID: 1771700960742609887}
   - component: {fileID: 8794644242709270748}
   - component: {fileID: 6457559445170426912}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PS
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26436,7 +26438,7 @@ GameObject:
   - component: {fileID: 5375774411419975043}
   m_Layer: 7
   m_Name: Handle
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -26760,7 +26762,7 @@ GameObject:
   - component: {fileID: 6940042965796724773}
   m_Layer: 7
   m_Name: Katana & Sheath (1)
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -26846,7 +26848,7 @@ GameObject:
   - component: {fileID: 1339579546075728831}
   m_Layer: 7
   m_Name: Handle
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -26944,7 +26946,7 @@ GameObject:
   - component: {fileID: 3957654989727434223}
   m_Layer: 7
   m_Name: Sheath
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -27043,7 +27045,7 @@ GameObject:
   - component: {fileID: 1177154497446293996}
   - component: {fileID: 3152545053673847054}
   - component: {fileID: 358364510701646408}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: rightside
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27162,7 +27164,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 0
   prewarm: 0
-  playOnAwake: 0
+  playOnAwake: 1
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -32068,7 +32070,7 @@ GameObject:
   - component: {fileID: 6389847902442181289}
   - component: {fileID: 8889832845171418107}
   - component: {fileID: 1119615992479172291}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -32169,7 +32171,7 @@ GameObject:
   - component: {fileID: 438851528636664622}
   - component: {fileID: 5021134919836266631}
   - component: {fileID: 7135118938559180851}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: leftside
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -32288,7 +32290,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 0
   prewarm: 0
-  playOnAwake: 0
+  playOnAwake: 1
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -37065,7 +37067,7 @@ GameObject:
   - component: {fileID: 504714224759544003}
   m_Layer: 7
   m_Name: Sheath
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

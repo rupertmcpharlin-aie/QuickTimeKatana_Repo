@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 using Image = UnityEngine.UI.Image;
@@ -10,20 +11,21 @@ public class BaseQTEScript : MonoBehaviour
 {
     [Header("Scripts")]
     [SerializeField] PlayerController playerController;
-    [SerializeField] EnemyController enemyController;
+    [SerializeField] public EnemyController enemyController;
 
     [Space]
     [Header("QTE System")]
     [SerializeField] GameObject[] QTEElements;
-    [SerializeField] GameObject currentQTEBackground;
+    [SerializeField] public GameObject currentQTEBackground;
     [SerializeField] GameObject currentQTEElement;
     [SerializeField] string currentQTEElementValue;
 
     [Space]
     [Header("Hidden fang")]
+    [SerializeField] HiddenFang hiddenFangScript;
     [SerializeField] bool isHiddenFangActive;
     [SerializeField] int hiddenFangIndex;
-    [SerializeField] HiddenFang hiddenFangScript;   
+    
     
 
     /*[Space]
@@ -72,18 +74,13 @@ public class BaseQTEScript : MonoBehaviour
     //controls the enemies behaviour
     private void EnemyBehaviour()
     {
+        //refill poise
+        enemyController.enemyPoise += Time.deltaTime / enemyController.enemyPoiseRecoverySpeed;
+        enemyController.enemyPoise = Mathf.Clamp01(enemyController.enemyPoise);
 
-        //while the enemy is alive
-        if (enemyController.enemyAlive && enemyController.enemyInCombat)
-        {
-            //refill poise
-            enemyController.enemyPoise += Time.deltaTime / enemyController.enemyPoiseRecoverySpeed;
-            enemyController.enemyPoise = Mathf.Clamp01(enemyController.enemyPoise);
-
-            //ready next attack
-            enemyController.enemyNextAttack += Time.deltaTime / enemyController.enemyNextAttackSpeed;
-            enemyController.enemyNextAttack = Mathf.Clamp01(enemyController.enemyNextAttack);
-        }
+        //ready next attack
+        enemyController.enemyNextAttack += Time.deltaTime / enemyController.enemyNextAttackSpeed;
+        enemyController.enemyNextAttack = Mathf.Clamp01(enemyController.enemyNextAttack);
 
         //if next attack reaches completion
         if (enemyController.enemyNextAttack == 1)
@@ -241,8 +238,11 @@ public class BaseQTEScript : MonoBehaviour
 
         //deactivate player variables
         enemyController.enemyAlive = false;
+        enemyController.enemyAwareOfPlayer = false;
+        enemyController.enemyInCombat = false;
         enemyController.enemyPoise = 0;
         enemyController.enemyNextAttack = 0;
+        enemyController.gameObject.GetComponent<NavMeshAgent>().speed = 0;
 
         //enable cut body
         enemyController.enemyMeshes.SetActive(false);

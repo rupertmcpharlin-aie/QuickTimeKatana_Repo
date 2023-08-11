@@ -115,18 +115,9 @@ public class PlayerController : MonoBehaviour
         //freecam -> lock on cam
         if(Input.GetButtonDown("RightStickDown") && freeCamera.Priority == 1 && enemies.Length > 0)
         {
-            //find closest enemy;
-            float minDistance = 0;
-            foreach(GameObject enemy in enemies)
-            {
-                float tempDistance = Vector3.Distance(transform.position, enemy.transform.position);
+            
 
-                if(tempDistance > minDistance)
-                {
-                    minDistance = tempDistance;
-                    lockedOnEnemy = enemy;
-                }
-            }
+            lockedOnEnemy = FindClosestEnemy();
 
             //set cameras;
             freeCamera.Priority = 0;
@@ -158,13 +149,26 @@ public class PlayerController : MonoBehaviour
 
         if(combatCamera.Priority == 1 && !engagedEnemy.GetComponent<EnemyController>().enemyAlive)
         {
-            if(FindRemainingAliveEnemies().Count < 0)
+            if(FindRemainingAliveEnemies().Count == 0)
             {
+                inCombat = false;
+
                 //transition to free cam
                 combatCamera.Priority = 0;
                 freeCamera.Priority = 1;
+            }
+            else
+            {
+                Debug.Log("Move onto next enemy");
+                engagedEnemy = FindClosestEnemy();
 
-                inCombat = false;
+                StartCombat(engagedEnemy);
+                engagedEnemy.GetComponent<EnemyController>().enemyInCombat = true;
+
+                //transition to new combat camera position
+                combatCamera.Follow = engagedEnemy.GetComponent<EnemyController>().cameraFocus.transform;
+                combatCamera.LookAt = engagedEnemy.GetComponent<EnemyController>().cameraFocus.transform;
+                combatCamera.GetCinemachineComponent<CinemachineOrbitalTransposer>().m_XAxis.Value = 0;
             }
         }
     }
@@ -183,7 +187,6 @@ public class PlayerController : MonoBehaviour
 
         //gravity stuff
         ySpeed += Physics.gravity.y * Time.deltaTime;
-
 
         //free camera
         if (freeCamera.Priority == 1)
@@ -228,6 +231,28 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void StartCombat(GameObject nearestEnemy)
+    {
+        EnemyController nearestEnemyController = nearestEnemy.GetComponent<EnemyController>();
+
+        //player
+        inCombat = true;
+
+        //enemy
+        engagedEnemy = nearestEnemy;
+        nearestEnemyController.enemyInCombat = true;
+        nearestEnemyController.currentQTEBackground.SetActive(true);
+
+        //combat camera
+        combatCamera.Follow = nearestEnemyController.cameraFocus.transform;
+        combatCamera.LookAt = nearestEnemyController.cameraFocus.transform;
+
+        //qte
+        QTEScript.currentQTEBackground = nearestEnemyController.currentQTEBackground;
+        QTEScript.enemyController = nearestEnemyController;
+    }
+
+
     public List<GameObject> FindRemainingAliveEnemies()
     {
         List<GameObject> tempList = new List<GameObject>();
@@ -237,13 +262,39 @@ public class PlayerController : MonoBehaviour
         foreach (GameObject enemy in enemies)
         {
             EnemyController enemyController = enemy.GetComponent<EnemyController>();
-            if (enemyController.enemyAlive)
+            if (enemyController.enemyAlive && enemyController.enemyInCombat)
             {
                 tempList.Add(enemy);
             }
         }
 
         return tempList;
+    }
+
+    public GameObject FindClosestEnemy()
+    {
+        //find closest enemy;
+        float minDistance = 0;
+
+        foreach (GameObject enemy in enemies)
+        {
+            float tempDistance = Vector3.Distance(transform.position, enemy.transform.position);
+
+            if (tempDistance > minDistance && enemy.GetComponent<EnemyController>().enemyAlive && enemy.GetComponent<EnemyController>().enemyInCombat)
+            {
+                minDistance = tempDistance;
+            }
+        }
+
+        foreach(GameObject enemy in enemies)
+        {
+            if (minDistance == Vector3.Distance(transform.position, enemy.transform.position) && enemy.GetComponent<EnemyController>().enemyAlive && enemy.GetComponent<EnemyController>().enemyInCombat)
+            {
+                return enemy;
+            }
+        }
+
+        return null;
     }
 }
 
