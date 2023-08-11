@@ -13,12 +13,9 @@ public class PlayerController : MonoBehaviour
     [Space]
     [Header("Camera")]
     [SerializeField] public CinemachineVirtualCamera freeCamera;
-    [SerializeField] public float rightStickYAxis;
-    [SerializeField] public bool resetFreeCam;
-    [SerializeField] public float freeCamDefaultHeight;
-    [SerializeField] public float freeCamVerticalMoveSpeed;
-    [SerializeField] public float freeCamYMin;
-    [SerializeField] public float freeCamYMax;
+    [SerializeField] public bool resetCam;
+    [SerializeField] public float camYMin;
+    [SerializeField] public float camYMax;
     [Space]
     [SerializeField] public CinemachineVirtualCamera lockOnCamera;
     [SerializeField] public GameObject lockedOnEnemy;
@@ -110,27 +107,16 @@ public class PlayerController : MonoBehaviour
         //set position of QTE background
         engagedEnemyScreenSpacePos = RectTransformUtility.WorldToScreenPoint(Camera.main, engagedEnemy.GetComponent<EnemyController>().torsoe.transform.position);
         engagedEnemy.GetComponent<EnemyController>().currentQTEBackground.transform.position = new Vector3(engagedEnemyScreenSpacePos.x, engagedEnemyScreenSpacePos.y, 0);
-    }
+    }  
 
 
     private void CameraManager()
     {
-        //freeCamera cam vertical
-        if (freeCamera.Priority == 1)
-        {
-            rightStickYAxis = Input.GetAxis("RightStickYAxis");
-            //freeCamera
-            freeCamera.GetCinemachineComponent<CinemachineOrbitalTransposer>().m_FollowOffset.y += rightStickYAxis * freeCamVerticalMoveSpeed * Time.deltaTime;
-            freeCamera.GetCinemachineComponent<CinemachineOrbitalTransposer>().m_FollowOffset.y = Mathf.Clamp(freeCamera.GetCinemachineComponent<CinemachineOrbitalTransposer>().m_FollowOffset.y, freeCamYMin, freeCamYMax);
-        }
-
-
-
-
-        //transitions
         //freecam -> lock on cam
         if(Input.GetButtonDown("RightStickDown") && freeCamera.Priority == 1 && enemies.Length > 0)
-        { 
+        {
+            
+
             lockedOnEnemy = FindClosestEnemy();
 
             //set cameras;

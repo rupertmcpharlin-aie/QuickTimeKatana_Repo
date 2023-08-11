@@ -58,16 +58,13 @@ public class BaseQTEScript : MonoBehaviour
         }
 
         //runs while enemy is alive
-        if (enemyController != null)
+        if (enemyController.enemyAlive && enemyController.enemyInCombat)
         {
-            if (enemyController.enemyAlive && enemyController.enemyInCombat)
-            {
-                //enemy behaviours
-                EnemyBehaviour();
+            //enemy behaviours
+            EnemyBehaviour();
 
-                //manages qte
-                MakeQTEELements();
-            }
+            //manages qte
+            MakeQTEELements();
         }
     }
 
