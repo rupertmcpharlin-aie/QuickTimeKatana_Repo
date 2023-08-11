@@ -87,8 +87,6 @@ public class PlayerController : MonoBehaviour
         //things to do once
         if (combatCamera.Priority != 1  && inCombat)
         {
-            Debug.Log("Made it into combat run once");
-
             //transition to combat camera
             freeCamera.Priority = 0;
             lockOnCamera.Priority = 0;
@@ -109,7 +107,8 @@ public class PlayerController : MonoBehaviour
         //set position of QTE background
         engagedEnemyScreenSpacePos = RectTransformUtility.WorldToScreenPoint(Camera.main, engagedEnemy.GetComponent<EnemyController>().torsoe.transform.position);
         engagedEnemy.GetComponent<EnemyController>().currentQTEBackground.transform.position = new Vector3(engagedEnemyScreenSpacePos.x, engagedEnemyScreenSpacePos.y, 0);
-    }
+    }  
+
 
     private void CameraManager()
     {
@@ -121,6 +120,7 @@ public class PlayerController : MonoBehaviour
             foreach(GameObject enemy in enemies)
             {
                 float tempDistance = Vector3.Distance(transform.position, enemy.transform.position);
+
                 if(tempDistance > minDistance)
                 {
                     minDistance = tempDistance;
@@ -154,6 +154,18 @@ public class PlayerController : MonoBehaviour
             //rightStickXAxis
             rightStickXAxis = Input.GetAxis("test");
             lockOnCamera.GetCinemachineComponent<Cinemachine3rdPersonFollow>().ShoulderOffset.x = rightStickXAxis;
+        }
+
+        if(combatCamera.Priority == 1 && !engagedEnemy.GetComponent<EnemyController>().enemyAlive)
+        {
+            if(FindRemainingAliveEnemies().Count < 0)
+            {
+                //transition to free cam
+                combatCamera.Priority = 0;
+                freeCamera.Priority = 1;
+
+                inCombat = false;
+            }
         }
     }
 
@@ -214,6 +226,24 @@ public class PlayerController : MonoBehaviour
             //move character
             characterController.Move(velocity * Time.deltaTime);
         }
+    }
+
+    public List<GameObject> FindRemainingAliveEnemies()
+    {
+        List<GameObject> tempList = new List<GameObject>();
+
+        //check if there is anymore enemies
+        enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        foreach (GameObject enemy in enemies)
+        {
+            EnemyController enemyController = enemy.GetComponent<EnemyController>();
+            if (enemyController.enemyAlive)
+            {
+                tempList.Add(enemy);
+            }
+        }
+
+        return tempList;
     }
 }
 

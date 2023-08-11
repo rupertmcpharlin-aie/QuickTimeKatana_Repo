@@ -235,15 +235,18 @@ public class BaseQTEScript : MonoBehaviour
     //KILLS THE ENEMY
     private void KillEnemy()
     {        
+        //remove qte stuff
         DestroyCurrentQTEElement();
         currentQTEBackground.SetActive(false);
 
+        //deactivate player variables
         enemyController.enemyAlive = false;
         enemyController.enemyPoise = 0;
         enemyController.enemyNextAttack = 0;
 
+        //enable cut body
         enemyController.enemyMeshes.SetActive(false);
-        enemyController.cutBody.SetActive(true);
+        enemyController.cutBodies[Random.Range(0, enemyController.cutBodies.Length)].SetActive(true);
     }
 
     //KILLS THE PLAYER

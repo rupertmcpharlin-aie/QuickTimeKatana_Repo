@@ -26,7 +26,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] public float enemyNextAttack;
     [SerializeField] public float enemyNextAttackSpeed;
     [Space]
-    [SerializeField] public GameObject cutBody;
+    [SerializeField] public GameObject[] cutBodies;
 
     [Space]
     [Header("Patrol Variables")]
