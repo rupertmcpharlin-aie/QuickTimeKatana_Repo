@@ -84,6 +84,8 @@ public class FieldOfView : MonoBehaviour
             }
 
             if(enemyController.playerController.playerState != PlayerController.PlayerState.crouched &&
+                enemyController.playerController.playerState != PlayerController.PlayerState.stealthKill
+                &&
                 enemyController.enemyState != EnemyController.EnemyState.inCombat &&
                 enemyController.enemyState != EnemyController.EnemyState.dead)
             {

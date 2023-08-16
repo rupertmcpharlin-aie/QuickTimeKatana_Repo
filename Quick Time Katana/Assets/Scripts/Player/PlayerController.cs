@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] public GameObject bodyStanding;
     [SerializeField] public GameObject head;
     [SerializeField] public GameObject katana;
+    [Space]
+    [SerializeField] public BaseQTEScript baseQTEScript;
 
     [Space]
     [Header("Camera")]
@@ -58,8 +60,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] public float damage;
     [Space]
     [SerializeField] public GameObject engagedEnemy;
+    [SerializeField] public EnemyController engagedEnemyController;
     [SerializeField] public GameObject[] enemies;
     [Space]
+    [SerializeField] public bool stealthTakeDownActive;
     [SerializeField] public float stealthEngageDistance;
     [SerializeField] public int stealthHitsIndex;
 
@@ -72,6 +76,7 @@ public class PlayerController : MonoBehaviour
     {
         exploring,
         crouched,
+        stealthKill,
         combat,
         dead
     }
@@ -116,7 +121,7 @@ public class PlayerController : MonoBehaviour
     public void Combat()
     {
         //things to do once
-        if (combatCamera.Priority != 1  && playerState == PlayerState.combat)
+        if (combatCamera.Priority != 1)
         {
             //transition to combat camera
             freeCamera.Priority = 0;
@@ -192,8 +197,14 @@ public class PlayerController : MonoBehaviour
             //if there are no more enemies
             if(FindRemainingAliveEnemies().Count == 0)
             {
-                playerState = PlayerState.exploring;
-
+                if (playerState != PlayerState.stealthKill)
+                {
+                    playerState = PlayerState.exploring;
+                }
+                else
+                {
+                    playerState = PlayerState.crouched;
+                }
                 //transition to free cam
                 combatCamera.Priority = 0;
                 freeCamera.Priority = 1;
@@ -273,25 +284,63 @@ public class PlayerController : MonoBehaviour
                 playerState = PlayerState.crouched;
                 movementSpeed = crouchedMovementSpeed;
             }
-            else if(playerState == PlayerState.crouched)
+            else if(playerState == PlayerState.crouched || playerState == PlayerState.stealthKill)
             {
                 animator.SetTrigger("StandTrigger");
                 playerState = PlayerState.exploring;
                 movementSpeed = standingMovementSpeed;
             }
+
         }
     }
 
     public void Stealth()
     {
-        foreach(GameObject enemy in FindRemainingAliveEnemies())
+        if (!stealthTakeDownActive)
         {
-            if(Vector3.Distance(transform.position, enemy.transform.position) < stealthEngageDistance &&
-                enemy.GetComponent<EnemyController>().enemyState == EnemyController.EnemyState.alive)
+            foreach (GameObject enemy in FindRemainingAliveEnemies())
             {
-                
+                if (Vector3.Distance(transform.position, enemy.transform.position) < stealthEngageDistance &&
+                    enemy.GetComponent<EnemyController>().enemyState == EnemyController.EnemyState.alive)
+                {
+                    Debug.Log("Start Stealth TakeDown");
+                    playerState = PlayerState.stealthKill;
+
+                    engagedEnemy = enemy;
+                    engagedEnemyController = engagedEnemy.GetComponent<EnemyController>();
+                    engagedEnemyController.currentQTEBackground.SetActive(true);
+
+                    combatCamera.Follow = engagedEnemyController.cameraFocus.transform;
+                    combatCamera.LookAt = engagedEnemyController.cameraFocus.transform;
+
+                    combatCamera.Priority = 1;
+                    freeCamera.Priority = 0;
+                    lockOnCamera.Priority = 0;
+
+                    baseQTEScript.enemyController = engagedEnemyController;
+                    baseQTEScript.currentQTEBackground = engagedEnemyController.currentQTEBackground;
+                }
             }
         }
+
+        if(playerState == PlayerState.stealthKill)
+        {
+            //face enemy
+            Vector3 direction = engagedEnemy.transform.position - transform.position;
+            Quaternion toRotation = Quaternion.LookRotation(direction, Vector3.up);
+            playerMeshes.transform.rotation = Quaternion.RotateTowards(playerMeshes.transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
+
+            //slowly rotate camera
+            combatCamera.GetCinemachineComponent<CinemachineOrbitalTransposer>().m_XAxis.Value += combatCameraRotationSpeed * Time.deltaTime;
+
+            //set position of QTE background
+            engagedEnemyScreenSpacePos = RectTransformUtility.WorldToScreenPoint(Camera.main, engagedEnemy.GetComponent<EnemyController>().torsoe.transform.position);
+            engagedEnemy.GetComponent<EnemyController>().currentQTEBackground.transform.position = new Vector3(engagedEnemyScreenSpacePos.x, engagedEnemyScreenSpacePos.y, 0);
+        }
+
+
+
+
     }
 
     public void StartCombat(GameObject nearestEnemy)

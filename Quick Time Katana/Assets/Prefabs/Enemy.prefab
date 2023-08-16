@@ -5860,14 +5860,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b39b994caf06ab48a1e54151cea7d33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyState: 0
   enemyMeshes: {fileID: 6668319621188778846}
   torsoe: {fileID: 4960871803947187232}
   head: {fileID: 483357364060209909}
-  playerController: {fileID: 0}
   cameraFocus: {fileID: 154102590}
   agent: {fileID: 6032368219634903470}
-  enemyAlive: 1
-  enemyInCombat: 0
+  playerController: {fileID: 0}
   enemyPoise: 1
   enemyPoiseRecoverySpeed: 10
   enemyNextAttack: 0
@@ -5879,7 +5878,6 @@ MonoBehaviour:
   isPatrolling: 0
   patrolTransforms: []
   patrolSpeed: 0
-  enemyAwareOfPlayer: 0
   noticePlayerWaitTime: 0
   chaseSpeed: 2.5
   facePlayerRotationSpeed: 400
@@ -16904,7 +16902,7 @@ ParticleSystem:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  moveWithTransform: 0
+  moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
   randomSeed: 0
@@ -21789,7 +21787,7 @@ ParticleSystem:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  moveWithTransform: 0
+  moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
   randomSeed: 0

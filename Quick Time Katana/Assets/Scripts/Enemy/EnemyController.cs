@@ -76,13 +76,16 @@ public class EnemyController : MonoBehaviour
             AwareOfPlayerBehaviour();
         }
 
-        if (enemyState == EnemyState.inCombat)
+        if (enemyState == EnemyState.inCombat || playerController.playerState == PlayerState.stealthKill)
         {
             //position the camera focus
             cameraFocus.transform.position = new Vector3((transform.position.x + playerController.transform.position.x) / 2,
                                                          (transform.position.y + playerController.transform.position.y) / 2,
                                                          (transform.position.z + playerController.transform.position.z) / 2);
-            
+        }
+
+        if (enemyState == EnemyState.inCombat)
+        {
             //engage the player
             Engage();
         }
@@ -110,6 +113,17 @@ public class EnemyController : MonoBehaviour
 
     public void Engage()
     {
+        //face player look at player
+        Vector3 targetDirection = playerController.head.transform.position - head.transform.position;
+        Quaternion toRotationHead = Quaternion.LookRotation(targetDirection, Vector3.up);
+        head.transform.rotation = Quaternion.RotateTowards(head.transform.rotation, toRotationHead, facePlayerRotationSpeed * Time.deltaTime);
+
+        //body turn towards player
+        targetDirection = playerController.torsoe.transform.position - torsoe.transform.position;
+        Quaternion toRotationTorsoe = Quaternion.LookRotation(targetDirection, Vector3.up);
+        toRotationTorsoe.eulerAngles = new Vector3(0, toRotationTorsoe.eulerAngles.y, 0);
+        torsoe.transform.rotation = Quaternion.RotateTowards(torsoe.transform.rotation, toRotationTorsoe, facePlayerRotationSpeed * Time.deltaTime);
+
         if (playerController.playerState != PlayerState.combat)
         {
             playerController.StartCombat(gameObject);

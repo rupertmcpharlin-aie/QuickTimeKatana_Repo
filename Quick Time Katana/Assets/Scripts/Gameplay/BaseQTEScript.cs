@@ -26,6 +26,7 @@ public class BaseQTEScript : MonoBehaviour
     [SerializeField] HiddenFang hiddenFangScript;
     [SerializeField] bool isHiddenFangActive;
     [SerializeField] int hiddenFangIndex;
+
     
     
 
@@ -58,6 +59,12 @@ public class BaseQTEScript : MonoBehaviour
             CombatInputManager();
         }
 
+        if(playerController.playerState == PlayerState.stealthKill)
+        {
+            MakeCombatQTEELements();
+            StealthInputManager();
+        }
+
         //runs while enemy is alive
         if (enemyController != null)
         {
@@ -67,9 +74,68 @@ public class BaseQTEScript : MonoBehaviour
                 EnemyBehaviour();
 
                 //manages qte
-                MakeQTEELements();
+                MakeCombatQTEELements();
             }
         }
+
+
+    }
+
+    private void StealthInputManager()
+    {
+        ///PSYEUDO CODE
+        /*  if correct input
+                increase index
+            
+            if at max index
+                kill opponent
+
+            if incorrect input
+                enter combat
+        */
+
+        if(Input.GetButtonDown(currentQTEElementValue))
+        {
+            playerController.stealthHitsIndex++;
+            StartCoroutine("CorrectInputFeedback");
+            DestroyCurrentQTEElement();
+        }
+
+        if(playerController.stealthHitsIndex == 4)
+        {
+            playerController.stealthHitsIndex = 0;
+            KillEnemy();
+        }
+
+        //INCORRECT INPUT
+        foreach (GameObject QTEElement in QTEElements)
+        {
+            string tempString = QTEElement.GetComponent<QTEElementScript>().QTEElementValue;
+            //if there is a current value
+            if (currentQTEElementValue != null)
+            {
+                //buttons
+                if (tempString != currentQTEElementValue)
+                {
+                    if (Input.GetButtonDown(tempString))
+                    {
+                        //reset stealth hits
+                        playerController.stealthHitsIndex = 0;
+
+                        //destroy current element
+                        DestroyCurrentQTEElement();
+
+                        //start combat
+                        playerController.playerState = PlayerState.combat;
+                        enemyController.enemyState = EnemyController.EnemyState.inCombat;
+
+                        //play player combat animation
+                        playerController.animator.SetTrigger("StandTrigger");
+                    }
+                }
+            }
+        }
+
     }
 
     /// <summary>
@@ -95,7 +161,7 @@ public class BaseQTEScript : MonoBehaviour
     }
 
     //MAKE QTE Elements
-    private void MakeQTEELements()
+    private void MakeCombatQTEELements()
     {
         //if there is no current element
         if (currentQTEElement == null && !isHiddenFangActive)
