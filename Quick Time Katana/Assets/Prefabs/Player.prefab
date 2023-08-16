@@ -537,10 +537,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35cad7be161368f44bef09a8cad5c9ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerState: 0
   playerMeshes: {fileID: 2595157478856661598}
-  torsoe: {fileID: 5690664233181461959}
+  torsoe: {fileID: 7839910612082734952}
+  bodyStanding: {fileID: 5690664233181461959}
   head: {fileID: 6017735100830055825}
   katana: {fileID: 4582694084314399738}
+  cameraState: 0
   freeCamera: {fileID: 0}
   resetCam: 0
   camYMin: 0
@@ -553,19 +556,17 @@ MonoBehaviour:
   combatCamera: {fileID: 0}
   combatCameraRotationSpeed: 10
   playerMovementActive: 1
-  characterController: {fileID: 0}
+  characterController: {fileID: 8483586790030080982}
   leftStickXAxis: 0
   leftStickYAxis: 0
   movementSpeed: 5
   rotationSpeed: 360
   ySpeed: 0
   cameraTransform: {fileID: 0}
-  inCombat: 0
   playerStunned: 0
   damage: 0.4
   engagedEnemy: {fileID: 0}
-  enemies:
-  - {fileID: 0}
+  enemies: []
   QTEScript: {fileID: 1838162603}
   engagedEnemyScreenSpacePos: {x: 0, y: 0}
 --- !u!95 &1838162601
@@ -648,9 +649,9 @@ MonoBehaviour:
   currentQTEBackground: {fileID: 0}
   currentQTEElement: {fileID: 0}
   currentQTEElementValue: 
+  hiddenFangScript: {fileID: 1838162602}
   isHiddenFangActive: 0
   hiddenFangIndex: 0
-  hiddenFangScript: {fileID: 1838162602}
 --- !u!1 &4582694084314399738
 GameObject:
   m_ObjectHideFlags: 0

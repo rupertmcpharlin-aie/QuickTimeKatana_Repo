@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
+using static PlayerController;
 using Image = UnityEngine.UI.Image;
 
 public class BaseQTEScript : MonoBehaviour
@@ -51,20 +52,23 @@ public class BaseQTEScript : MonoBehaviour
     void Update()
     {
         //runs while the player is in combat and not stunned and the enemy is aware of the player
-        if (!playerController.playerStunned && playerController.inCombat)
+        if (!playerController.playerStunned && playerController.playerState == PlayerState.combat)
         {
             //gets inputs from the player
             CombatInputManager();
         }
 
         //runs while enemy is alive
-        if (enemyController.enemyAlive && enemyController.enemyInCombat)
+        if (enemyController != null)
         {
-            //enemy behaviours
-            EnemyBehaviour();
+            if (enemyController.enemyAlive && enemyController.enemyInCombat)
+            {
+                //enemy behaviours
+                EnemyBehaviour();
 
-            //manages qte
-            MakeQTEELements();
+                //manages qte
+                MakeQTEELements();
+            }
         }
     }
 
@@ -253,7 +257,7 @@ public class BaseQTEScript : MonoBehaviour
     private void KillPlayer()
     {
         DestroyCurrentQTEElement();
-        playerController.inCombat = false;
+        playerController.playerState = PlayerState.dead;
         currentQTEBackground.SetActive(false);
 
         //run death animation
@@ -262,7 +266,7 @@ public class BaseQTEScript : MonoBehaviour
     //STARTS COMBAT
     public void StartCombat()
     {
-        playerController.inCombat = true;
+        playerController.playerState = PlayerState.combat;
     }
 
     //player feedback correct input

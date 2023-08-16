@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using static PlayerController;
 
 public class EnemyController : MonoBehaviour
 {
@@ -95,7 +96,7 @@ public class EnemyController : MonoBehaviour
 
     public void Engage()
     {
-        if (!playerController.inCombat)
+        if (playerController.playerState != PlayerState.combat)
         {
             playerController.StartCombat(gameObject);
         }

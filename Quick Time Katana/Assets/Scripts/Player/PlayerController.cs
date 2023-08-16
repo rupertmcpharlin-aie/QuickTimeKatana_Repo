@@ -6,12 +6,18 @@ using Cinemachine;
 public class PlayerController : MonoBehaviour
 {
     [Header("GameObjects")]
+    [SerializeField] public PlayerState playerState;
+    [Space]
     [SerializeField] public GameObject playerMeshes;
     [SerializeField] public GameObject torsoe;
+    [SerializeField] public GameObject bodyStanding;
     [SerializeField] public GameObject head;
     [SerializeField] public GameObject katana;
+
     [Space]
     [Header("Camera")]
+    [SerializeField] public CameraState cameraState;
+    [Space]
     [SerializeField] public CinemachineVirtualCamera freeCamera;
     [SerializeField] public bool resetCam;
     [SerializeField] public float camYMin;
@@ -44,7 +50,6 @@ public class PlayerController : MonoBehaviour
 
     [Space]
     [Header("Combat Variables")]
-    [SerializeField] public bool inCombat;
     [SerializeField] public bool playerStunned;
     [SerializeField] public float damage;
     [Space]
@@ -56,25 +61,38 @@ public class PlayerController : MonoBehaviour
     [SerializeField] public BaseQTEScript QTEScript;
     [SerializeField] public Vector2 engagedEnemyScreenSpacePos;
 
+    public enum PlayerState
+    {
+        exploring,
+        crouched,
+        combat,
+        dead
+    }
+
+    public enum CameraState
+    {
+        freeCam,
+        combatCam,
+        lockOnCam
+    }
+
 
 
     // Start is called before the first frame update
     void Start()
     {
-        characterController = GetComponent<CharacterController>();
-        enemies = GameObject.FindGameObjectsWithTag("Enemy");
     }
 
     // Update is called once per frame
     void Update()
     {
         //free cam movement
-        if (playerMovementActive && !inCombat)
+        if (playerState == PlayerState.exploring || playerState == PlayerState.crouched)
         {
             Movement();
         }
 
-        if(inCombat)
+        if(playerState == PlayerState.combat)
         {
             Combat();
         }
@@ -85,7 +103,7 @@ public class PlayerController : MonoBehaviour
     public void Combat()
     {
         //things to do once
-        if (combatCamera.Priority != 1  && inCombat)
+        if (combatCamera.Priority != 1  && playerState == PlayerState.combat)
         {
             //transition to combat camera
             freeCamera.Priority = 0;
@@ -113,16 +131,23 @@ public class PlayerController : MonoBehaviour
     private void CameraManager()
     {
         //freecam -> lock on cam
-        if(Input.GetButtonDown("RightStickDown") && freeCamera.Priority == 1 && enemies.Length > 0)
+        if(Input.GetButtonDown("RightStickDown") && freeCamera.Priority == 1)
         {
-            
+            if(FindRemainingAliveEnemies().Count > 0)
+            {
+                lockedOnEnemy = FindClosestEnemy();
 
-            lockedOnEnemy = FindClosestEnemy();
-
-            //set cameras;
-            freeCamera.Priority = 0;
-            lockOnCamera.Priority = 1;
+                //set cameras;
+                freeCamera.Priority = 0;
+                lockOnCamera.Priority = 1;
+            }
+            //else reset player camera
+            else
+            {
+                freeCamera.GetCinemachineComponent<CinemachineOrbitalTransposer>().m_XAxis.Value = playerMeshes.transform.rotation.eulerAngles.y - 180;
+            }
         }
+
         //lockon -> free cam
         else if (Input.GetButtonDown("RightStickDown") && lockOnCamera.Priority == 1)
         {
@@ -147,16 +172,21 @@ public class PlayerController : MonoBehaviour
             lockOnCamera.GetCinemachineComponent<Cinemachine3rdPersonFollow>().ShoulderOffset.x = rightStickXAxis;
         }
 
+
+        //if engaged enemy is no longer alive
         if(combatCamera.Priority == 1 && !engagedEnemy.GetComponent<EnemyController>().enemyAlive)
         {
+            //if there are no more enemies
             if(FindRemainingAliveEnemies().Count == 0)
             {
-                inCombat = false;
+                playerState = PlayerState.exploring;
 
                 //transition to free cam
                 combatCamera.Priority = 0;
                 freeCamera.Priority = 1;
             }
+
+            //if there are still enemies
             else
             {
                 Debug.Log("Move onto next enemy");
@@ -172,6 +202,8 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
+
 
     public void Movement()
     {
@@ -236,7 +268,7 @@ public class PlayerController : MonoBehaviour
         EnemyController nearestEnemyController = nearestEnemy.GetComponent<EnemyController>();
 
         //player
-        inCombat = true;
+        playerState = PlayerState.combat;
 
         //enemy
         engagedEnemy = nearestEnemy;
@@ -262,7 +294,7 @@ public class PlayerController : MonoBehaviour
         foreach (GameObject enemy in enemies)
         {
             EnemyController enemyController = enemy.GetComponent<EnemyController>();
-            if (enemyController.enemyAlive && enemyController.enemyInCombat)
+            if (enemyController.enemyAlive)
             {
                 tempList.Add(enemy);
             }
@@ -280,15 +312,17 @@ public class PlayerController : MonoBehaviour
         {
             float tempDistance = Vector3.Distance(transform.position, enemy.transform.position);
 
-            if (tempDistance > minDistance && enemy.GetComponent<EnemyController>().enemyAlive && enemy.GetComponent<EnemyController>().enemyInCombat)
+            if (tempDistance > minDistance && enemy.GetComponent<EnemyController>().enemyAlive)
             {
                 minDistance = tempDistance;
             }
         }
 
+        Debug.Log(minDistance);
+
         foreach(GameObject enemy in enemies)
         {
-            if (minDistance == Vector3.Distance(transform.position, enemy.transform.position) && enemy.GetComponent<EnemyController>().enemyAlive && enemy.GetComponent<EnemyController>().enemyInCombat)
+            if (minDistance == Vector3.Distance(transform.position, enemy.transform.position) && enemy.GetComponent<EnemyController>().enemyAlive)
             {
                 return enemy;
             }
