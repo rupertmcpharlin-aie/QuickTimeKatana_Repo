@@ -59,7 +59,7 @@ public class BaseQTEScript : MonoBehaviour
             CombatInputManager();
         }
 
-        if(playerController.playerState == PlayerState.stealthKill)
+        if(playerController.playerState == PlayerState.stealthKill && enemyController.enemyState != EnemyController.EnemyState.dead)
         {
             MakeCombatQTEELements();
             StealthInputManager();
@@ -103,8 +103,11 @@ public class BaseQTEScript : MonoBehaviour
 
         if(playerController.stealthHitsIndex == 4)
         {
+            enemyController.enemyState = EnemyController.EnemyState.dead;
+            enemyController.currentQTEBackground.SetActive(false);
             playerController.stealthHitsIndex = 0;
-            KillEnemy();
+            DestroyCurrentQTEElement();
+            playerController.animator.SetTrigger("StealthKill");
         }
 
         //INCORRECT INPUT
@@ -212,7 +215,7 @@ public class BaseQTEScript : MonoBehaviour
                 if (enemyController.enemyPoise < playerController.damage)
                 {
                     //kill enemy
-                    KillEnemy();
+                    KillEnemy(enemyController.cutBodies_Standard);
                 }
                 else
                 {
@@ -231,7 +234,9 @@ public class BaseQTEScript : MonoBehaviour
                     currentQTEBackground.GetComponent<Image>().color = Color.black;
 
                     //kill enemy
-                    KillEnemy();
+                    playerController.animator.SetTrigger("HiddenFangKillTrigger");
+                    DestroyCurrentQTEElement();
+                    enemyController.currentQTEBackground.SetActive(false);
                 }
             }
         }
@@ -300,7 +305,7 @@ public class BaseQTEScript : MonoBehaviour
     }
 
     //KILLS THE ENEMY
-    private void KillEnemy()
+    public void KillEnemy(GameObject[] cutBodies)
     {        
         //remove qte stuff
         DestroyCurrentQTEElement();
@@ -314,7 +319,41 @@ public class BaseQTEScript : MonoBehaviour
 
         //enable cut body
         enemyController.enemyMeshes.SetActive(false);
-        enemyController.cutBodies[Random.Range(0, enemyController.cutBodies.Length)].SetActive(true);
+        cutBodies[Random.Range(0, cutBodies.Length)].SetActive(true);
+    }
+
+    public void KillEnemyStealth()
+    {
+        //remove qte stuff
+        DestroyCurrentQTEElement();
+        currentQTEBackground.SetActive(false);
+
+        //deactivate player variables
+        enemyController.SetEnemyState(EnemyController.EnemyState.dead);
+        enemyController.enemyPoise = 0;
+        enemyController.enemyNextAttack = 0;
+        enemyController.gameObject.GetComponent<NavMeshAgent>().speed = 0;
+
+        //enable cut body
+        enemyController.enemyMeshes.SetActive(false);
+        enemyController.cutBodies_StealthKill[0].SetActive(true);
+    }
+
+    public void KillEnemyHiddenFang()
+    {
+        //remove qte stuff
+        DestroyCurrentQTEElement();
+        currentQTEBackground.SetActive(false);
+
+        //deactivate player variables
+        enemyController.SetEnemyState(EnemyController.EnemyState.dead);
+        enemyController.enemyPoise = 0;
+        enemyController.enemyNextAttack = 0;
+        enemyController.gameObject.GetComponent<NavMeshAgent>().speed = 0;
+
+        //enable cut body
+        enemyController.enemyMeshes.SetActive(false);
+        enemyController.cutBodies_HiddenFang[0].SetActive(true);
     }
 
     //KILLS THE PLAYER

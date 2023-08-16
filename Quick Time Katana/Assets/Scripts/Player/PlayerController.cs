@@ -110,7 +110,7 @@ public class PlayerController : MonoBehaviour
             Combat();
         }
 
-        if(playerState == PlayerState.crouched)
+        if(playerState == PlayerState.crouched || playerState == PlayerState.stealthKill)
         {
             Stealth();
         }
@@ -290,7 +290,6 @@ public class PlayerController : MonoBehaviour
                 playerState = PlayerState.exploring;
                 movementSpeed = standingMovementSpeed;
             }
-
         }
     }
 
@@ -303,7 +302,6 @@ public class PlayerController : MonoBehaviour
                 if (Vector3.Distance(transform.position, enemy.transform.position) < stealthEngageDistance &&
                     enemy.GetComponent<EnemyController>().enemyState == EnemyController.EnemyState.alive)
                 {
-                    Debug.Log("Start Stealth TakeDown");
                     playerState = PlayerState.stealthKill;
 
                     engagedEnemy = enemy;
@@ -325,22 +323,20 @@ public class PlayerController : MonoBehaviour
 
         if(playerState == PlayerState.stealthKill)
         {
+            Debug.Log("Made it");
+
             //face enemy
             Vector3 direction = engagedEnemy.transform.position - transform.position;
             Quaternion toRotation = Quaternion.LookRotation(direction, Vector3.up);
             playerMeshes.transform.rotation = Quaternion.RotateTowards(playerMeshes.transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
 
             //slowly rotate camera
-            combatCamera.GetCinemachineComponent<CinemachineOrbitalTransposer>().m_XAxis.Value += combatCameraRotationSpeed * Time.deltaTime;
-
+            combatCamera.GetCinemachineComponent<CinemachineOrbitalTransposer>().m_XAxis.Value +=  combatCameraRotationSpeed * Time.deltaTime;
+            
             //set position of QTE background
             engagedEnemyScreenSpacePos = RectTransformUtility.WorldToScreenPoint(Camera.main, engagedEnemy.GetComponent<EnemyController>().torsoe.transform.position);
             engagedEnemy.GetComponent<EnemyController>().currentQTEBackground.transform.position = new Vector3(engagedEnemyScreenSpacePos.x, engagedEnemyScreenSpacePos.y, 0);
         }
-
-
-
-
     }
 
     public void StartCombat(GameObject nearestEnemy)
@@ -399,8 +395,6 @@ public class PlayerController : MonoBehaviour
                 minDistance = tempDistance;
             }
         }
-
-        Debug.Log(minDistance);
 
         foreach(GameObject enemy in enemies)
         {
