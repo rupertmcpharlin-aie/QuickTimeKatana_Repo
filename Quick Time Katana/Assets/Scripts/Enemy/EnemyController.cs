@@ -6,18 +6,22 @@ using static PlayerController;
 
 public class EnemyController : MonoBehaviour
 {
+    [Header("Enemy State")]
+    [SerializeField] public EnemyState enemyState;
+
+    [Space]
     [Header("GameObjects")]
     [SerializeField] public GameObject enemyMeshes;
     [SerializeField] public GameObject torsoe;
     [SerializeField] public GameObject head;
-    [SerializeField] PlayerController playerController;
+    [Space]
     [SerializeField] public GameObject cameraFocus;
     [SerializeField] public NavMeshAgent agent;
     //[SerializeField] Animator enemyAnimator;
-
+    [Space]
+    [SerializeField] public PlayerController playerController;
+    
     [Header("Combat Variables")]
-    [SerializeField] public bool enemyAlive = true;
-    [SerializeField] public bool enemyInCombat;
     [Space]
     [Range(0, 1)]
     [SerializeField] public float enemyPoise;
@@ -38,7 +42,6 @@ public class EnemyController : MonoBehaviour
 
     [Space]
     [Header("Aware of player variables")]
-    [SerializeField] public bool enemyAwareOfPlayer;
     [SerializeField] public float noticePlayerWaitTime;
     [SerializeField] public float chaseSpeed;
     [SerializeField] public float facePlayerRotationSpeed;
@@ -46,6 +49,15 @@ public class EnemyController : MonoBehaviour
     [Space]
     [Header("QTE")]
     [SerializeField] public GameObject currentQTEBackground;
+
+    public enum EnemyState
+    {
+        alive,
+        awareOfPlayer,
+        waitingForCombat,
+        inCombat,
+        dead
+    }
 
 
     // Start is called before the first frame update
@@ -57,24 +69,26 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(enemyAwareOfPlayer)
+        //if the enemy is aware of the player
+        if(enemyState == EnemyState.awareOfPlayer)
         {
+            //do behaviour
             AwareOfPlayerBehaviour();
         }
 
-        if (enemyAlive)
+        if (enemyState == EnemyState.inCombat)
         {
+            //position the camera focus
             cameraFocus.transform.position = new Vector3((transform.position.x + playerController.transform.position.x) / 2,
                                                          (transform.position.y + playerController.transform.position.y) / 2,
                                                          (transform.position.z + playerController.transform.position.z) / 2);
-        }
-
-        if(enemyInCombat)
-        {
+            
+            //engage the player
             Engage();
         }
     }
 
+    //behaviour when the enemy is aware of the player
     private void AwareOfPlayerBehaviour()
     {
         //face player look at player
@@ -100,5 +114,11 @@ public class EnemyController : MonoBehaviour
         {
             playerController.StartCombat(gameObject);
         }
+    }
+
+    public void SetEnemyState(EnemyState newState)
+    {
+        Debug.Log(newState);
+        enemyState = newState;
     }
 }

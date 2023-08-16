@@ -5,8 +5,11 @@ using Cinemachine;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("GameObjects")]
+    [Header("Player")]
     [SerializeField] public PlayerState playerState;
+    [Space]
+    [SerializeField] public Animator animator;
+    [SerializeField] public CharacterController characterController;
     [Space]
     [SerializeField] public GameObject playerMeshes;
     [SerializeField] public GameObject torsoe;
@@ -35,14 +38,15 @@ public class PlayerController : MonoBehaviour
     [Space]
     [Header("Movement Variables")]
     [SerializeField] public bool playerMovementActive = true;
-    [SerializeField] public CharacterController characterController;
     [Space]
     [Range(-1,1)]
     [SerializeField] public float leftStickXAxis;
     [Range(-1, 1)]
     [SerializeField] public float leftStickYAxis;
-    [SerializeField] public float movementSpeed;
     [Space]
+    [SerializeField] public float movementSpeed;
+    [SerializeField] public float standingMovementSpeed;
+    [SerializeField] public float crouchedMovementSpeed;
     [Space]
     [SerializeField] public float rotationSpeed;
     [SerializeField] public float ySpeed;
@@ -54,7 +58,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] public float damage;
     [Space]
     [SerializeField] public GameObject engagedEnemy;
-    [SerializeField] public GameObject[] enemies;   
+    [SerializeField] public GameObject[] enemies;
+    [Space]
+    [SerializeField] public float stealthEngageDistance;
+    [SerializeField] public int stealthHitsIndex;
 
     [Space]
     [Header("QTE")]
@@ -90,11 +97,17 @@ public class PlayerController : MonoBehaviour
         if (playerState == PlayerState.exploring || playerState == PlayerState.crouched)
         {
             Movement();
+            Crouch();
         }
 
         if(playerState == PlayerState.combat)
         {
             Combat();
+        }
+
+        if(playerState == PlayerState.crouched)
+        {
+            Stealth();
         }
 
         CameraManager();
@@ -174,7 +187,7 @@ public class PlayerController : MonoBehaviour
 
 
         //if engaged enemy is no longer alive
-        if(combatCamera.Priority == 1 && !engagedEnemy.GetComponent<EnemyController>().enemyAlive)
+        if(combatCamera.Priority == 1 && engagedEnemy.GetComponent<EnemyController>().enemyState == EnemyController.EnemyState.dead)
         {
             //if there are no more enemies
             if(FindRemainingAliveEnemies().Count == 0)
@@ -193,7 +206,7 @@ public class PlayerController : MonoBehaviour
                 engagedEnemy = FindClosestEnemy();
 
                 StartCombat(engagedEnemy);
-                engagedEnemy.GetComponent<EnemyController>().enemyInCombat = true;
+                engagedEnemy.GetComponent<EnemyController>().SetEnemyState(EnemyController.EnemyState.inCombat);
 
                 //transition to new combat camera position
                 combatCamera.Follow = engagedEnemy.GetComponent<EnemyController>().cameraFocus.transform;
@@ -216,6 +229,7 @@ public class PlayerController : MonoBehaviour
         //get player input
         Vector3 movementDirection = new Vector3(leftStickXAxis, 0, leftStickYAxis);
         float inputMagnitude = Mathf.Clamp01(movementDirection.magnitude);
+        float speed = inputMagnitude * movementSpeed;
 
         //gravity stuff
         ySpeed += Physics.gravity.y * Time.deltaTime;
@@ -223,19 +237,8 @@ public class PlayerController : MonoBehaviour
         //free camera
         if (freeCamera.Priority == 1)
         {
-            //if crouching half speed
-
-            float speed = inputMagnitude * movementSpeed;
             movementDirection = Quaternion.AngleAxis(cameraTransform.rotation.eulerAngles.y, Vector3.up) * movementDirection;
             movementDirection.Normalize();
-
-            //get velocity
-            Vector3 velocity = movementDirection * speed;
-            velocity.y = ySpeed;
-
-            //move character
-            characterController.Move(velocity * Time.deltaTime);
-
 
             //face direction of movement
             if (movementDirection != Vector3.zero)
@@ -244,22 +247,50 @@ public class PlayerController : MonoBehaviour
                 playerMeshes.transform.rotation = Quaternion.RotateTowards(playerMeshes.transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
             }
         }
-
         //lock on cam
-        if (lockOnCamera.Priority == 1)
+        else if (lockOnCamera.Priority == 1)
         {
-            //if crouching half speed
-
-            float speed = inputMagnitude * movementSpeed;
             movementDirection = Quaternion.AngleAxis(playerMeshes.transform.rotation.eulerAngles.y, Vector3.up) * movementDirection;
             movementDirection.Normalize();
+        }
 
-            //get velocity
-            Vector3 velocity = movementDirection * speed;
-            velocity.y = ySpeed;
+        //get velocity
+        Vector3 velocity = movementDirection * speed;
+        velocity.y = ySpeed;
 
-            //move character
-            characterController.Move(velocity * Time.deltaTime);
+        //move character
+        characterController.Move(velocity * Time.deltaTime);
+    }
+
+    //controls crouch stuff
+    public void Crouch()
+    {
+        if(Input.GetButtonDown("LeftStickDown"))
+        {
+            if (playerState == PlayerState.exploring)
+            {
+                animator.SetTrigger("CrouchTrigger");
+                playerState = PlayerState.crouched;
+                movementSpeed = crouchedMovementSpeed;
+            }
+            else if(playerState == PlayerState.crouched)
+            {
+                animator.SetTrigger("StandTrigger");
+                playerState = PlayerState.exploring;
+                movementSpeed = standingMovementSpeed;
+            }
+        }
+    }
+
+    public void Stealth()
+    {
+        foreach(GameObject enemy in FindRemainingAliveEnemies())
+        {
+            if(Vector3.Distance(transform.position, enemy.transform.position) < stealthEngageDistance &&
+                enemy.GetComponent<EnemyController>().enemyState == EnemyController.EnemyState.alive)
+            {
+                
+            }
         }
     }
 
@@ -272,7 +303,7 @@ public class PlayerController : MonoBehaviour
 
         //enemy
         engagedEnemy = nearestEnemy;
-        nearestEnemyController.enemyInCombat = true;
+        nearestEnemyController.SetEnemyState(EnemyController.EnemyState.inCombat);
         nearestEnemyController.currentQTEBackground.SetActive(true);
 
         //combat camera
@@ -294,7 +325,8 @@ public class PlayerController : MonoBehaviour
         foreach (GameObject enemy in enemies)
         {
             EnemyController enemyController = enemy.GetComponent<EnemyController>();
-            if (enemyController.enemyAlive)
+            if (enemyController.enemyState == EnemyController.EnemyState.alive ||
+                enemyController.enemyState == EnemyController.EnemyState.awareOfPlayer)
             {
                 tempList.Add(enemy);
             }
@@ -312,7 +344,8 @@ public class PlayerController : MonoBehaviour
         {
             float tempDistance = Vector3.Distance(transform.position, enemy.transform.position);
 
-            if (tempDistance > minDistance && enemy.GetComponent<EnemyController>().enemyAlive)
+            if (tempDistance > minDistance && enemy.GetComponent<EnemyController>().enemyState == EnemyController.EnemyState.alive ||
+                                              enemy.GetComponent<EnemyController>().enemyState == EnemyController.EnemyState.awareOfPlayer)
             {
                 minDistance = tempDistance;
             }
@@ -322,7 +355,8 @@ public class PlayerController : MonoBehaviour
 
         foreach(GameObject enemy in enemies)
         {
-            if (minDistance == Vector3.Distance(transform.position, enemy.transform.position) && enemy.GetComponent<EnemyController>().enemyAlive)
+            if (minDistance == Vector3.Distance(transform.position, enemy.transform.position) && enemy.GetComponent<EnemyController>().enemyState == EnemyController.EnemyState.alive ||
+                                                                                                 enemy.GetComponent<EnemyController>().enemyState == EnemyController.EnemyState.awareOfPlayer)
             {
                 return enemy;
             }

@@ -68,13 +68,26 @@ public class FieldOfView : MonoBehaviour
                 //if player can be seen directly by enemy
                 if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstructionMask))
                 {
-                    enemyController.enemyAwareOfPlayer = true;
-
-                    if(distanceToTarget <= combatDistance && enemyController.enemyAlive)
+                    if(enemyController.enemyState == EnemyController.EnemyState.alive)
                     {
-                        enemyController.enemyInCombat = true;
+                        Debug.Log("Set enemy state to aware");
+                        enemyController.SetEnemyState(EnemyController.EnemyState.awareOfPlayer);
+                    }
+                    
+
+                    if(distanceToTarget <= combatDistance && enemyController.enemyState == EnemyController.EnemyState.awareOfPlayer)
+                    {
+                        Debug.Log("Set enemy state to combat");
+                        enemyController.SetEnemyState(EnemyController.EnemyState.inCombat);
                     }
                 }
+            }
+
+            if(enemyController.playerController.playerState != PlayerController.PlayerState.crouched &&
+                enemyController.enemyState != EnemyController.EnemyState.inCombat &&
+                enemyController.enemyState != EnemyController.EnemyState.dead)
+            {
+                enemyController.SetEnemyState(EnemyController.EnemyState.awareOfPlayer);
             }
         }
     }

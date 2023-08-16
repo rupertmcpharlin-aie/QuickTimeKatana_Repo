@@ -61,7 +61,7 @@ public class BaseQTEScript : MonoBehaviour
         //runs while enemy is alive
         if (enemyController != null)
         {
-            if (enemyController.enemyAlive && enemyController.enemyInCombat)
+            if (enemyController.enemyState == EnemyController.EnemyState.inCombat)
             {
                 //enemy behaviours
                 EnemyBehaviour();
@@ -241,9 +241,7 @@ public class BaseQTEScript : MonoBehaviour
         currentQTEBackground.SetActive(false);
 
         //deactivate player variables
-        enemyController.enemyAlive = false;
-        enemyController.enemyAwareOfPlayer = false;
-        enemyController.enemyInCombat = false;
+        enemyController.SetEnemyState(EnemyController.EnemyState.dead);
         enemyController.enemyPoise = 0;
         enemyController.enemyNextAttack = 0;
         enemyController.gameObject.GetComponent<NavMeshAgent>().speed = 0;
