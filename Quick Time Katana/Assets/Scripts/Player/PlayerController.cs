@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using Unity.VisualScripting;
+using UnityEngine.AI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -19,8 +20,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] public GameObject katana;
     [Space]
     [SerializeField] public GameObject horse;
+    [SerializeField] public GameObject environment;
     [Space]
     [SerializeField] public BaseQTEScript baseQTEScript;
+    [Space]
+    [SerializeField] public GameObject galen;
+    [SerializeField] public GameObject galen_body;
+    [SerializeField] public GameObject galen_horse;
 
     [Space]
     [Header("Camera")]
@@ -58,6 +64,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] public float mountedMovementSpeed;
     [Space]
     [SerializeField] public float rotationSpeed;
+    [SerializeField] public float standingRotationSpeed;
+    [SerializeField] public float mountedRotationSpeed;
     [SerializeField] public float ySpeed;
     [SerializeField] public Transform cameraTransform;
 
@@ -113,12 +121,9 @@ public class PlayerController : MonoBehaviour
             Crouch();
         }
 
-        if(playerState == PlayerState.mounted)
-        {
-            Movement();
-        }
+        
 
-        if(playerState == PlayerState.combat)
+        if (playerState == PlayerState.combat)
         {
             Combat();
         }
@@ -132,23 +137,77 @@ public class PlayerController : MonoBehaviour
         {
             if(Input.GetButtonDown("ButtonDown"))
             {
-                playerState = PlayerState.mounted;
-                animator.SetTrigger("Sheath_Horse");
-                
-                gameObject.transform.position = horse.transform.position;
-                playerMeshes.transform.rotation = horse.transform.rotation;
-
-                horse.transform.SetParent(playerMeshes.transform);
-
-                freeCamera.Priority = 0;
-                mountedCamera.Priority = 1;
-                
+                Debug.Log("Mount Horse");
+                MountHorseBehaviour();
             }
+        }
+        else if (playerState == PlayerState.mounted)
+        {
+            Movement();
+            HorseWalkingAnimationSpeedController();
+            GalenHorseController();
+            UnMountHorseBehaviour();
         }
 
 
 
         CameraManager();
+    }
+
+    public void GalenHorseController()
+    {
+        galen.GetComponent<NavMeshAgent>().SetDestination(new Vector3(playerMeshes.transform.position.x + 4, playerMeshes.transform.position.y, playerMeshes.transform.position.z));
+    }
+
+    private void HorseWalkingAnimationSpeedController()
+    {
+
+        horse.GetComponent<Animator>().speed = Mathf.Clamp01(Mathf.Abs(leftStickXAxis) + Mathf.Abs(leftStickYAxis));
+    }
+
+    private void UnMountHorseBehaviour()
+    {
+        if (Input.GetButtonDown("ButtonDown"))
+        {
+            Debug.Log("UnMount Horse");
+
+            horse.transform.SetParent(environment.transform);
+
+            playerState = PlayerState.exploring;
+            animator.SetTrigger("UnMount_Horse");
+            horse.GetComponent<HorseScript>().StartIdleAnimation();
+            horse.GetComponent<Animator>().speed = 1;
+
+            gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z + 5);
+
+            freeCamera.Priority = 1;
+            mountedCamera.Priority = 0;
+
+            movementSpeed = standingMovementSpeed;
+            rotationSpeed = standingRotationSpeed;
+        }
+    }
+
+    private void MountHorseBehaviour()
+    {
+        playerState = PlayerState.mounted;
+        animator.SetTrigger("Sheath_Horse");
+        horse.GetComponent<HorseScript>().StartWalkingAnimation();
+
+        gameObject.transform.position = horse.transform.position;
+        playerMeshes.transform.rotation = horse.transform.rotation;
+
+        horse.transform.SetParent(playerMeshes.transform);
+
+        freeCamera.Priority = 0;
+        mountedCamera.Priority = 1;
+
+        movementSpeed = mountedMovementSpeed;
+        rotationSpeed = mountedRotationSpeed;
+
+        galen.transform.position = galen_horse.transform.position;
+        galen_body.transform.position = new Vector3(galen_body.transform.position.x, galen_body.transform.position.y + 2, galen_body.transform.position.z);
+        galen_horse.transform.SetParent(galen.transform);
     }
 
     public void Combat()

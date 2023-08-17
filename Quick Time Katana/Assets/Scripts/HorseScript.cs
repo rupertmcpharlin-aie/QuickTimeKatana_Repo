@@ -21,4 +21,14 @@ public class HorseScript : MonoBehaviour
             other.GetComponent<PlayerController>().horse = null;
         }
     }
+
+    public void StartWalkingAnimation()
+    {
+        GetComponent<Animator>().SetTrigger("Mounted");
+    }
+
+    public void StartIdleAnimation()
+    {
+        GetComponent<Animator>().SetTrigger("UnMounted");
+    }
 }
