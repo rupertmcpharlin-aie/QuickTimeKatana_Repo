@@ -70,7 +70,7 @@ public class BaseQTEScript : MonoBehaviour
         //runs while enemy is alive
         if (enemyController != null)
         {
-            if (enemyController.enemyState == EnemyController.EnemyState.inCombat)
+            if (enemyController.enemyState == EnemyController.EnemyState.inCombat && playerController.playerState != PlayerState.dead)
             {
                 //enemy behaviours
                 EnemyBehaviour();
@@ -149,6 +149,11 @@ public class BaseQTEScript : MonoBehaviour
     //controls the enemies behaviour
     private void EnemyBehaviour()
     {
+        if(enemyController.enemyPoise == 0)
+        {
+            enemyController.enemyAnimator.SetTrigger("RaiseWeapon");
+        }
+
         //refill poise
         enemyController.enemyPoise += Time.deltaTime / enemyController.enemyPoiseRecoverySpeed;
         enemyController.enemyPoise = Mathf.Clamp01(enemyController.enemyPoise);
@@ -416,6 +421,7 @@ public class BaseQTEScript : MonoBehaviour
         currentQTEBackground.SetActive(false);
 
         //run death animation
+
     }
 
     //STARTS COMBAT

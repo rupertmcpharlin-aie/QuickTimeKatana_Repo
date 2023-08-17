@@ -70,6 +70,7 @@ public class FieldOfView : MonoBehaviour
                     {
                         Debug.Log("Set enemy state to combat");
                         enemyController.SetEnemyState(EnemyController.EnemyState.inCombat);
+                        enemyController.enemyAnimator.SetTrigger("RaiseWeapon");
                     }
                 }
             }
