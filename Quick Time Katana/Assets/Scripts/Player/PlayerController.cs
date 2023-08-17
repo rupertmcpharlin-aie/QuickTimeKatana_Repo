@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using Unity.VisualScripting;
 
 public class PlayerController : MonoBehaviour
 {
@@ -16,6 +17,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] public GameObject bodyStanding;
     [SerializeField] public GameObject head;
     [SerializeField] public GameObject katana;
+    [Space]
+    [SerializeField] public GameObject horse;
     [Space]
     [SerializeField] public BaseQTEScript baseQTEScript;
 
@@ -36,10 +39,13 @@ public class PlayerController : MonoBehaviour
     [Space]
     [SerializeField] public CinemachineVirtualCamera combatCamera;
     [SerializeField] public float combatCameraRotationSpeed;
+    [Space]
+    [SerializeField] public CinemachineVirtualCamera mountedCamera;
 
     [Space]
     [Header("Movement Variables")]
     [SerializeField] public bool playerMovementActive = true;
+    [SerializeField] public bool isNearHorse;
     [Space]
     [Range(-1,1)]
     [SerializeField] public float leftStickXAxis;
@@ -49,6 +55,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] public float movementSpeed;
     [SerializeField] public float standingMovementSpeed;
     [SerializeField] public float crouchedMovementSpeed;
+    [SerializeField] public float mountedMovementSpeed;
     [Space]
     [SerializeField] public float rotationSpeed;
     [SerializeField] public float ySpeed;
@@ -75,6 +82,7 @@ public class PlayerController : MonoBehaviour
     public enum PlayerState
     {
         exploring,
+        mounted,
         crouched,
         stealthKill,
         combat,
@@ -105,6 +113,11 @@ public class PlayerController : MonoBehaviour
             Crouch();
         }
 
+        if(playerState == PlayerState.mounted)
+        {
+            Movement();
+        }
+
         if(playerState == PlayerState.combat)
         {
             Combat();
@@ -114,6 +127,26 @@ public class PlayerController : MonoBehaviour
         {
             Stealth();
         }
+
+        if(isNearHorse && playerState == PlayerState.exploring)
+        {
+            if(Input.GetButtonDown("ButtonDown"))
+            {
+                playerState = PlayerState.mounted;
+                animator.SetTrigger("Sheath_Horse");
+                
+                gameObject.transform.position = horse.transform.position;
+                playerMeshes.transform.rotation = horse.transform.rotation;
+
+                horse.transform.SetParent(playerMeshes.transform);
+
+                freeCamera.Priority = 0;
+                mountedCamera.Priority = 1;
+                
+            }
+        }
+
+
 
         CameraManager();
     }
@@ -227,8 +260,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
-
     public void Movement()
     {
         //MOVEMENT
@@ -246,7 +277,7 @@ public class PlayerController : MonoBehaviour
         ySpeed += Physics.gravity.y * Time.deltaTime;
 
         //free camera
-        if (freeCamera.Priority == 1)
+        if (freeCamera.Priority == 1 || mountedCamera.Priority == 1)
         {
             movementDirection = Quaternion.AngleAxis(cameraTransform.rotation.eulerAngles.y, Vector3.up) * movementDirection;
             movementDirection.Normalize();
