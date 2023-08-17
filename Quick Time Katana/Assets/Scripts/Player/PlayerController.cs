@@ -52,6 +52,7 @@ public class PlayerController : MonoBehaviour
     [Header("Movement Variables")]
     [SerializeField] public bool playerMovementActive = true;
     [SerializeField] public bool isNearHorse;
+    [SerializeField] public bool canClimb;
     [Space]
     [Range(-1,1)]
     [SerializeField] public float leftStickXAxis;
@@ -327,40 +328,58 @@ public class PlayerController : MonoBehaviour
         leftStickYAxis = Input.GetAxis("LeftStickYAxis");
         leftStickXAxis = Input.GetAxis("LeftStickXAxis");
 
-        //get player input
-        Vector3 movementDirection = new Vector3(leftStickXAxis, 0, leftStickYAxis);
-        float inputMagnitude = Mathf.Clamp01(movementDirection.magnitude);
-        float speed = inputMagnitude * movementSpeed;
-
-        //gravity stuff
-        ySpeed += Physics.gravity.y * Time.deltaTime;
-
-        //free camera
-        if (freeCamera.Priority == 1 || mountedCamera.Priority == 1)
+        if (!canClimb)
         {
-            movementDirection = Quaternion.AngleAxis(cameraTransform.rotation.eulerAngles.y, Vector3.up) * movementDirection;
-            movementDirection.Normalize();
+            //get player input
+            Vector3 movementDirection = new Vector3(leftStickXAxis, 0, leftStickYAxis);
+            float inputMagnitude = Mathf.Clamp01(movementDirection.magnitude);
+            float speed = inputMagnitude * movementSpeed;
 
-            //face direction of movement
-            if (movementDirection != Vector3.zero)
+            //free camera
+            if (freeCamera.Priority == 1 || mountedCamera.Priority == 1)
             {
-                Quaternion toRotation = Quaternion.LookRotation(movementDirection, Vector3.up);
-                playerMeshes.transform.rotation = Quaternion.RotateTowards(playerMeshes.transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
+                movementDirection = Quaternion.AngleAxis(cameraTransform.rotation.eulerAngles.y, Vector3.up) * movementDirection;
+                movementDirection.Normalize();
+
+                //face direction of movement
+                if (movementDirection != Vector3.zero)
+                {
+                    Quaternion toRotation = Quaternion.LookRotation(movementDirection, Vector3.up);
+                    playerMeshes.transform.rotation = Quaternion.RotateTowards(playerMeshes.transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
+                }
             }
+
+            //lock on cam
+            else if (lockOnCamera.Priority == 1)
+            {
+                movementDirection = Quaternion.AngleAxis(playerMeshes.transform.rotation.eulerAngles.y, Vector3.up) * movementDirection;
+                movementDirection.Normalize();
+            }
+
+            //get velocity
+            Vector3 velocity = movementDirection * speed;
+            
+
+
+
+            //move character
+            characterController.Move(velocity * Time.deltaTime);
         }
-        //lock on cam
-        else if (lockOnCamera.Priority == 1)
+        else
         {
-            movementDirection = Quaternion.AngleAxis(playerMeshes.transform.rotation.eulerAngles.y, Vector3.up) * movementDirection;
-            movementDirection.Normalize();
+            //get player input
+            Vector3 movementDirection = new Vector3(0, leftStickXAxis, 0);
+            float inputMagnitude = Mathf.Clamp01(movementDirection.magnitude);
+            float speed = inputMagnitude * movementSpeed;
+
+            //get velocity
+            Vector3 velocity = movementDirection * speed;
+
+            //move character
+            characterController.Move(velocity * Time.deltaTime);
         }
 
-        //get velocity
-        Vector3 velocity = movementDirection * speed;
-        velocity.y = ySpeed;
 
-        //move character
-        characterController.Move(velocity * Time.deltaTime);
     }
 
     //controls crouch stuff
