@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 using static PlayerController;
 using Image = UnityEngine.UI.Image;
+using Random = UnityEngine.Random;
 
 public class BaseQTEScript : MonoBehaviour
 {
@@ -214,8 +216,24 @@ public class BaseQTEScript : MonoBehaviour
                 //if playerController.damage is greater than the amount of poise enemy has left
                 if (enemyController.enemyPoise < playerController.damage)
                 {
-                    //kill enemy
-                    KillEnemy(enemyController.cutBodies_Standard);
+                    /*//kill enemy
+                    int random = Random.Range(0, 2);
+                    Debug.Log(random);
+                    if(random == 0)
+                    {
+                        playerController.animator.SetTrigger("StandardKill_TopLeftTrigger");
+                        DestroyCurrentQTEElement();
+                        enemyController.currentQTEBackground.SetActive(false);
+                    }
+                    else
+                    {
+                        playerController.animator.SetTrigger("StandardKill_TopRightTrigger");
+                        DestroyCurrentQTEElement();
+                        enemyController.currentQTEBackground.SetActive(false);
+                    }*/
+                    playerController.animator.SetTrigger("StandardKill_TopRightTrigger");
+                    DestroyCurrentQTEElement();
+                    enemyController.currentQTEBackground.SetActive(false);
                 }
                 else
                 {
@@ -320,6 +338,40 @@ public class BaseQTEScript : MonoBehaviour
         //enable cut body
         enemyController.enemyMeshes.SetActive(false);
         cutBodies[Random.Range(0, cutBodies.Length)].SetActive(true);
+    }
+
+    public void KillEnemy_Standard_TopRight()
+    {
+        //remove qte stuff
+        DestroyCurrentQTEElement();
+        currentQTEBackground.SetActive(false);
+
+        //deactivate player variables
+        enemyController.SetEnemyState(EnemyController.EnemyState.dead);
+        enemyController.enemyPoise = 0;
+        enemyController.enemyNextAttack = 0;
+        enemyController.gameObject.GetComponent<NavMeshAgent>().speed = 0;
+
+        //enable cut body
+        enemyController.enemyMeshes.SetActive(false);
+        enemyController.cutBodies_TopRight.SetActive(true);
+    }
+
+    public void KillEnemy_Standard_TopLeft()
+    {
+        //remove qte stuff
+        DestroyCurrentQTEElement();
+        currentQTEBackground.SetActive(false);
+
+        //deactivate player variables
+        enemyController.SetEnemyState(EnemyController.EnemyState.dead);
+        enemyController.enemyPoise = 0;
+        enemyController.enemyNextAttack = 0;
+        enemyController.gameObject.GetComponent<NavMeshAgent>().speed = 0;
+
+        //enable cut body
+        enemyController.enemyMeshes.SetActive(false);
+        enemyController.cutBodies_TopLeft.SetActive(true);
     }
 
     public void KillEnemyStealth()

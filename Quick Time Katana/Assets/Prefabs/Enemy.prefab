@@ -5998,6 +5998,7 @@ MonoBehaviour:
   head: {fileID: 483357364060209909}
   cameraFocus: {fileID: 154102590}
   agent: {fileID: 6032368219634903470}
+  enemyAnimator: {fileID: 0}
   playerController: {fileID: 0}
   enemyPoise: 1
   enemyPoiseRecoverySpeed: 10
@@ -6011,8 +6012,9 @@ MonoBehaviour:
   cutBodies_StealthKill:
   - {fileID: 297429432324650560}
   isPatrolling: 0
+  currentPatrolTransform: {fileID: 0}
   patrolTransforms: []
-  patrolSpeed: 0
+  patrolIndex: 0
   noticePlayerWaitTime: 0
   chaseSpeed: 2.5
   facePlayerRotationSpeed: 400
@@ -6050,7 +6052,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1925670224215577897}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 7b39b5467b05f5e468f34b671aabe3c9, type: 2}
   m_CullingMode: 0
@@ -6076,7 +6078,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 400
-  m_StoppingDistance: 6
+  m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 0
   m_AutoRepath: 1

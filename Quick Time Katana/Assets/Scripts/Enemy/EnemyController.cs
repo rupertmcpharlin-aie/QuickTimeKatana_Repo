@@ -17,7 +17,7 @@ public class EnemyController : MonoBehaviour
     [Space]
     [SerializeField] public GameObject cameraFocus;
     [SerializeField] public NavMeshAgent agent;
-    //[SerializeField] Animator enemyAnimator;
+    [SerializeField] public Animator enemyAnimator;
     [Space]
     [SerializeField] public PlayerController playerController;
     
@@ -31,16 +31,18 @@ public class EnemyController : MonoBehaviour
     [SerializeField] public float enemyNextAttack;
     [SerializeField] public float enemyNextAttackSpeed;
     [Space]
-    [SerializeField] public GameObject[] cutBodies_Standard;
+    [SerializeField] public GameObject cutBodies_TopLeft;
+    [SerializeField] public GameObject cutBodies_TopRight;
     [SerializeField] public GameObject[] cutBodies_HiddenFang;
     [SerializeField] public GameObject[] cutBodies_StealthKill;
 
     [Space]
     [Header("Patrol Variables")]
     [SerializeField] public bool isPatrolling;
+    [SerializeField] public Transform currentPatrolTransform;
     [SerializeField] public Transform[] patrolTransforms;
     [Range(0,100)]
-    [SerializeField] public float patrolSpeed;
+    [SerializeField] public int patrolIndex;
 
     [Space]
     [Header("Aware of player variables")]
@@ -66,11 +68,18 @@ public class EnemyController : MonoBehaviour
     void Start()
     {
         playerController = FindObjectOfType<PlayerController>();
+        agent = GetComponent<NavMeshAgent>();
+        enemyAnimator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(enemyState == EnemyState.alive)
+        {
+            Patrol();
+        }
+
         //if the enemy is aware of the player
         if(enemyState == EnemyState.awareOfPlayer)
         {
@@ -90,6 +99,44 @@ public class EnemyController : MonoBehaviour
         {
             //engage the player
             Engage();
+        }
+    }
+
+    public void AwareOfPlayer()
+    {
+        if (enemyState != EnemyState.awareOfPlayer)
+        {
+            enemyState = EnemyState.awareOfPlayer;
+            agent.stoppingDistance = 6f;
+            enemyAnimator.SetTrigger("AwareOfPlayer");
+        }
+    }
+
+    public void Patrol()
+    {
+        if(isPatrolling)
+        {
+            //get patrol point if has none
+            if(currentPatrolTransform == null)
+            {
+                currentPatrolTransform = patrolTransforms[patrolIndex];
+            }
+
+            agent.SetDestination(currentPatrolTransform.position);
+
+            if(Vector3.Distance(transform.position, currentPatrolTransform.position) < 0.1f)
+            {
+                if(patrolIndex == patrolTransforms.Length - 1)
+                {
+                    patrolIndex = 0;
+                }
+                else
+                {
+                    patrolIndex++;
+                }
+
+                currentPatrolTransform = patrolTransforms[patrolIndex];
+            }
         }
     }
 

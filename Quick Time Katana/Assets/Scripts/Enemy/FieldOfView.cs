@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class FieldOfView : MonoBehaviour
 {
@@ -20,19 +21,11 @@ public class FieldOfView : MonoBehaviour
     public LayerMask targetMask;
     public LayerMask obstructionMask;
     
-
-
     // Start is called before the first frame update
     void Start()
     {
         playerRef = GameObject.FindGameObjectWithTag("Player");
         StartCoroutine("FOVRoutine");
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     private IEnumerator FOVRoutine()
@@ -70,11 +63,9 @@ public class FieldOfView : MonoBehaviour
                 {
                     if(enemyController.enemyState == EnemyController.EnemyState.alive)
                     {
-                        Debug.Log("Set enemy state to aware");
-                        enemyController.SetEnemyState(EnemyController.EnemyState.awareOfPlayer);
+                        enemyController.AwareOfPlayer();
                     }
                     
-
                     if(distanceToTarget <= combatDistance && enemyController.enemyState == EnemyController.EnemyState.awareOfPlayer)
                     {
                         Debug.Log("Set enemy state to combat");
@@ -89,7 +80,7 @@ public class FieldOfView : MonoBehaviour
                 enemyController.enemyState != EnemyController.EnemyState.inCombat &&
                 enemyController.enemyState != EnemyController.EnemyState.dead)
             {
-                enemyController.SetEnemyState(EnemyController.EnemyState.awareOfPlayer);
+                enemyController.AwareOfPlayer();
             }
         }
     }
