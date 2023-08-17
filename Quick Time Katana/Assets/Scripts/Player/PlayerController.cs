@@ -358,8 +358,10 @@ public class PlayerController : MonoBehaviour
 
             //get velocity
             Vector3 velocity = movementDirection * speed;
-            
 
+            //gravity stuff
+            ySpeed += Physics.gravity.y * Time.deltaTime;
+            velocity.y = ySpeed;
 
 
             //move character
@@ -368,7 +370,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             //get player input
-            Vector3 movementDirection = new Vector3(0, leftStickXAxis, 0);
+            Vector3 movementDirection = new Vector3(0, leftStickYAxis, 0);
             float inputMagnitude = Mathf.Clamp01(movementDirection.magnitude);
             float speed = inputMagnitude * movementSpeed;
 
