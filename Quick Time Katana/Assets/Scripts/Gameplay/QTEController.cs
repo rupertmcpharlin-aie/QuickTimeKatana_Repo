@@ -56,12 +56,6 @@ public class QTEController : MonoBehaviour
             HiddenFang();
         }
 
-        if(playerController.playerState == PlayerState.stealthKill && enemyController.enemyState != EnemyController.EnemyState.dead)
-        {
-            MakeCombatQTEELements();
-            StealthInputManager();
-        }
-
         //runs while enemy is alive
         if (enemyController != null)
         {
@@ -77,8 +71,13 @@ public class QTEController : MonoBehaviour
 
                 //manages qte
                 MakeCombatQTEELements();
-
             }
+        }
+
+        if (playerController.playerState == PlayerState.stealthKill && enemyController.enemyState != EnemyController.EnemyState.dead)
+        {
+            MakeCombatQTEELements();
+            StealthInputManager();
         }
     }
     /*****************************************************************************************************************************/
@@ -141,8 +140,10 @@ public class QTEController : MonoBehaviour
             //HIDDEN FANG BEHAVIOUR
             else
             {
+                //hidden fang kill
                 if (hiddenFangIndex == hiddenFangScript.hiddenFangs.Length-1 && enemyController.enemyNextAttack < 1)
                 {
+                    //reset varaiables
                     hiddenFangIndex = 0;
                     isHiddenFangActive = false;
 
@@ -150,6 +151,7 @@ public class QTEController : MonoBehaviour
                     StartCoroutine("KillEnemyStanding");
                     playerController.animator.SetTrigger("HiddenFangKillTrigger");
                 }
+                //move onto next hidden fang
                 else if(hiddenFangIndex < hiddenFangScript.hiddenFangs.Length-1)
                 {
                     hiddenFangIndex++;
@@ -169,28 +171,62 @@ public class QTEController : MonoBehaviour
                 {
                     if (Input.GetButtonDown(tempString))
                     {
-                        StartCoroutine("WrongInput");
+                        StartCoroutine("WrongInputCombat");
                     }
                 }
             }
         }        
     }
 
-    IEnumerator EnemyStunned()
+    //player stealth stuff
+    private void StealthInputManager()
     {
-        //STUN ENEMY
-        enemyController.enemyPoise = 0;
-        enemyController.enemyNextAttack = 0;
-        enemyController.SetEnemyState(EnemyController.EnemyState.stunned);
-
-        yield return new WaitForSeconds(enemyController.stunnedRecoveryTime);
-
-        if (enemyController.enemyState == EnemyController.EnemyState.stunned)
+        //CORRECT INPUT
+        if (Input.GetButtonDown(currentQTEElementValue))
         {
-            enemyController.SetEnemyState(EnemyController.EnemyState.inCombat);
+            playerController.stealthHitsIndex++;
+            StartCoroutine("CorrectInputFeedback");
+            DestroyCurrentQTEElement();
+
+            if (playerController.stealthHitsIndex == 4)
+            {
+                StartCoroutine("KillEnemyCrouched");
+                playerController.animator.SetTrigger("StealthKill");
+            }
+        }
+
+        //INCORRECT INPUT
+        foreach (GameObject QTEElement in QTEElements)
+        {
+            string tempString = QTEElement.GetComponent<QTEElementScript>().QTEElementValue;
+            //if there is a current value
+            if (currentQTEElementValue != null)
+            {
+                //buttons
+                if (tempString != currentQTEElementValue)
+                {
+                    if (Input.GetButtonDown(tempString))
+                    {
+                        //reset stealth hits
+                        playerController.stealthHitsIndex = 0;
+
+                        //destroy current element
+                        DestroyCurrentQTEElement();
+
+                        //start combat
+                        playerController.StartCombat(playerController.engagedEnemy);
+                        playerController.SetPlayerState(PlayerState.combat);
+                        enemyController.SetEnemyState(EnemyController.EnemyState.inCombat);
+
+                        //play player combat animation
+                        playerController.animator.SetTrigger("StandTrigger");
+                    }
+                }
+            }
         }
     }
 
+    //controls hidden fang
     private void HiddenFang()
     {
         //hidden fang
@@ -215,51 +251,7 @@ public class QTEController : MonoBehaviour
         }
     }
 
-    private void StealthInputManager()
-    {
-        if(Input.GetButtonDown(currentQTEElementValue))
-        {
-            playerController.stealthHitsIndex++;
-            StartCoroutine("CorrectInputFeedback");
-            DestroyCurrentQTEElement();
-        }
-
-        if(playerController.stealthHitsIndex == 4)
-        {
-            StartCoroutine("KillEnemyCrouched");
-            playerController.animator.SetTrigger("StealthKill");
-        }
-
-        //INCORRECT INPUT
-        foreach (GameObject QTEElement in QTEElements)
-        {
-            string tempString = QTEElement.GetComponent<QTEElementScript>().QTEElementValue;
-            //if there is a current value
-            if (currentQTEElementValue != null)
-            {
-                //buttons
-                if (tempString != currentQTEElementValue)
-                {
-                    if (Input.GetButtonDown(tempString))
-                    {
-                        //reset stealth hits
-                        playerController.stealthHitsIndex = 0;
-
-                        //destroy current element
-                        DestroyCurrentQTEElement();
-
-                        //start combat
-                        playerController.SetPlayerState(PlayerState.combat);
-                        enemyController.SetEnemyState(EnemyController.EnemyState.inCombat);
-
-                        //play player combat animation
-                        playerController.animator.SetTrigger("StandTrigger");
-                    }
-                }
-            }
-        }
-
-    }
+    /****************************************************************************************************************************/
 
     /// <summary>
     /// ENEMY
@@ -267,11 +259,6 @@ public class QTEController : MonoBehaviour
     //controls the enemies behaviour
     private void EnemyBehaviour()
     {
-        /*if(enemyController.enemyPoise == 0)
-        {
-            enemyController.enemyAnimator.SetTrigger("RaiseWeapon");
-        }*/
-
         //refill poise
         enemyController.enemyPoise += Time.deltaTime / enemyController.enemyPoiseRecoverySpeed;
         enemyController.enemyPoise = Mathf.Clamp01(enemyController.enemyPoise);
@@ -288,6 +275,28 @@ public class QTEController : MonoBehaviour
         }
     }
 
+    //STUN THE ENEMY
+    IEnumerator EnemyStunned()
+    {
+        //STUN ENEMY
+        enemyController.enemyPoise = 0;
+        enemyController.enemyNextAttack = 0;
+        enemyController.SetEnemyState(EnemyController.EnemyState.stunned);
+
+        yield return new WaitForSeconds(enemyController.stunnedRecoveryTime);
+
+        if (enemyController.enemyState == EnemyController.EnemyState.stunned)
+        {
+            enemyController.SetEnemyState(EnemyController.EnemyState.inCombat);
+        }
+    }
+
+    
+    /*****************************************************************************************************************************/
+    /// <summary>
+    /// QTE STUFF
+    /// </summary>
+    
     //MAKE QTE Elements
     private void MakeCombatQTEELements()
     {
@@ -311,10 +320,28 @@ public class QTEController : MonoBehaviour
         currentQTEElement.transform.position = currentQTEBackground.transform.position;
     }
 
-    
+    //player feedback correct input
+    IEnumerator CorrectInputFeedback()
+    {
+        //set colour to green
+        currentQTEBackground.GetComponent<Image>().color = Color.green;
+
+        //wait for a sec
+        yield return new WaitForSeconds(0.1f);
+
+        //reset colour
+        if (playerController.playerState == PlayerState.combat)
+        {
+            currentQTEBackground.GetComponent<Image>().color = Color.black;
+        }
+        else if (playerController.playerState == PlayerState.stealthKill)
+        {
+            currentQTEBackground.GetComponent<Image>().color = Color.gray;
+        }
+    }
 
     //stuns the player if they press the wrong input
-    public IEnumerator WrongInput()
+    public IEnumerator WrongInputCombat()
     {
         enemyController.enemyPoise = 1;
         currentQTEBackground.GetComponent<Image>().color = Color.red;
@@ -329,15 +356,18 @@ public class QTEController : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// UTILITY METHODS
-    /// </summary>
     //DESTROYS THE CURRENT QTE ELEMENT AND RESETS VALUE
     private void DestroyCurrentQTEElement()
     {
         Destroy(currentQTEElement);
         currentQTEElementValue = null;
     }
+
+    /***********************************************************************************************************/
+    /// <summary>
+    /// KILLLLLLLL
+    /// </summary>
+
 
     //KILLS THE ENEMY
     IEnumerator KillEnemyStanding()
@@ -414,23 +444,6 @@ public class QTEController : MonoBehaviour
         currentQTEBackground.SetActive(false);
 
         //run death animation
-
-    }
-
-    //player feedback correct input
-    IEnumerator CorrectInputFeedback()
-    {
-        currentQTEBackground.GetComponent<Image>().color = Color.green;
-
-        yield return new WaitForSeconds(0.1f);
-
-        if (playerController.playerState == PlayerState.combat)
-        {
-            currentQTEBackground.GetComponent<Image>().color = Color.black;
-        }
-        else if(playerController.playerState == PlayerState.stealthKill)
-        {
-            currentQTEBackground.GetComponent<Image>().color = Color.gray;
-        }
+        //TO POLISH
     }
 }

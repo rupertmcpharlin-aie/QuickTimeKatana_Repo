@@ -439,6 +439,11 @@ public class PlayerController : MonoBehaviour
     public void StartCombat(GameObject nearestEnemy)
     {
         //player
+        if(playerState == PlayerState.crouched)
+        {
+            animator.SetTrigger("StandTrigger");
+            movementSpeed = standingMovementSpeed;
+        }
         SetPlayerState(PlayerState.combat);
 
         //enemy
@@ -460,28 +465,7 @@ public class PlayerController : MonoBehaviour
         qteController.enemyController = engagedEnemyController;
     }
 
-    public void StartStealthKill(GameObject nearestEnemy)
-    {
-        //change player state to stealth kill
-        SetPlayerState(PlayerState.stealthKill);
-
-        //enemy
-        engagedEnemy = nearestEnemy;
-        engagedEnemyController = nearestEnemy.GetComponent<EnemyController>();
-
-        //set background active
-        engagedEnemyController.currentQTEBackground.SetActive(true);
-        engagedEnemyController.currentQTEBackground.GetComponent<Image>().color = Color.grey;
-
-        //combat camera
-        CameraTransition_CombatCam();
-        combatCamera.Follow = engagedEnemyController.cameraFocus.transform;
-        combatCamera.LookAt = engagedEnemyController.cameraFocus.transform;
-
-        //qte
-        qteController.currentQTEBackground = engagedEnemyController.currentQTEBackground;
-        qteController.enemyController = engagedEnemyController;
-    }
+    
 
     /*******************************************************************************************************************************/
     //STEALTH
@@ -517,6 +501,31 @@ public class PlayerController : MonoBehaviour
             engagedEnemy.GetComponent<EnemyController>().currentQTEBackground.transform.position = new Vector3(engagedEnemyScreenSpacePos.x, engagedEnemyScreenSpacePos.y, 0);
         }
     }
+
+    //stealth kill
+    public void StartStealthKill(GameObject nearestEnemy)
+    {
+        //change player state to stealth kill
+        SetPlayerState(PlayerState.stealthKill);
+
+        //enemy
+        engagedEnemy = nearestEnemy;
+        engagedEnemyController = nearestEnemy.GetComponent<EnemyController>();
+
+        //set background active
+        engagedEnemyController.currentQTEBackground.SetActive(true);
+        engagedEnemyController.currentQTEBackground.GetComponent<Image>().color = Color.grey;
+
+        //combat camera
+        CameraTransition_CombatCam();
+        combatCamera.Follow = engagedEnemyController.cameraFocus.transform;
+        combatCamera.LookAt = engagedEnemyController.cameraFocus.transform;
+
+        //qte
+        qteController.currentQTEBackground = engagedEnemyController.currentQTEBackground;
+        qteController.enemyController = engagedEnemyController;
+    }
+
     /*********************************************************************************************************************************/
     //UTILITY METHODS
     //FIND ENEMIES

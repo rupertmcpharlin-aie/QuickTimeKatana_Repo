@@ -6,16 +6,19 @@ using static PlayerController;
 
 public class EnemyController : MonoBehaviour
 {
-    [Header("Enemy State")]
-    [SerializeField] public EnemyState enemyState;
-
+    /// <summary>
+    /// VARIABLES
+    /// </summary>
     [Space]
-    [Header("GameObjects")]
+    [Header("Enemy Variables")]
+    [SerializeField] public EnemyState enemyState;
+    [Space]
     [SerializeField] public GameObject enemyMeshes;
     [SerializeField] public GameObject torsoe;
     [SerializeField] public GameObject head;
     [Space]
     [SerializeField] public GameObject cameraFocus;
+    [Space]
     [SerializeField] public NavMeshAgent agent;
     [SerializeField] public Animator enemyAnimator;
     [Space]
@@ -48,14 +51,18 @@ public class EnemyController : MonoBehaviour
 
     [Space]
     [Header("Aware of player variables")]
-    [SerializeField] public float noticePlayerWaitTime;
-    [SerializeField] public float chaseSpeed;
     [SerializeField] public float facePlayerRotationSpeed;
+    [SerializeField] public EnemyController[] awarenessGroup;
 
     [Space]
     [Header("QTE")]
     [SerializeField] public GameObject currentQTEBackground;
 
+    /*******************************************************************************************************************************/
+
+    /// <summary>
+    /// ENUM
+    /// </summary>
     public enum EnemyState
     {
         alive,
@@ -66,6 +73,11 @@ public class EnemyController : MonoBehaviour
         dead
     }
 
+    /*******************************************************************************************************************************/
+
+    /// <summary>
+    /// METHODS
+    /// </summary>
 
     // Start is called before the first frame update
     void Start()
@@ -78,6 +90,7 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //patrol
         if(enemyState == EnemyState.alive)
         {
             Patrol();
@@ -105,31 +118,28 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    public void AwareOfPlayer()
-    {
-        if (enemyState != EnemyState.awareOfPlayer)
-        {
-            SetEnemyState(EnemyState.awareOfPlayer);
-            agent.stoppingDistance = 6f;
-            enemyAnimator.SetTrigger("AwareOfPlayer");
-        }
-    }
-
+    /******************************************************************************************************************************************/
+    /// <summary>
+    /// PATROL
+    /// </summary>
     public void Patrol()
     {
-        if(isPatrolling)
+        //if the patrolling variable is active
+        if (isPatrolling)
         {
             //get patrol point if has none
-            if(currentPatrolTransform == null)
+            if (currentPatrolTransform == null)
             {
                 currentPatrolTransform = patrolTransforms[patrolIndex];
             }
 
+            //set the enemys destination
             agent.SetDestination(currentPatrolTransform.position);
 
-            if(Vector3.Distance(transform.position, currentPatrolTransform.position) < 0.1f)
+            //move onto next patrol point if reached current objective
+            if (Vector3.Distance(transform.position, currentPatrolTransform.position) < 0.1f)
             {
-                if(patrolIndex == patrolTransforms.Length - 1)
+                if (patrolIndex == patrolTransforms.Length - 1)
                 {
                     patrolIndex = 0;
                 }
@@ -142,6 +152,21 @@ public class EnemyController : MonoBehaviour
             }
         }
     }
+
+
+    /*********************************************************************************************************************************************/
+    /// <summary>
+    /// AWARE OF PLAYER
+    /// </summary>
+    public void AwareOfPlayer()
+    {
+        if (enemyState != EnemyState.awareOfPlayer)
+        {
+            SetEnemyState(EnemyState.awareOfPlayer);
+            agent.stoppingDistance = 6f;
+            enemyAnimator.SetTrigger("AwareOfPlayer");
+        }
+    }    
 
     //behaviour when the enemy is aware of the player
     private void AwareOfPlayerBehaviour()
@@ -161,8 +186,21 @@ public class EnemyController : MonoBehaviour
         agent.SetDestination(playerController.transform.position);
 
         //back off player if already engaged
+
+        //make group aware
+        foreach(EnemyController enemy in awarenessGroup)
+        {
+            if (enemy.enemyState == EnemyState.alive)
+            {
+                enemy.AwareOfPlayer();
+            }
+        }
     }
 
+    /*******************************************************************************************************************************************/
+    /// <summary>
+    /// COMBAT
+    /// </summary>
     public void Engage()
     {
         //face player look at player
@@ -176,12 +214,18 @@ public class EnemyController : MonoBehaviour
         toRotationTorsoe.eulerAngles = new Vector3(0, toRotationTorsoe.eulerAngles.y, 0);
         torsoe.transform.rotation = Quaternion.RotateTowards(torsoe.transform.rotation, toRotationTorsoe, facePlayerRotationSpeed * Time.deltaTime);
 
+        //set players state
         if (playerController.playerState != PlayerState.combat)
         {
             playerController.StartCombat(gameObject);
         }
     }
 
+
+    /**************************************************************************************************************************************************/
+    /// <summary>
+    /// UTILITY METHODS
+    /// </summary>
     public void SetEnemyState(EnemyState newState)
     {
         Debug.Log("Set enemy state to: " + newState);
