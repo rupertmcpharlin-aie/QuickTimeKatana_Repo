@@ -18,10 +18,4 @@ public class HiddenFang : MonoBehaviour
         hiddenFangs[2] = module2;
         hiddenFangs[3] = module3;
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

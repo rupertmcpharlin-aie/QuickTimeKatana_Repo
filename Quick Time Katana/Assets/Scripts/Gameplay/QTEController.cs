@@ -111,19 +111,13 @@ public class QTEController : MonoBehaviour
                 //if playerController.damage is greater than the amount of poise enemy has left
                 if (enemyController.enemyPoise < playerController.damage && enemyController.enemyState == EnemyController.EnemyState.inCombat)
                 {
-                    //STUN ENEMY
-                    enemyController.enemyPoise = 0;
-                    enemyController.enemyNextAttack = 0;
-                    enemyController.SetEnemyState(EnemyController.EnemyState.stunned);
-
-                    //start coroutine
+                    //stun enemy
                     StartCoroutine("EnemyStunned");
                 }
                 else if (enemyController.enemyState == EnemyController.EnemyState.stunned)
                 {
                     //kill enemy
-                    KillEnemy();
-                    
+                    StartCoroutine("KillEnemy");
 
                     //pick random kill animation
                     int random = Random.Range(0, 2);
@@ -147,17 +141,20 @@ public class QTEController : MonoBehaviour
             //HIDDEN FANG BEHAVIOUR
             else
             {
-                if (hiddenFangIndex == hiddenFangScript.hiddenFangs.Length && enemyController.enemyNextAttack > 0)
+                if (hiddenFangIndex == hiddenFangScript.hiddenFangs.Length-1 && enemyController.enemyNextAttack < 1)
                 {
+                    Debug.Log("Hidden fang kill");
                     hiddenFangIndex = 0;
                     isHiddenFangActive = false;
                     currentQTEBackground.GetComponent<Image>().color = Color.black;
 
                     //kill enemy
-                    KillEnemy();
+                    StartCoroutine("KillEnemy");
                     playerController.animator.SetTrigger("HiddenFangKillTrigger");
-                    DestroyCurrentQTEElement();
-                    enemyController.currentQTEBackground.SetActive(false);
+                }
+                else if(hiddenFangIndex < hiddenFangScript.hiddenFangs.Length-1)
+                {
+                    hiddenFangIndex++;
                 }
             }
         }
@@ -183,14 +180,17 @@ public class QTEController : MonoBehaviour
 
     IEnumerator EnemyStunned()
     {
-        //start recovery animation
+        //STUN ENEMY
+        enemyController.enemyPoise = 0;
+        enemyController.enemyNextAttack = 0;
+        enemyController.SetEnemyState(EnemyController.EnemyState.stunned);
+
         yield return new WaitForSeconds(enemyController.stunnedRecoveryTime);
 
         if (enemyController.enemyState == EnemyController.EnemyState.stunned)
         {
             enemyController.SetEnemyState(EnemyController.EnemyState.inCombat);
         }
-        yield return null;
     }
 
     private void HiddenFang()
@@ -228,7 +228,7 @@ public class QTEController : MonoBehaviour
 
         if(playerController.stealthHitsIndex == 4)
         {
-            KillEnemy();
+            StartCoroutine("KillEnemy");
             playerController.animator.SetTrigger("StealthKill");
         }
 
@@ -302,8 +302,8 @@ public class QTEController : MonoBehaviour
         else if (currentQTEElement == null && isHiddenFangActive)
         {
             //instantiate
+            Debug.Log(hiddenFangIndex);
             currentQTEElement = Instantiate(hiddenFangScript.hiddenFangs[hiddenFangIndex][Random.Range(0, hiddenFangScript.hiddenFangs[hiddenFangIndex].Length)], currentQTEBackground.transform);
-            hiddenFangIndex++;
         }
 
         //reassign value 
@@ -339,7 +339,7 @@ public class QTEController : MonoBehaviour
     }
 
     //KILLS THE ENEMY
-    public void KillEnemy()
+    IEnumerator KillEnemy()
     {
         //remove qte stuff
         DestroyCurrentQTEElement();
@@ -350,6 +350,8 @@ public class QTEController : MonoBehaviour
         enemyController.enemyPoise = 0;
         enemyController.enemyNextAttack = 0;
         enemyController.gameObject.GetComponent<NavMeshAgent>().speed = 0;
+
+        yield return new WaitForSeconds(1f);
 
         //player variables
         playerController.playerState = PlayerState.exploring;

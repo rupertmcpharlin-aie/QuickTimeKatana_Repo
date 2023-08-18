@@ -212,28 +212,31 @@ public class PlayerController : MonoBehaviour
         //TO FIX
         //COMBAT CAM: transition to next enemy
         if (cameraState == CameraState.combatCam && 
+            playerState == PlayerState.stealthKill &&
             engagedEnemy.GetComponent<EnemyController>().enemyState == EnemyController.EnemyState.dead)
         {
             //if there are no more enemies
             if (FindRemainingAliveEnemies_Aware().Count == 0)
             {
+
                 if (playerState != PlayerState.stealthKill)
                 {
-                    playerState = PlayerState.exploring;
+                    SetPlayerState(PlayerState.exploring);
                 }
                 else
                 {
-                    playerState = PlayerState.crouched;
+                    SetPlayerState(PlayerState.crouched);
                 }
+
                 //transition to free cam
-                combatCamera.Priority = 0;
-                freeCamera.Priority = 1;
+                CameraTransition_FreeCam();
             }
 
+            //TO FIX
             //if there are still enemies
             else
             {
-                engagedEnemy = FindClosestEnemy_Aware();
+                /*engagedEnemy = FindClosestEnemy_Aware();
 
                 StartCombat(engagedEnemy);
                 engagedEnemy.GetComponent<EnemyController>().SetEnemyState(EnemyController.EnemyState.inCombat);
@@ -241,7 +244,7 @@ public class PlayerController : MonoBehaviour
                 //transition to new combat camera position
                 combatCamera.Follow = engagedEnemy.GetComponent<EnemyController>().cameraFocus.transform;
                 combatCamera.LookAt = engagedEnemy.GetComponent<EnemyController>().cameraFocus.transform;
-                combatCamera.GetCinemachineComponent<CinemachineOrbitalTransposer>().m_XAxis.Value = 0;
+                combatCamera.GetCinemachineComponent<CinemachineOrbitalTransposer>().m_XAxis.Value = 0;*/
             }
         }
     }
@@ -330,7 +333,7 @@ public class PlayerController : MonoBehaviour
             Vector3 velocity = movementDirection * speed;
 
             //gravity stuff
-            ySpeed += Physics.gravity.y * Time.deltaTime;
+            ySpeed = Physics.gravity.y;
             velocity.y = ySpeed;
 
             //move character
@@ -360,13 +363,13 @@ public class PlayerController : MonoBehaviour
             if (playerState == PlayerState.exploring)
             {
                 animator.SetTrigger("CrouchTrigger");
-                playerState = PlayerState.crouched;
+                SetPlayerState(PlayerState.crouched);
                 movementSpeed = crouchedMovementSpeed;
             }
             else if (playerState == PlayerState.crouched || playerState == PlayerState.stealthKill)
             {
                 animator.SetTrigger("StandTrigger");
-                playerState = PlayerState.exploring;
+                SetPlayerState(PlayerState.exploring);
                 movementSpeed = standingMovementSpeed;
             }
         }
@@ -377,10 +380,10 @@ public class PlayerController : MonoBehaviour
     private void MountHorseBehaviour()
     {
         //set state
-        playerState = PlayerState.mounted;
+        SetPlayerState(PlayerState.mounted);
         
         //trigger animation
-        animator.SetTrigger("Sheath_Horse");
+        animator.SetTrigger("Mount_Horse");
 
         //start horse walking animation
         horse.GetComponent<HorseScript>().StartWalkingAnimation();
@@ -427,7 +430,7 @@ public class PlayerController : MonoBehaviour
             horse.transform.SetParent(environment.transform);
 
             //set player state
-            playerState = PlayerState.exploring;
+            SetPlayerState(PlayerState.exploring);
 
             //start player animation
             animator.SetTrigger("UnMount_Horse");
@@ -479,11 +482,8 @@ public class PlayerController : MonoBehaviour
     //begin combat
     public void StartCombat(GameObject nearestEnemy)
     {
-        //set variables
-        
-
         //player
-        playerState = PlayerState.combat;
+        SetPlayerState(PlayerState.combat);
 
         //enemy
         engagedEnemy = nearestEnemy;
@@ -514,7 +514,7 @@ public class PlayerController : MonoBehaviour
                 if (Vector3.Distance(transform.position, enemy.transform.position) < stealthEngageDistance)
                 {
                     //change player state to stealth kill
-                    playerState = PlayerState.stealthKill;
+                    SetPlayerState(PlayerState.stealthKill);
 
                     //set engaged enemy variables
                     engagedEnemy = enemy;
@@ -617,5 +617,11 @@ public class PlayerController : MonoBehaviour
         }
 
         return null;
+    }
+
+    public void SetPlayerState(PlayerState newState)
+    {
+        Debug.Log("New player state = " + newState);
+        playerState = newState;
     }
 }
