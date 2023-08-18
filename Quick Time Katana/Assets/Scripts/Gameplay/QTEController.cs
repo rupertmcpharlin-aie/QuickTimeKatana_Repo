@@ -123,8 +123,7 @@ public class QTEController : MonoBehaviour
                 {
                     //kill enemy
                     KillEnemy();
-                    DestroyCurrentQTEElement();
-                    enemyController.currentQTEBackground.SetActive(false);
+                    
 
                     //pick random kill animation
                     int random = Random.Range(0, 2);
@@ -187,8 +186,10 @@ public class QTEController : MonoBehaviour
         //start recovery animation
         yield return new WaitForSeconds(enemyController.stunnedRecoveryTime);
 
-        enemyController.enemyState = EnemyController.EnemyState.inCombat;
-
+        if (enemyController.enemyState == EnemyController.EnemyState.stunned)
+        {
+            enemyController.SetEnemyState(EnemyController.EnemyState.inCombat);
+        }
         yield return null;
     }
 
@@ -268,10 +269,10 @@ public class QTEController : MonoBehaviour
     //controls the enemies behaviour
     private void EnemyBehaviour()
     {
-        if(enemyController.enemyPoise == 0)
+        /*if(enemyController.enemyPoise == 0)
         {
             enemyController.enemyAnimator.SetTrigger("RaiseWeapon");
-        }
+        }*/
 
         //refill poise
         enemyController.enemyPoise += Time.deltaTime / enemyController.enemyPoiseRecoverySpeed;
@@ -349,6 +350,10 @@ public class QTEController : MonoBehaviour
         enemyController.enemyPoise = 0;
         enemyController.enemyNextAttack = 0;
         enemyController.gameObject.GetComponent<NavMeshAgent>().speed = 0;
+
+        //player variables
+        playerController.playerState = PlayerState.exploring;
+        playerController.CameraTransition_FreeCam();
     }
 
     public void KillEnemy_Standard_TopRight()
