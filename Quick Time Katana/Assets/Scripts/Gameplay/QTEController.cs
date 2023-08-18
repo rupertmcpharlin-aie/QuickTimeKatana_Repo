@@ -117,7 +117,7 @@ public class QTEController : MonoBehaviour
                 else if (enemyController.enemyState == EnemyController.EnemyState.stunned)
                 {
                     //kill enemy
-                    StartCoroutine("KillEnemy");
+                    StartCoroutine("KillEnemyStanding");
 
                     //pick random kill animation
                     int random = Random.Range(0, 2);
@@ -143,13 +143,11 @@ public class QTEController : MonoBehaviour
             {
                 if (hiddenFangIndex == hiddenFangScript.hiddenFangs.Length-1 && enemyController.enemyNextAttack < 1)
                 {
-                    Debug.Log("Hidden fang kill");
                     hiddenFangIndex = 0;
                     isHiddenFangActive = false;
-                    currentQTEBackground.GetComponent<Image>().color = Color.black;
 
                     //kill enemy
-                    StartCoroutine("KillEnemy");
+                    StartCoroutine("KillEnemyStanding");
                     playerController.animator.SetTrigger("HiddenFangKillTrigger");
                 }
                 else if(hiddenFangIndex < hiddenFangScript.hiddenFangs.Length-1)
@@ -228,7 +226,7 @@ public class QTEController : MonoBehaviour
 
         if(playerController.stealthHitsIndex == 4)
         {
-            StartCoroutine("KillEnemy");
+            StartCoroutine("KillEnemyCrouched");
             playerController.animator.SetTrigger("StealthKill");
         }
 
@@ -251,7 +249,7 @@ public class QTEController : MonoBehaviour
                         DestroyCurrentQTEElement();
 
                         //start combat
-                        playerController.playerState = PlayerState.combat;
+                        playerController.SetPlayerState(PlayerState.combat);
                         enemyController.SetEnemyState(EnemyController.EnemyState.inCombat);
 
                         //play player combat animation
@@ -324,8 +322,11 @@ public class QTEController : MonoBehaviour
 
         yield return new WaitForSeconds(.5f);
 
-        currentQTEBackground.GetComponent<Image>().color = Color.black;
-        playerController.playerStunned = false;
+        if(playerController.playerState == PlayerState.combat)
+        {
+            currentQTEBackground.GetComponent<Image>().color = Color.black;
+            playerController.playerStunned = false;
+        }
     }
 
     /// <summary>
@@ -339,7 +340,7 @@ public class QTEController : MonoBehaviour
     }
 
     //KILLS THE ENEMY
-    IEnumerator KillEnemy()
+    IEnumerator KillEnemyStanding()
     {
         //remove qte stuff
         DestroyCurrentQTEElement();
@@ -354,7 +355,26 @@ public class QTEController : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         //player variables
-        playerController.playerState = PlayerState.exploring;
+        playerController.SetPlayerState(PlayerState.exploring);
+        playerController.CameraTransition_FreeCam();
+    }
+
+    IEnumerator KillEnemyCrouched()
+    {
+        //remove qte stuff
+        DestroyCurrentQTEElement();
+        currentQTEBackground.SetActive(false);
+
+        //deactivate player variables
+        enemyController.SetEnemyState(EnemyController.EnemyState.dead);
+        enemyController.enemyPoise = 0;
+        enemyController.enemyNextAttack = 0;
+        enemyController.gameObject.GetComponent<NavMeshAgent>().speed = 0;
+
+        yield return new WaitForSeconds(1f);
+
+        //player variables
+        playerController.SetPlayerState(PlayerState.crouched);
         playerController.CameraTransition_FreeCam();
     }
 
@@ -390,24 +410,27 @@ public class QTEController : MonoBehaviour
     private void KillPlayer()
     {
         DestroyCurrentQTEElement();
-        playerController.playerState = PlayerState.dead;
+        playerController.SetPlayerState(PlayerState.dead);
         currentQTEBackground.SetActive(false);
 
         //run death animation
 
     }
 
-    //STARTS COMBAT
-    public void StartCombat()
-    {
-        playerController.playerState = PlayerState.combat;
-    }
-
     //player feedback correct input
     IEnumerator CorrectInputFeedback()
     {
         currentQTEBackground.GetComponent<Image>().color = Color.green;
+
         yield return new WaitForSeconds(0.1f);
-        currentQTEBackground.GetComponent<Image>().color = Color.black;
+
+        if (playerController.playerState == PlayerState.combat)
+        {
+            currentQTEBackground.GetComponent<Image>().color = Color.black;
+        }
+        else if(playerController.playerState == PlayerState.stealthKill)
+        {
+            currentQTEBackground.GetComponent<Image>().color = Color.gray;
+        }
     }
 }

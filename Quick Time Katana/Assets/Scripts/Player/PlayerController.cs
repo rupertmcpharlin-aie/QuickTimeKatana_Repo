@@ -4,6 +4,7 @@ using UnityEngine;
 using Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -211,42 +212,7 @@ public class PlayerController : MonoBehaviour
 
         //TO FIX
         //COMBAT CAM: transition to next enemy
-        if (cameraState == CameraState.combatCam && 
-            playerState == PlayerState.stealthKill &&
-            engagedEnemy.GetComponent<EnemyController>().enemyState == EnemyController.EnemyState.dead)
-        {
-            //if there are no more enemies
-            if (FindRemainingAliveEnemies_Aware().Count == 0)
-            {
 
-                if (playerState != PlayerState.stealthKill)
-                {
-                    SetPlayerState(PlayerState.exploring);
-                }
-                else
-                {
-                    SetPlayerState(PlayerState.crouched);
-                }
-
-                //transition to free cam
-                CameraTransition_FreeCam();
-            }
-
-            //TO FIX
-            //if there are still enemies
-            else
-            {
-                /*engagedEnemy = FindClosestEnemy_Aware();
-
-                StartCombat(engagedEnemy);
-                engagedEnemy.GetComponent<EnemyController>().SetEnemyState(EnemyController.EnemyState.inCombat);
-
-                //transition to new combat camera position
-                combatCamera.Follow = engagedEnemy.GetComponent<EnemyController>().cameraFocus.transform;
-                combatCamera.LookAt = engagedEnemy.GetComponent<EnemyController>().cameraFocus.transform;
-                combatCamera.GetCinemachineComponent<CinemachineOrbitalTransposer>().m_XAxis.Value = 0;*/
-            }
-        }
     }
 
     public void CameraTransition_LockOn()
@@ -456,16 +422,6 @@ public class PlayerController : MonoBehaviour
     //COMBAT
     public void Combat()
     {
-        //things to do once
-        if (cameraState != CameraState.combatCam)
-        {
-            //transition to combat camera
-            CameraTransition_CombatCam();
-
-            //set background active
-            engagedEnemy.GetComponent<EnemyController>().currentQTEBackground.SetActive(true);
-        }
-
         //face enemy
         Vector3 direction = engagedEnemy.transform.position - transform.position;
         Quaternion toRotation = Quaternion.LookRotation(direction, Vector3.up);
@@ -487,17 +443,44 @@ public class PlayerController : MonoBehaviour
 
         //enemy
         engagedEnemy = nearestEnemy;
-        EnemyController nearestEnemyController = nearestEnemy.GetComponent<EnemyController>();
-        nearestEnemyController.SetEnemyState(EnemyController.EnemyState.inCombat);
-        nearestEnemyController.currentQTEBackground.SetActive(true);
+        engagedEnemyController = nearestEnemy.GetComponent<EnemyController>();
+        engagedEnemyController.SetEnemyState(EnemyController.EnemyState.inCombat);
+
+        //set background active
+        engagedEnemyController.currentQTEBackground.SetActive(true);
+        engagedEnemyController.currentQTEBackground.GetComponent<Image>().color = Color.black;
 
         //combat camera
-        combatCamera.Follow = nearestEnemyController.cameraFocus.transform;
-        combatCamera.LookAt = nearestEnemyController.cameraFocus.transform;
+        CameraTransition_CombatCam();
+        combatCamera.Follow = engagedEnemyController.cameraFocus.transform;
+        combatCamera.LookAt = engagedEnemyController.cameraFocus.transform;
 
         //qte
-        qteController.currentQTEBackground = nearestEnemyController.currentQTEBackground;
-        qteController.enemyController = nearestEnemyController;
+        qteController.currentQTEBackground = engagedEnemyController.currentQTEBackground;
+        qteController.enemyController = engagedEnemyController;
+    }
+
+    public void StartStealthKill(GameObject nearestEnemy)
+    {
+        //change player state to stealth kill
+        SetPlayerState(PlayerState.stealthKill);
+
+        //enemy
+        engagedEnemy = nearestEnemy;
+        engagedEnemyController = nearestEnemy.GetComponent<EnemyController>();
+
+        //set background active
+        engagedEnemyController.currentQTEBackground.SetActive(true);
+        engagedEnemyController.currentQTEBackground.GetComponent<Image>().color = Color.grey;
+
+        //combat camera
+        CameraTransition_CombatCam();
+        combatCamera.Follow = engagedEnemyController.cameraFocus.transform;
+        combatCamera.LookAt = engagedEnemyController.cameraFocus.transform;
+
+        //qte
+        qteController.currentQTEBackground = engagedEnemyController.currentQTEBackground;
+        qteController.enemyController = engagedEnemyController;
     }
 
     /*******************************************************************************************************************************/
@@ -513,24 +496,7 @@ public class PlayerController : MonoBehaviour
                 //check if distance between player and enemies is less than threshold to start stealth kill
                 if (Vector3.Distance(transform.position, enemy.transform.position) < stealthEngageDistance)
                 {
-                    //change player state to stealth kill
-                    SetPlayerState(PlayerState.stealthKill);
-
-                    //set engaged enemy variables
-                    engagedEnemy = enemy;
-                    engagedEnemyController = engagedEnemy.GetComponent<EnemyController>();
-                    engagedEnemyController.currentQTEBackground.SetActive(true);
-
-                    //set camerra variables
-                    combatCamera.Follow = engagedEnemyController.cameraFocus.transform;
-                    combatCamera.LookAt = engagedEnemyController.cameraFocus.transform;
-
-                    //transition camera
-                    CameraTransition_CombatCam();
-
-                    //set qte variables
-                    qteController.enemyController = engagedEnemyController;
-                    qteController.currentQTEBackground = engagedEnemyController.currentQTEBackground;
+                    StartStealthKill(enemy);
                 }
             }
         }
