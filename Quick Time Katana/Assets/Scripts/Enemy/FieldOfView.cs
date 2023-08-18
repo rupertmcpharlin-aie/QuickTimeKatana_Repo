@@ -68,9 +68,8 @@ public class FieldOfView : MonoBehaviour
                     
                     if(distanceToTarget <= combatDistance && enemyController.enemyState == EnemyController.EnemyState.awareOfPlayer)
                     {
-                        Debug.Log("Set enemy state to combat");
                         enemyController.SetEnemyState(EnemyController.EnemyState.inCombat);
-                        enemyController.enemyAnimator.SetTrigger("RaiseWeapon");
+                        //enemyController.enemyAnimator.SetTrigger("RaiseWeapon");
                     }
                 }
             }
@@ -78,8 +77,7 @@ public class FieldOfView : MonoBehaviour
             if(enemyController.playerController.playerState != PlayerController.PlayerState.crouched &&
                 enemyController.playerController.playerState != PlayerController.PlayerState.stealthKill
                 &&
-                enemyController.enemyState != EnemyController.EnemyState.inCombat &&
-                enemyController.enemyState != EnemyController.EnemyState.dead)
+                enemyController.enemyState == EnemyController.EnemyState.alive)
             {
                 enemyController.AwareOfPlayer();
             }

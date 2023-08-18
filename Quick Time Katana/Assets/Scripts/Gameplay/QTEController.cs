@@ -10,17 +10,20 @@ using static PlayerController;
 using Image = UnityEngine.UI.Image;
 using Random = UnityEngine.Random;
 
-public class BaseQTEScript : MonoBehaviour
+public class QTEController : MonoBehaviour
 {
+    /// <summary>
+    /// VARIABLES
+    /// </summary>
     [Header("Scripts")]
-    [SerializeField] PlayerController playerController;
+    [SerializeField] public PlayerController playerController;
     [SerializeField] public EnemyController enemyController;
 
     [Space]
     [Header("QTE System")]
-    [SerializeField] GameObject[] QTEElements;
+    [SerializeField] public GameObject[] QTEElements;
     [SerializeField] public GameObject currentQTEBackground;
-    [SerializeField] GameObject currentQTEElement;
+    [SerializeField] public GameObject currentQTEElement;
     [SerializeField] string currentQTEElementValue;
 
     [Space]
@@ -29,25 +32,14 @@ public class BaseQTEScript : MonoBehaviour
     [SerializeField] bool isHiddenFangActive;
     [SerializeField] int hiddenFangIndex;
 
-    
-    
-
-    /*[Space]
     [Space]
     [Header("Audio")]
     [SerializeField] AudioSource swordSource;
     [SerializeField] AudioClip[] swordHits;
     [SerializeField] float swordPitchRange;
     [SerializeField] AudioSource killSource;
-    [SerializeField] AudioClip[] killSFX;*/
-
-    /// <summary>
-    /// START
-    /// </summary>
-    void Start()
-    {
-        
-    }
+    [SerializeField] AudioClip[] killSFX;
+    /**************************************************************************************************************************/
 
     /// <summary>
     /// UPDATE
@@ -59,6 +51,9 @@ public class BaseQTEScript : MonoBehaviour
         {
             //gets inputs from the player
             CombatInputManager();
+
+            //hidden fang
+            HiddenFang();
         }
 
         if(playerController.playerState == PlayerState.stealthKill && enemyController.enemyState != EnemyController.EnemyState.dead)
@@ -70,32 +65,159 @@ public class BaseQTEScript : MonoBehaviour
         //runs while enemy is alive
         if (enemyController != null)
         {
-            if (enemyController.enemyState == EnemyController.EnemyState.inCombat && playerController.playerState != PlayerState.dead)
+            if (enemyController.enemyState == EnemyController.EnemyState.inCombat ||
+                enemyController.enemyState == EnemyController.EnemyState.stunned &&
+                playerController.playerState != PlayerState.dead)
             {
-                //enemy behaviours
-                EnemyBehaviour();
+                if (enemyController.enemyState == EnemyController.EnemyState.inCombat)
+                {
+                    //enemy behaviours
+                    EnemyBehaviour();
+                }
 
                 //manages qte
                 MakeCombatQTEELements();
+
+            }
+        }
+    }
+    /*****************************************************************************************************************************/
+
+    /// <summary>
+    /// PLAYER
+    /// </summary>
+    //Manages player input
+    private void CombatInputManager()
+    {
+        //CORRECT INPUT
+        if (Input.GetButtonDown(currentQTEElementValue))
+        {
+            StartCoroutine("CorrectInputFeedback");
+
+            /*//play metal SFX
+            swordSource.pitch = 1;
+            swordSource.clip = swordHits[Random.Range(0, swordHits.Length)];
+            float pitchRandom = Random.Range(-swordPitchRange, swordPitchRange);
+            swordSource.pitch += pitchRandom;
+            swordSource.Play();*/
+
+            //destroy current QTE Element and reset value
+            DestroyCurrentQTEElement();
+
+            //NORMAL BENHAVIOUR
+            if (!isHiddenFangActive)
+            {
+                //playerController.damage
+                //if playerController.damage is greater than the amount of poise enemy has left
+                if (enemyController.enemyPoise < playerController.damage && enemyController.enemyState == EnemyController.EnemyState.inCombat)
+                {
+                    //STUN ENEMY
+                    enemyController.enemyPoise = 0;
+                    enemyController.enemyNextAttack = 0;
+                    enemyController.SetEnemyState(EnemyController.EnemyState.stunned);
+
+                    //start coroutine
+                    StartCoroutine("EnemyStunned");
+                }
+                else if (enemyController.enemyState == EnemyController.EnemyState.stunned)
+                {
+                    //kill enemy
+                    KillEnemy();
+                    DestroyCurrentQTEElement();
+                    enemyController.currentQTEBackground.SetActive(false);
+
+                    //pick random kill animation
+                    int random = Random.Range(0, 2);
+                    if (random == 0)
+                    {
+                        playerController.animator.SetTrigger("StandardKill_TopLeftTrigger");
+                    }
+                    else
+                    {
+                        playerController.animator.SetTrigger("StandardKill_TopRightTrigger");
+                    }
+                }
+                else
+                {
+                    //do playerController.damage
+                    enemyController.enemyPoise -= playerController.damage;
+                    enemyController.enemyNextAttack = 0;
+                }
+            }
+
+            //HIDDEN FANG BEHAVIOUR
+            else
+            {
+                if (hiddenFangIndex == hiddenFangScript.hiddenFangs.Length && enemyController.enemyNextAttack > 0)
+                {
+                    hiddenFangIndex = 0;
+                    isHiddenFangActive = false;
+                    currentQTEBackground.GetComponent<Image>().color = Color.black;
+
+                    //kill enemy
+                    KillEnemy();
+                    playerController.animator.SetTrigger("HiddenFangKillTrigger");
+                    DestroyCurrentQTEElement();
+                    enemyController.currentQTEBackground.SetActive(false);
+                }
             }
         }
 
+        //INCORRECT INPUT
+        foreach (GameObject QTEElement in QTEElements)
+        {
+            string tempString = QTEElement.GetComponent<QTEElementScript>().QTEElementValue;
+            //if there is a current value
+            if (currentQTEElementValue != null)
+            {
+                //buttons
+                if (tempString != currentQTEElementValue)
+                {
+                    if (Input.GetButtonDown(tempString))
+                    {
+                        StartCoroutine("WrongInput");
+                    }
+                }
+            }
+        }        
+    }
 
+    IEnumerator EnemyStunned()
+    {
+        //start recovery animation
+        yield return new WaitForSeconds(enemyController.stunnedRecoveryTime);
+
+        enemyController.enemyState = EnemyController.EnemyState.inCombat;
+
+        yield return null;
+    }
+
+    private void HiddenFang()
+    {
+        //hidden fang
+        if (Input.GetButtonDown("LeftStickDown"))
+        {
+            //destroy current QTEElement
+            DestroyCurrentQTEElement();
+
+            //reset enemy next attack buffer
+            enemyController.enemyNextAttack = 0;
+
+            //set hidden fang variables
+            isHiddenFangActive = true;
+            hiddenFangIndex = 0;
+        }
+
+        //set colour of background to yellow during hidden fang
+        if (isHiddenFangActive && currentQTEBackground.GetComponent<Image>().color != Color.yellow)
+        {
+            //change background of QTE
+            currentQTEBackground.GetComponent<Image>().color = Color.yellow;
+        }
     }
 
     private void StealthInputManager()
     {
-        ///PSYEUDO CODE
-        /*  if correct input
-                increase index
-            
-            if at max index
-                kill opponent
-
-            if incorrect input
-                enter combat
-        */
-
         if(Input.GetButtonDown(currentQTEElementValue))
         {
             playerController.stealthHitsIndex++;
@@ -105,10 +227,7 @@ public class BaseQTEScript : MonoBehaviour
 
         if(playerController.stealthHitsIndex == 4)
         {
-            enemyController.enemyState = EnemyController.EnemyState.dead;
-            enemyController.currentQTEBackground.SetActive(false);
-            playerController.stealthHitsIndex = 0;
-            DestroyCurrentQTEElement();
+            KillEnemy();
             playerController.animator.SetTrigger("StealthKill");
         }
 
@@ -132,7 +251,7 @@ public class BaseQTEScript : MonoBehaviour
 
                         //start combat
                         playerController.playerState = PlayerState.combat;
-                        enemyController.enemyState = EnemyController.EnemyState.inCombat;
+                        enemyController.SetEnemyState(EnemyController.EnemyState.inCombat);
 
                         //play player combat animation
                         playerController.animator.SetTrigger("StandTrigger");
@@ -193,116 +312,7 @@ public class BaseQTEScript : MonoBehaviour
         currentQTEElement.transform.position = currentQTEBackground.transform.position;
     }
 
-    /// <summary>
-    /// PLAYER
-    /// </summary>
-    //Manages player input
-    private void CombatInputManager()
-    {
-        //CORRECT INPUT
-        if (Input.GetButtonDown(currentQTEElementValue))
-        {
-            StartCoroutine("CorrectInputFeedback");
-
-            /*//play metal SFX
-            swordSource.pitch = 1;
-            swordSource.clip = swordHits[Random.Range(0, swordHits.Length)];
-            float pitchRandom = Random.Range(-swordPitchRange, swordPitchRange);
-            swordSource.pitch += pitchRandom;
-            swordSource.Play();*/
-
-            //destroy current QTE Element and reset value
-            DestroyCurrentQTEElement();
-
-            //NORMAL BENHAVIOUR
-            if (!isHiddenFangActive)
-            {
-                //playerController.damage
-                //if playerController.damage is greater than the amount of poise enemy has left
-                if (enemyController.enemyPoise < playerController.damage)
-                {
-                    /*//kill enemy
-                    int random = Random.Range(0, 2);
-                    Debug.Log(random);
-                    if(random == 0)
-                    {
-                        playerController.animator.SetTrigger("StandardKill_TopLeftTrigger");
-                        DestroyCurrentQTEElement();
-                        enemyController.currentQTEBackground.SetActive(false);
-                    }
-                    else
-                    {
-                        playerController.animator.SetTrigger("StandardKill_TopRightTrigger");
-                        DestroyCurrentQTEElement();
-                        enemyController.currentQTEBackground.SetActive(false);
-                    }*/
-                    playerController.animator.SetTrigger("StandardKill_TopRightTrigger");
-                    DestroyCurrentQTEElement();
-                    enemyController.currentQTEBackground.SetActive(false);
-                }
-                else
-                {
-                    //do playerController.damage
-                    enemyController.enemyPoise -= playerController.damage;
-                    enemyController.enemyNextAttack = 0;
-                }
-            }
-            //HIDDEN FANG BEHAVIOUR
-            else
-            {
-                if(hiddenFangIndex == hiddenFangScript.hiddenFangs.Length && enemyController.enemyNextAttack > 0)
-                {
-                    hiddenFangIndex = 0;
-                    isHiddenFangActive = false;
-                    currentQTEBackground.GetComponent<Image>().color = Color.black;
-
-                    //kill enemy
-                    playerController.animator.SetTrigger("HiddenFangKillTrigger");
-                    DestroyCurrentQTEElement();
-                    enemyController.currentQTEBackground.SetActive(false);
-                }
-            }
-        }
-
-        //INCORRECT INPUT
-        foreach(GameObject QTEElement in QTEElements)
-        {
-            string tempString = QTEElement.GetComponent<QTEElementScript>().QTEElementValue;
-            //if there is a current value
-            if (currentQTEElementValue != null)
-            {
-                //buttons
-                if (tempString != currentQTEElementValue)
-                {
-                    if (Input.GetButtonDown(tempString))
-                    {
-                        StartCoroutine("WrongInput");
-                    }
-                }
-            }
-        }
-
-        //hidden fang
-        if(Input.GetButtonDown("LeftStickDown"))
-        {
-            //destroy current QTEElement
-            DestroyCurrentQTEElement();
-
-            //reset enemy next attack buffer
-            enemyController.enemyNextAttack = 0;
-
-            //set hidden fang variables
-            isHiddenFangActive = true;
-            hiddenFangIndex = 0;
-        }
-
-        //set colour of background to yellow during hidden fang
-        if(isHiddenFangActive && currentQTEBackground.GetComponent<Image>().color != Color.yellow)
-        {
-            //change background of QTE
-            currentQTEBackground.GetComponent<Image>().color = Color.yellow;
-        }
-    }
+    
 
     //stuns the player if they press the wrong input
     public IEnumerator WrongInput()
@@ -328,24 +338,7 @@ public class BaseQTEScript : MonoBehaviour
     }
 
     //KILLS THE ENEMY
-    public void KillEnemy(GameObject[] cutBodies)
-    {        
-        //remove qte stuff
-        DestroyCurrentQTEElement();
-        currentQTEBackground.SetActive(false);
-
-        //deactivate player variables
-        enemyController.SetEnemyState(EnemyController.EnemyState.dead);
-        enemyController.enemyPoise = 0;
-        enemyController.enemyNextAttack = 0;
-        enemyController.gameObject.GetComponent<NavMeshAgent>().speed = 0;
-
-        //enable cut body
-        enemyController.enemyMeshes.SetActive(false);
-        cutBodies[Random.Range(0, cutBodies.Length)].SetActive(true);
-    }
-
-    public void KillEnemy_Standard_TopRight()
+    public void KillEnemy()
     {
         //remove qte stuff
         DestroyCurrentQTEElement();
@@ -356,7 +349,10 @@ public class BaseQTEScript : MonoBehaviour
         enemyController.enemyPoise = 0;
         enemyController.enemyNextAttack = 0;
         enemyController.gameObject.GetComponent<NavMeshAgent>().speed = 0;
+    }
 
+    public void KillEnemy_Standard_TopRight()
+    {
         //enable cut body
         enemyController.enemyMeshes.SetActive(false);
         enemyController.cutBodies_TopRight.SetActive(true);
@@ -364,16 +360,6 @@ public class BaseQTEScript : MonoBehaviour
 
     public void KillEnemy_Standard_TopLeft()
     {
-        //remove qte stuff
-        DestroyCurrentQTEElement();
-        currentQTEBackground.SetActive(false);
-
-        //deactivate player variables
-        enemyController.SetEnemyState(EnemyController.EnemyState.dead);
-        enemyController.enemyPoise = 0;
-        enemyController.enemyNextAttack = 0;
-        enemyController.gameObject.GetComponent<NavMeshAgent>().speed = 0;
-
         //enable cut body
         enemyController.enemyMeshes.SetActive(false);
         enemyController.cutBodies_TopLeft.SetActive(true);
@@ -381,16 +367,6 @@ public class BaseQTEScript : MonoBehaviour
 
     public void KillEnemyStealth()
     {
-        //remove qte stuff
-        DestroyCurrentQTEElement();
-        currentQTEBackground.SetActive(false);
-
-        //deactivate player variables
-        enemyController.SetEnemyState(EnemyController.EnemyState.dead);
-        enemyController.enemyPoise = 0;
-        enemyController.enemyNextAttack = 0;
-        enemyController.gameObject.GetComponent<NavMeshAgent>().speed = 0;
-
         //enable cut body
         enemyController.enemyMeshes.SetActive(false);
         enemyController.cutBodies_StealthKill[0].SetActive(true);
@@ -398,16 +374,6 @@ public class BaseQTEScript : MonoBehaviour
 
     public void KillEnemyHiddenFang()
     {
-        //remove qte stuff
-        DestroyCurrentQTEElement();
-        currentQTEBackground.SetActive(false);
-
-        //deactivate player variables
-        enemyController.SetEnemyState(EnemyController.EnemyState.dead);
-        enemyController.enemyPoise = 0;
-        enemyController.enemyNextAttack = 0;
-        enemyController.gameObject.GetComponent<NavMeshAgent>().speed = 0;
-
         //enable cut body
         enemyController.enemyMeshes.SetActive(false);
         enemyController.cutBodies_HiddenFang[0].SetActive(true);

@@ -31,6 +31,8 @@ public class EnemyController : MonoBehaviour
     [SerializeField] public float enemyNextAttack;
     [SerializeField] public float enemyNextAttackSpeed;
     [Space]
+    [SerializeField] public float stunnedRecoveryTime;
+    [Space]
     [SerializeField] public GameObject cutBodies_TopLeft;
     [SerializeField] public GameObject cutBodies_TopRight;
     [SerializeField] public GameObject[] cutBodies_HiddenFang;
@@ -60,6 +62,7 @@ public class EnemyController : MonoBehaviour
         awareOfPlayer,
         waitingForCombat,
         inCombat,
+        stunned,
         dead
     }
 
@@ -106,7 +109,7 @@ public class EnemyController : MonoBehaviour
     {
         if (enemyState != EnemyState.awareOfPlayer)
         {
-            enemyState = EnemyState.awareOfPlayer;
+            SetEnemyState(EnemyState.awareOfPlayer);
             agent.stoppingDistance = 6f;
             enemyAnimator.SetTrigger("AwareOfPlayer");
         }
@@ -181,7 +184,7 @@ public class EnemyController : MonoBehaviour
 
     public void SetEnemyState(EnemyState newState)
     {
-        Debug.Log(newState);
+        Debug.Log("Set enemy state to: " + newState);
         enemyState = newState;
     }
 }

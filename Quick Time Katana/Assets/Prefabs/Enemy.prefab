@@ -6001,12 +6001,11 @@ MonoBehaviour:
   enemyAnimator: {fileID: 0}
   playerController: {fileID: 0}
   enemyPoise: 1
-  enemyPoiseRecoverySpeed: 10
+  enemyPoiseRecoverySpeed: 2
   enemyNextAttack: 0
-  enemyNextAttackSpeed: 10
-  cutBodies_Standard:
-  - {fileID: 2584383577977328006}
-  - {fileID: 3194120793537977889}
+  enemyNextAttackSpeed: 2
+  cutBodies_TopLeft: {fileID: 2584383577977328006}
+  cutBodies_TopRight: {fileID: 3194120793537977889}
   cutBodies_HiddenFang:
   - {fileID: 622449637430551954}
   cutBodies_StealthKill:

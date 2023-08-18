@@ -17,7 +17,6 @@ public class ClimableEnvironment : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Collision");
 
         if (other.gameObject.tag == "Player")
         {
