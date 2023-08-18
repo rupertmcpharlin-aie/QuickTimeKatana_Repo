@@ -92,6 +92,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] public float combatCameraRotationSpeed;
     [Space]
     [SerializeField] public CinemachineVirtualCamera mountedCamera;
+    [Space]
+    [SerializeField] public CinemachineVirtualCamera deathCam;
 
     /// <summary>
     /// ENUMS
@@ -112,6 +114,7 @@ public class PlayerController : MonoBehaviour
         combatCam,
         lockOnCam,
         mountedCam,
+        deathCam
     }
 
     /// <summary>
@@ -170,6 +173,16 @@ public class PlayerController : MonoBehaviour
             //stealthy
             Stealth();
         }        
+
+        //dead player
+        if(playerState == PlayerState.dead)
+        {
+            if(cameraState != CameraState.deathCam)
+            {
+                CameraTransition_DeathCam();
+            }
+            deathCam.GetCinemachineComponent<CinemachineOrbitalTransposer>().m_XAxis.Value += combatCameraRotationSpeed * Time.deltaTime;
+        }
     }
     /********************************************************************************************************************************/
     
@@ -257,6 +270,19 @@ public class PlayerController : MonoBehaviour
 
         cameraState = CameraState.mountedCam;
     }
+
+    public void CameraTransition_DeathCam()
+    {
+        freeCamera.Priority = 0;
+        combatCamera.Priority = 0;
+        mountedCamera.Priority = 0;
+        lockOnCamera.Priority = 0;
+        deathCam.Priority = 1;
+
+        cameraState = CameraState.deathCam;
+    }
+
+
 
 
     /*******************************************************************************************************************************/

@@ -393,6 +393,10 @@ public class QTEController : MonoBehaviour
         enemyController.enemyNextAttack = 0;
         enemyController.gameObject.GetComponent<NavMeshAgent>().speed = 0;
 
+        enemyController.enemyAnimator.playbackTime = 0;
+        enemyController.enemyAnimator.SetBool("isAlive", false);
+
+
         yield return new WaitForSeconds(1f);
 
         //player variables
@@ -412,6 +416,8 @@ public class QTEController : MonoBehaviour
         enemyController.enemyPoise = 0;
         enemyController.enemyNextAttack = 0;
         enemyController.gameObject.GetComponent<NavMeshAgent>().speed = 0;
+
+        
 
         yield return new WaitForSeconds(1f);
 
@@ -458,9 +464,5 @@ public class QTEController : MonoBehaviour
         yield return new WaitForSeconds(1f);
     }
 
-    public void SwapPlayerModels()
-    {
-        playerController.playerMeshes.SetActive(false);
-        playerController.cutBody.SetActive(true);
-    }
+    
 }

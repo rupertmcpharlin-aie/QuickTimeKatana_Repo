@@ -111,11 +111,13 @@ public class EnemyController : MonoBehaviour
                                                          (transform.position.z + playerController.transform.position.z) / 2);
         }
 
-        if (enemyState == EnemyState.inCombat)
+        if (enemyState == EnemyState.inCombat && playerController.playerState != PlayerState.dead)
         {
             //engage the player
             Engage();
         }
+
+
     }
 
     /******************************************************************************************************************************************/
@@ -224,7 +226,9 @@ public class EnemyController : MonoBehaviour
 
     public void SwapPlayerModels()
     {
-        playerController.playerMeshes.SetActive(false);
+        playerController.head.SetActive(false);
+        playerController.torsoe.SetActive(false);
+        playerController.katana.SetActive(false);
         playerController.cutBody.SetActive(true);
     }
 
