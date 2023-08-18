@@ -24,6 +24,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] public GameObject head;
     [SerializeField] public GameObject katana;
     [Space]
+    [SerializeField] public GameObject cutBody;
+    [Space]
     [SerializeField] public GameObject horse;
     [SerializeField] public GameObject environment;
     [Space]
@@ -141,6 +143,7 @@ public class PlayerController : MonoBehaviour
                 MountHorseBehaviour();
             }
         }
+
         //if the player is already mounted
         else if (playerState == PlayerState.mounted)
         {
@@ -445,6 +448,8 @@ public class PlayerController : MonoBehaviour
             movementSpeed = standingMovementSpeed;
         }
         SetPlayerState(PlayerState.combat);
+        animator.SetBool("RaiseWeapon", true);
+        animator.Play("Raise Weapon");
 
         //enemy
         engagedEnemy = nearestEnemy;

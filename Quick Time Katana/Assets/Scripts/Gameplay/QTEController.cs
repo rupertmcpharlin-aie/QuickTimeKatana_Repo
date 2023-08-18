@@ -134,6 +134,14 @@ public class QTEController : MonoBehaviour
                     //do playerController.damage
                     enemyController.enemyPoise -= playerController.damage;
                     enemyController.enemyNextAttack = 0;
+
+                    //play player hit animation
+                    playerController.animator.Play("Hit");
+                    
+                    //play enemy animation
+                    enemyController.enemyAnimator.Play("Raise weapon", -1, 0.0f);
+
+                    
                 }
             }
 
@@ -271,7 +279,10 @@ public class QTEController : MonoBehaviour
         if (enemyController.enemyNextAttack == 1)
         {
             //kill player
-            KillPlayer();
+            if (playerController.playerState != PlayerState.dead)
+            {
+                StartCoroutine("KillPlayer");
+            }
         }
     }
 
@@ -385,6 +396,7 @@ public class QTEController : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         //player variables
+        playerController.animator.SetBool("RaiseWeapon_Bool", false);
         playerController.SetPlayerState(PlayerState.exploring);
         playerController.CameraTransition_FreeCam();
     }
@@ -437,13 +449,18 @@ public class QTEController : MonoBehaviour
     }
 
     //KILLS THE PLAYER
-    private void KillPlayer()
+    IEnumerator KillPlayer()
     {
         DestroyCurrentQTEElement();
         playerController.SetPlayerState(PlayerState.dead);
         currentQTEBackground.SetActive(false);
 
-        //run death animation
-        //TO POLISH
+        yield return new WaitForSeconds(1f);
+    }
+
+    public void SwapPlayerModels()
+    {
+        playerController.playerMeshes.SetActive(false);
+        playerController.cutBody.SetActive(true);
     }
 }

@@ -6004,6 +6004,7 @@ MonoBehaviour:
   enemyPoiseRecoverySpeed: 2
   enemyNextAttack: 0
   enemyNextAttackSpeed: 2
+  stunnedRecoveryTime: 1
   cutBodies_TopLeft: {fileID: 2584383577977328006}
   cutBodies_TopRight: {fileID: 3194120793537977889}
   cutBodies_HiddenFang:
@@ -6014,9 +6015,8 @@ MonoBehaviour:
   currentPatrolTransform: {fileID: 0}
   patrolTransforms: []
   patrolIndex: 0
-  noticePlayerWaitTime: 0
-  chaseSpeed: 2.5
   facePlayerRotationSpeed: 400
+  awarenessGroup: []
   currentQTEBackground: {fileID: 1815162779}
 --- !u!114 &725276402
 MonoBehaviour:

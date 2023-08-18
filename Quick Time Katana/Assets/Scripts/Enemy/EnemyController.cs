@@ -218,7 +218,14 @@ public class EnemyController : MonoBehaviour
         if (playerController.playerState != PlayerState.combat)
         {
             playerController.StartCombat(gameObject);
+            enemyAnimator.SetTrigger("RaiseWeapon_Trigger");
         }
+    }
+
+    public void SwapPlayerModels()
+    {
+        playerController.playerMeshes.SetActive(false);
+        playerController.cutBody.SetActive(true);
     }
 
 

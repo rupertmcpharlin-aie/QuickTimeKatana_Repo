@@ -10721,23 +10721,9 @@ MonoBehaviour:
   katana: {fileID: 4582694084314399738}
   horse: {fileID: 0}
   environment: {fileID: 0}
-  baseQTEScript: {fileID: 1838162603}
   galen: {fileID: 0}
   galen_body: {fileID: 0}
   galen_horse: {fileID: 0}
-  cameraState: 0
-  freeCamera: {fileID: 0}
-  resetCam: 0
-  camYMin: 0
-  camYMax: 0
-  lockOnCamera: {fileID: 0}
-  lockedOnEnemy: {fileID: 0}
-  rightStickXAxis: 0
-  lockOnDistance: 0
-  lockOnOffset: 5
-  combatCamera: {fileID: 0}
-  combatCameraRotationSpeed: 10
-  mountedCamera: {fileID: 0}
   playerMovementActive: 1
   isNearHorse: 0
   canClimb: 0
@@ -10751,17 +10737,30 @@ MonoBehaviour:
   standingRotationSpeed: 360
   mountedRotationSpeed: 100
   ySpeed: 0
-  cameraTransform: {fileID: 0}
   playerStunned: 0
   damage: 0.4
   engagedEnemy: {fileID: 0}
   engagedEnemyController: {fileID: 0}
   enemies: []
-  stealthTakeDownActive: 0
+  stealthKillReady: 0
   stealthEngageDistance: 4
   stealthHitsIndex: 0
-  QTEScript: {fileID: 1838162603}
+  qteController: {fileID: 1838162603}
   engagedEnemyScreenSpacePos: {x: 0, y: 0}
+  cameraState: 0
+  cameraTransform: {fileID: 0}
+  freeCamera: {fileID: 0}
+  resetCam: 0
+  camYMin: 0
+  camYMax: 0
+  lockOnCamera: {fileID: 0}
+  lockedOnEnemy: {fileID: 0}
+  rightStickXAxis: 0
+  lockOnDistance: 0
+  lockOnOffset: 5
+  combatCamera: {fileID: 0}
+  combatCameraRotationSpeed: 10
+  mountedCamera: {fileID: 0}
 --- !u!95 &1838162601
 Animator:
   serializedVersion: 4
@@ -10845,6 +10844,11 @@ MonoBehaviour:
   hiddenFangScript: {fileID: 1838162602}
   isHiddenFangActive: 0
   hiddenFangIndex: 0
+  swordSource: {fileID: 0}
+  swordHits: []
+  swordPitchRange: 0
+  killSource: {fileID: 0}
+  killSFX: []
 --- !u!1 &4582694084314399738
 GameObject:
   m_ObjectHideFlags: 0
