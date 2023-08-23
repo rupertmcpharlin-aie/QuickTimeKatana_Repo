@@ -8,6 +8,9 @@ TagManager:
   - Ground
   - Environment
   - Enemy
+  - TransitionBox
+  - PlayerController
+  - CheckPoints
   layers:
   - Default
   - TransparentFX

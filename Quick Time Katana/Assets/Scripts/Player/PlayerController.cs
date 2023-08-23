@@ -128,6 +128,9 @@ public class PlayerController : MonoBehaviour
         //camera controls
         CameraManager();
 
+        //checkpoint manager
+        CheckPointManager();
+
         //when the player is exploring or crouched the player can:
         if (playerState == PlayerState.exploring || playerState == PlayerState.crouched)
         {
@@ -187,6 +190,8 @@ public class PlayerController : MonoBehaviour
 
             deathCam.GetCinemachineComponent<CinemachineOrbitalTransposer>().m_XAxis.Value += combatCameraRotationSpeed * Time.deltaTime;
         }
+
+        
     }
 
     /********************************************************************************************************************************/
@@ -287,6 +292,22 @@ public class PlayerController : MonoBehaviour
         cameraState = CameraState.deathCam;
     }
 
+    /*******************************************************************************************************************************/
+    //CHECKPOINT
+    public void CheckPointManager()
+    {
+        /*if (checkpoints == null)
+        {
+            checkpoints = GetComponent<checkpoints>();
+        }*/
+
+        Debug.Log(gameObject.transform.position);
+    }
+
+    public void SetCheckPointsScript(checkpoints inputCheckPoints)
+    {
+        checkpoints = inputCheckPoints;
+    }
 
 
 
