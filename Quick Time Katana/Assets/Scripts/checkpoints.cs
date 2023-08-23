@@ -13,6 +13,11 @@ public class checkpoints : MonoBehaviour
     [SerializeField] public bool[] checkpointBools;
 
     [Space]
+    [SerializeField] public GameObject[] enemies;
+    [SerializeField] public bool[] isEnemyAliveCurrent;
+    [SerializeField] public bool[] isEnemyAliveWorld;
+
+    [Space]
     [SerializeField] public float transitionWaitTime;
     [SerializeField] public float fadeWaitTime;
     [SerializeField] public GameObject sceneTransitionBox;
@@ -34,6 +39,22 @@ public class checkpoints : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        if(isEnemyAliveCurrent.Length == 0)
+        {
+            enemies = GameObject.FindGameObjectsWithTag("Enemy");
+            isEnemyAliveCurrent = new bool[enemies.Length];
+            isEnemyAliveWorld = new bool[enemies.Length];
+
+            for(int i = 0; i < enemies.Length; i++)
+            {
+                isEnemyAliveCurrent[i] = true;
+                isEnemyAliveWorld[i] = true;
+                enemies[i].GetComponent<EnemyController>().checkPointIndex = i;
+            }
+        }
+
+        
     }
 
     // Update is called once per frame
@@ -51,7 +72,11 @@ public class checkpoints : MonoBehaviour
         if(!checkpointBools[checkPointIndex])
         {
             checkpointBools[checkPointIndex] = true;
-            playerController.PermaKillEnemies();
+
+            for(int i = 0; i < isEnemyAliveWorld.Length; i++)
+            {
+                isEnemyAliveWorld[i] = isEnemyAliveCurrent[i];
+            }
         }
     }
 
@@ -80,7 +105,11 @@ public class checkpoints : MonoBehaviour
 
         SceneManager.LoadScene(0);
 
+        yield return new WaitForSeconds(.1f);
+
+        DespawnDeadEnemies();
         sceneTransitionBox.GetComponent<Animator>().SetTrigger("Fade_Out_Trigger");
+
         yield return new WaitForSeconds(fadeWaitTime);
     }
 
@@ -88,5 +117,17 @@ public class checkpoints : MonoBehaviour
     {
         playerController = GameObject.FindGameObjectWithTag("PlayerController").GetComponent<PlayerController>();
         playerController.SetCheckPointsScript(GetComponent<checkpoints>());
+    }
+
+    public void DespawnDeadEnemies()
+    {
+        enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        for (int i = 0; i < enemies.Length; i++)
+        {
+            if (!isEnemyAliveWorld[enemies[i].GetComponent<EnemyController>().checkPointIndex])
+            {
+                Destroy(enemies[i]);
+            }
+        }
     }
 }

@@ -400,6 +400,7 @@ public class QTEController : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         //player variables
+        playerController.checkpoints.isEnemyAliveCurrent[enemyController.checkPointIndex] = false;
         playerController.animator.SetBool("RaiseWeapon_Bool", false);
         playerController.SetPlayerState(PlayerState.exploring);
         playerController.CameraTransition_FreeCam();
@@ -422,6 +423,7 @@ public class QTEController : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         //player variables
+        playerController.checkpoints.isEnemyAliveCurrent[enemyController.checkPointIndex] = false;
         playerController.SetPlayerState(PlayerState.crouched);
         playerController.CameraTransition_FreeCam();
     }

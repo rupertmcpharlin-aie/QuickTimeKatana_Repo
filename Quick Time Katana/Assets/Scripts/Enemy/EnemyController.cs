@@ -12,6 +12,7 @@ public class EnemyController : MonoBehaviour
     [Space]
     [Header("Enemy Variables")]
     [SerializeField] public EnemyState enemyState;
+    [SerializeField] public int checkPointIndex;
     [Space]
     [SerializeField] public GameObject enemyMeshes;
     [SerializeField] public GameObject torsoe;
@@ -71,7 +72,6 @@ public class EnemyController : MonoBehaviour
         inCombat,
         stunned,
         dead,
-        permaDead
     }
 
     /*******************************************************************************************************************************/
@@ -92,12 +92,6 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(enemyState == EnemyState.permaDead)
-        {
-            Destroy(gameObject);
-        }
-
-
         //patrol
         if(enemyState == EnemyState.alive)
         {

@@ -5993,6 +5993,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyState: 0
+  checkPointIndex: 0
   enemyMeshes: {fileID: 6668319621188778846}
   torsoe: {fileID: 4960871803947187232}
   head: {fileID: 483357364060209909}
