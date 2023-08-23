@@ -5,6 +5,7 @@ using Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine.AI;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class PlayerController : MonoBehaviour
     [Space]
     [SerializeField] public Animator animator;
     [SerializeField] public CharacterController characterController;
+    [SerializeField] public checkpoints checkpoints;
     [Space]
     [SerializeField] public GameObject playerMeshes;
     [SerializeField] public GameObject torsoe;
@@ -177,13 +179,16 @@ public class PlayerController : MonoBehaviour
         //dead player
         if(playerState == PlayerState.dead)
         {
-            if(cameraState != CameraState.deathCam)
+            if (cameraState != CameraState.deathCam)
             {
                 CameraTransition_DeathCam();
+                checkpoints.StartCoroutine("DeathBehaviour");
             }
+
             deathCam.GetCinemachineComponent<CinemachineOrbitalTransposer>().m_XAxis.Value += combatCameraRotationSpeed * Time.deltaTime;
         }
     }
+
     /********************************************************************************************************************************/
     
     //CAMERA MANAGER
@@ -630,4 +635,10 @@ public class PlayerController : MonoBehaviour
         Debug.Log("New player state = " + newState);
         playerState = newState;
     }
+    /*******************************************************************************************************************************************/
+    ///
+    /// DEATH
+    /// 
+
+    
 }
