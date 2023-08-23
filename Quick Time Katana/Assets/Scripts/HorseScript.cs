@@ -6,7 +6,7 @@ public class HorseScript : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.tag == "Player")
+        if(other.gameObject.tag == "PlayerController")
         {
             other.GetComponent<PlayerController>().isNearHorse = true;
             other.GetComponent<PlayerController>().horse = gameObject;
@@ -15,7 +15,7 @@ public class HorseScript : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.tag == "Player")
+        if (other.gameObject.tag == "PlayerController")
         {
             other.GetComponent<PlayerController>().isNearHorse = false;
             other.GetComponent<PlayerController>().horse = null;
