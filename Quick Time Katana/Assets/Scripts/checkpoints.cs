@@ -35,11 +35,9 @@ public class checkpoints : MonoBehaviour
             Destroy(gameObject);
         }
 
-        if(playerController == null)
-        {
-            Instantiate(playerPrefab, GetCurrentCheckpoint().position, GetCurrentCheckpoint().rotation, null);
-            AssignScripts();
-        }
+
+        Instantiate(playerPrefab, GetCurrentCheckpoint().position, GetCurrentCheckpoint().rotation, null);
+
     }
 
     // Update is called once per frame

@@ -11,6 +11,11 @@ TagManager:
   - TransitionBox
   - PlayerController
   - CheckPoints
+  - FreeCam
+  - LockOnCam
+  - CombatCam
+  - DeathCam
+  - MountedCam
   layers:
   - Default
   - TransparentFX

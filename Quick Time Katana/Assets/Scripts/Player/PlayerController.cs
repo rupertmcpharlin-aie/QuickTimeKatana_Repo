@@ -119,9 +119,40 @@ public class PlayerController : MonoBehaviour
         deathCam
     }
 
+
+
+
     /// <summary>
     /// METHODS
     /// </summary>
+    /// 
+    //START
+    private void Start()
+    {
+        enemies = GameObject.FindGameObjectsWithTag("Enemy");
+
+        foreach(GameObject enemy in enemies)
+        {
+            enemy.GetComponent<EnemyController>().playerController = this;
+        }
+
+        cameraTransform = Camera.main.transform;
+        freeCamera = GameObject.FindGameObjectWithTag("FreeCam").GetComponent<CinemachineVirtualCamera>();
+        lockOnCamera = GameObject.FindGameObjectWithTag("LockOnCam").GetComponent<CinemachineVirtualCamera>();
+        combatCamera = GameObject.FindGameObjectWithTag("CombatCam").GetComponent<CinemachineVirtualCamera>();
+        mountedCamera = GameObject.FindGameObjectWithTag("MountedCam").GetComponent<CinemachineVirtualCamera>();
+        deathCam = GameObject.FindGameObjectWithTag("DeathCam").GetComponent<CinemachineVirtualCamera>();
+
+        CameraTransition_FreeCam();
+
+
+    }
+
+
+
+
+
+
     // UPDATE METHOD controls everything when things are running, state dependant
     void Update()
     {
@@ -249,6 +280,9 @@ public class PlayerController : MonoBehaviour
         mountedCamera.Priority = 0;
 
         cameraState = CameraState.lockOnCam;
+
+        lockOnCamera.Follow = transform;
+        lockOnCamera.LookAt = lockedOnEnemy.transform;
     }
 
     public void CameraTransition_FreeCam()
@@ -259,6 +293,9 @@ public class PlayerController : MonoBehaviour
         mountedCamera.Priority = 0;
 
         cameraState = CameraState.freeCam;
+
+        freeCamera.LookAt = transform;
+        freeCamera.Follow = transform;
     }
 
     public void CameraTransition_CombatCam()
@@ -279,6 +316,9 @@ public class PlayerController : MonoBehaviour
         lockOnCamera.Priority = 0;
 
         cameraState = CameraState.mountedCam;
+
+        mountedCamera.LookAt = transform;
+        mountedCamera.Follow = transform;
     }
 
     public void CameraTransition_DeathCam()
