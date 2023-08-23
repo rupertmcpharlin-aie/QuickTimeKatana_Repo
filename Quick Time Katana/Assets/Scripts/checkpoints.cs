@@ -48,8 +48,11 @@ public class checkpoints : MonoBehaviour
 
     public void SetCheckPoint(int checkPointIndex)
     {
-        Debug.Log(checkPointIndex);
-        checkpointBools[checkPointIndex] = true;
+        if(!checkpointBools[checkPointIndex])
+        {
+            checkpointBools[checkPointIndex] = true;
+            playerController.PermaKillEnemies();
+        }
     }
 
     public Transform GetCurrentCheckpoint()

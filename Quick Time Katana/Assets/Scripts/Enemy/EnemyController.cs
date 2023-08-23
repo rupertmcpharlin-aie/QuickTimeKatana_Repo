@@ -70,7 +70,8 @@ public class EnemyController : MonoBehaviour
         waitingForCombat,
         inCombat,
         stunned,
-        dead
+        dead,
+        permaDead
     }
 
     /*******************************************************************************************************************************/
@@ -85,11 +86,18 @@ public class EnemyController : MonoBehaviour
         playerController = FindObjectOfType<PlayerController>();
         agent = GetComponent<NavMeshAgent>();
         enemyAnimator = GetComponent<Animator>();
+
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(enemyState == EnemyState.permaDead)
+        {
+            Destroy(gameObject);
+        }
+
+
         //patrol
         if(enemyState == EnemyState.alive)
         {

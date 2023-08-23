@@ -347,6 +347,18 @@ public class PlayerController : MonoBehaviour
         checkpoints = inputCheckPoints;
     }
 
+    public void PermaKillEnemies()
+    {
+        foreach(GameObject enemy in enemies)
+        {
+            EnemyController enemyController = enemy.GetComponent<EnemyController>();
+            if(enemyController.enemyState == EnemyController.EnemyState.dead)
+            {
+                enemyController.enemyState = EnemyController.EnemyState.permaDead;
+            }
+        }
+    }
+
 
 
     /*******************************************************************************************************************************/
