@@ -103,21 +103,22 @@ public class EnemyController : MonoBehaviour
             AwareOfPlayerBehaviour();
         }
 
-        if (enemyState == EnemyState.inCombat || playerController.playerState == PlayerState.stealthKill)
+        if (playerController != null)
         {
-            //position the camera focus
-            cameraFocus.transform.position = new Vector3((transform.position.x + playerController.transform.position.x) / 2,
-                                                         (transform.position.y + playerController.transform.position.y) / 2,
-                                                         (transform.position.z + playerController.transform.position.z) / 2);
+            if (enemyState == EnemyState.inCombat || playerController.playerState == PlayerState.stealthKill)
+            {
+                //position the camera focus
+                cameraFocus.transform.position = new Vector3((transform.position.x + playerController.transform.position.x) / 2,
+                                                             (transform.position.y + playerController.transform.position.y) / 2,
+                                                             (transform.position.z + playerController.transform.position.z) / 2);
+            }
+
+            if (enemyState == EnemyState.inCombat && playerController.playerState != PlayerState.dead)
+            {
+                //engage the player
+                Engage();
+            }
         }
-
-        if (enemyState == EnemyState.inCombat && playerController.playerState != PlayerState.dead)
-        {
-            //engage the player
-            Engage();
-        }
-
-
     }
 
     /******************************************************************************************************************************************/

@@ -13,6 +13,9 @@ public class checkpoint : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        action.Invoke();
+        if (other.tag == "PlayerController")
+        {
+            action.Invoke();
+        }
     }
 }

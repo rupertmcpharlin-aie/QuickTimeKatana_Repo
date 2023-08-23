@@ -17,7 +17,7 @@ public class checkpoints : MonoBehaviour
     [SerializeField] public float fadeWaitTime;
     [SerializeField] public GameObject sceneTransitionBox;
     [Space]
-    [SerializeField] public checkpoints[] chechpointSystems;
+    [SerializeField] public checkpoints[] checkpointSystems;
 
 
 
@@ -25,8 +25,8 @@ public class checkpoints : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        chechpointSystems = FindObjectsOfType<checkpoints>();
-        if (chechpointSystems.Length == 1)
+        checkpointSystems = FindObjectsOfType<checkpoints>();
+        if (checkpointSystems.Length == 1)
         {
             DontDestroyOnLoad(gameObject);
         }
@@ -34,10 +34,6 @@ public class checkpoints : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
-
-        Instantiate(playerPrefab, GetCurrentCheckpoint().position, GetCurrentCheckpoint().rotation, null);
-
     }
 
     // Update is called once per frame
@@ -45,39 +41,41 @@ public class checkpoints : MonoBehaviour
     {
         if(playerController == null)
         {
+            Instantiate(playerPrefab, GetCurrentCheckpoint().position, GetCurrentCheckpoint().rotation, null);
             AssignScripts();
         }
     }
 
     public void SetCheckPoint(int checkPointIndex)
     {
+        Debug.Log(checkPointIndex);
         checkpointBools[checkPointIndex] = true;
     }
 
     public Transform GetCurrentCheckpoint()
     {        
-        for(int i = 0; i < checkpointBools.Length-1; i++)
+        for(int i = checkpointBools.Length-1; i >= 0; i--)
         {
-            if(!checkpointBools[i+1])
+            if(checkpointBools[i])
             {
                 return checkpointTransforms[i];
             }
         }
 
-        return checkpointTransforms[checkpointBools.Length];
+        return checkpointTransforms[0];
     }
 
 
     public IEnumerator DeathBehaviour()
     {
+
         yield return new WaitForSeconds(transitionWaitTime);
+
         sceneTransitionBox.GetComponent<Animator>().SetTrigger("Fade_In_Trigger");
+
         yield return new WaitForSeconds(fadeWaitTime);
 
         SceneManager.LoadScene(0);
-
-        
-        
 
         sceneTransitionBox.GetComponent<Animator>().SetTrigger("Fade_Out_Trigger");
         yield return new WaitForSeconds(fadeWaitTime);

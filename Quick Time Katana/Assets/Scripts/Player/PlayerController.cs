@@ -267,9 +267,6 @@ public class PlayerController : MonoBehaviour
             lockOnDistance = targetDirection.magnitude;
         }
 
-        //TO FIX
-        //COMBAT CAM: transition to next enemy
-
     }
 
     public void CameraTransition_LockOn()
@@ -281,8 +278,8 @@ public class PlayerController : MonoBehaviour
 
         cameraState = CameraState.lockOnCam;
 
-        lockOnCamera.Follow = transform;
-        lockOnCamera.LookAt = lockedOnEnemy.transform;
+        lockOnCamera.Follow = playerMeshes.transform;
+        lockOnCamera.LookAt = playerMeshes.transform;
     }
 
     public void CameraTransition_FreeCam()
@@ -330,6 +327,9 @@ public class PlayerController : MonoBehaviour
         deathCam.Priority = 1;
 
         cameraState = CameraState.deathCam;
+
+        deathCam.Follow = transform;
+        deathCam.LookAt = transform;
     }
 
     /*******************************************************************************************************************************/
@@ -340,8 +340,6 @@ public class PlayerController : MonoBehaviour
         {
             checkpoints = GetComponent<checkpoints>();
         }*/
-
-        Debug.Log(gameObject.transform.position);
     }
 
     public void SetCheckPointsScript(checkpoints inputCheckPoints)
