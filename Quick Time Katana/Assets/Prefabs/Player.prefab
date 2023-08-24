@@ -10738,9 +10738,11 @@ MonoBehaviour:
   cameraState: 0
   cameraTransform: {fileID: 0}
   freeCamera: {fileID: 0}
+  rightStickYAxis: 0
   resetCam: 0
-  camYMin: 0
-  camYMax: 0
+  camYMin: 5
+  camYDef: 3.25
+  camYMax: 2
   lockOnCamera: {fileID: 0}
   lockedOnEnemy: {fileID: 0}
   rightStickXAxis: 0

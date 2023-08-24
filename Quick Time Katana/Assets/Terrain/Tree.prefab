@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8521689645916037392}
   - component: {fileID: -2560578131105730758}
   - component: {fileID: 3413553749054439353}
+  - component: {fileID: 8450796020128236140}
   m_Layer: 0
   m_Name: Tree
   m_TagString: Untagged
@@ -43,7 +44,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 320277803232549910}
-  m_Mesh: {fileID: -5076798556035486163, guid: a9a075223f2ed9044aa7ff98280d017c, type: 3}
+  m_Mesh: {fileID: -5076798556035486163, guid: 563224b0dbd20064fb20287ce2214ad3, type: 3}
 --- !u!23 &106921677686628208
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -64,8 +65,8 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 8748892135801146194, guid: a9a075223f2ed9044aa7ff98280d017c, type: 3}
-  - {fileID: -4006148316881293267, guid: a9a075223f2ed9044aa7ff98280d017c, type: 3}
+  - {fileID: 8748892135801146194, guid: 563224b0dbd20064fb20287ce2214ad3, type: 3}
+  - {fileID: -4006148316881293267, guid: 563224b0dbd20064fb20287ce2214ad3, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -152,3 +153,17 @@ MonoBehaviour:
   yScaleMax: 1.2
   zScaleMin: 0.8
   zScaleMax: 1.2
+--- !u!136 &8450796020128236140
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 320277803232549910}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 1.01
+  m_Height: 18.384558
+  m_Direction: 1
+  m_Center: {x: 0, y: 7.8144336, z: 0}

@@ -80,8 +80,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] public Transform cameraTransform;
     [Space]
     [SerializeField] public CinemachineVirtualCamera freeCamera;
+    [Range(-1,1)]
+    [SerializeField] public float rightStickYAxis;
     [SerializeField] public bool resetCam;
     [SerializeField] public float camYMin;
+    [SerializeField] public float camYDef;
     [SerializeField] public float camYMax;
     [Space]
     [SerializeField] public CinemachineVirtualCamera lockOnCamera;
@@ -145,7 +148,11 @@ public class PlayerController : MonoBehaviour
 
         CameraTransition_FreeCam();
 
+        environment = GameObject.FindGameObjectWithTag("Environment");
 
+        galen = GameObject.FindGameObjectWithTag("Galen Harrow");
+        galen_body = GameObject.FindGameObjectWithTag("Galen Body");
+        galen_horse = GameObject.FindGameObjectWithTag("Galen Horse");
     }
 
 
@@ -230,6 +237,18 @@ public class PlayerController : MonoBehaviour
     //CAMERA MANAGER
     private void CameraManager()
     {
+        rightStickYAxis = Input.GetAxis("RightStickYAxis");
+        if(cameraState == CameraState.freeCam)
+        {
+            freeCamera.GetCinemachineComponent<CinemachineOrbitalTransposer>().m_FollowOffset.y += rightStickYAxis * 2f * Time.deltaTime;
+        }
+        else if(cameraState == CameraState.mountedCam)
+        {
+            mountedCamera.GetCinemachineComponent<CinemachineOrbitalTransposer>().m_FollowOffset.y += rightStickYAxis * 2f * Time.deltaTime;
+        }
+        
+
+
         //TRANSITION: freecam -> lock on cam
         if (Input.GetButtonDown("RightStickDown") && cameraState == CameraState.freeCam)
         {

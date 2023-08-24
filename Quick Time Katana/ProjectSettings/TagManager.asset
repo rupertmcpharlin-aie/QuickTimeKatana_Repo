@@ -16,6 +16,10 @@ TagManager:
   - CombatCam
   - DeathCam
   - MountedCam
+  - Galen Harrow
+  - Galen Body
+  - Galen Horse
+  - Horse
   layers:
   - Default
   - TransparentFX
