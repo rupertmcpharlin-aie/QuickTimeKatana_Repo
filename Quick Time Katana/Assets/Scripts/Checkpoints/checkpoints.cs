@@ -116,7 +116,6 @@ public class checkpoints : MonoBehaviour
     public void AssignScripts()
     {
         playerController = GameObject.FindGameObjectWithTag("PlayerController").GetComponent<PlayerController>();
-        playerController.SetCheckPointsScript(GetComponent<checkpoints>());
     }
 
     public void DespawnDeadEnemies()

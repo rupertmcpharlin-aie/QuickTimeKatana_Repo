@@ -20,6 +20,7 @@ TagManager:
   - Galen Body
   - Galen Horse
   - Horse
+  - Checkpoints
   layers:
   - Default
   - TransparentFX

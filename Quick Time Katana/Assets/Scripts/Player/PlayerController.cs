@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour
     [Space]
     [SerializeField] public Animator animator;
     [SerializeField] public CharacterController characterController;
-    [SerializeField] public checkpoints checkpoints;
+    [SerializeField] public checkpoints checkpointsScript;
     [Space]
     [SerializeField] public GameObject playerMeshes;
     [SerializeField] public GameObject torsoe;
@@ -223,7 +223,7 @@ public class PlayerController : MonoBehaviour
             if (cameraState != CameraState.deathCam)
             {
                 CameraTransition_DeathCam();
-                checkpoints.StartCoroutine("DeathBehaviour");
+                checkpointsScript.StartCoroutine("DeathBehaviour");
             }
 
             deathCam.GetCinemachineComponent<CinemachineOrbitalTransposer>().m_XAxis.Value += combatCameraRotationSpeed * Time.deltaTime;
@@ -359,11 +359,6 @@ public class PlayerController : MonoBehaviour
         {
             checkpoints = GetComponent<checkpoints>();
         }*/
-    }
-
-    public void SetCheckPointsScript(checkpoints inputCheckPoints)
-    {
-        checkpoints = inputCheckPoints;
     }
 
 
