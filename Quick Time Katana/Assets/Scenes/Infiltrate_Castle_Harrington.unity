@@ -86029,7 +86029,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7119846010438467648, guid: a2d56a8d0e14ed14ca7a90bdf7fce350, type: 3}
       propertyPath: m_FollowOffset.y
-      value: 3.326842
+      value: 3.180125
       objectReference: {fileID: 0}
     - target: {fileID: 7119846010438467648, guid: a2d56a8d0e14ed14ca7a90bdf7fce350, type: 3}
       propertyPath: m_XAxis.m_MaxSpeed
