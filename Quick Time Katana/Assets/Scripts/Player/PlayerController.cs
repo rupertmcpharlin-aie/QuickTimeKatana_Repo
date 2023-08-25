@@ -497,7 +497,7 @@ public class PlayerController : MonoBehaviour
     private void UnMountHorseBehaviour()
     {
         //when press button down
-        if (Input.GetButtonDown("ButtonDown"))
+        if (Input.GetButtonDown("ButtonRight"))
         {
             //reset horse hierarchy
             horse.transform.SetParent(environment.transform);

@@ -16,6 +16,7 @@ public class checkpoint : MonoBehaviour
         if (other.tag == "PlayerController")
         {
             action.Invoke();
+            Destroy(gameObject);
         }
     }
 }
