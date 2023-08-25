@@ -134,11 +134,6 @@ public class PlayerController : MonoBehaviour
     {
         enemies = GameObject.FindGameObjectsWithTag("Enemy");
 
-        foreach(GameObject enemy in enemies)
-        {
-            enemy.GetComponent<EnemyController>().playerController = this;
-        }
-
         cameraTransform = Camera.main.transform;
         freeCamera = GameObject.FindGameObjectWithTag("FreeCam").GetComponent<CinemachineVirtualCamera>();
         lockOnCamera = GameObject.FindGameObjectWithTag("LockOnCam").GetComponent<CinemachineVirtualCamera>();

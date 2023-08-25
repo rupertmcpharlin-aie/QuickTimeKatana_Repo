@@ -83,15 +83,20 @@ public class EnemyController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        playerController = FindObjectOfType<PlayerController>();
         agent = GetComponent<NavMeshAgent>();
         enemyAnimator = GetComponent<Animator>();
-
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(playerController == null && GameObject.FindGameObjectWithTag("PlayerController") != null)
+        {
+            playerController = GameObject.FindGameObjectWithTag("PlayerController").GetComponent<PlayerController>();
+        }
+
+
+
         //patrol
         if(enemyState == EnemyState.alive)
         {
@@ -139,10 +144,13 @@ public class EnemyController : MonoBehaviour
             }
 
             //set the enemys destination
-            agent.SetDestination(currentPatrolTransform.position);
+            if (!agent.hasPath)
+            {
+                agent.SetDestination(currentPatrolTransform.position);
+            }
 
             //move onto next patrol point if reached current objective
-            if (Vector3.Distance(transform.position, currentPatrolTransform.position) < 0.1f)
+            if (Vector3.Distance(transform.position, currentPatrolTransform.position) < 1f)
             {
                 if (patrolIndex == patrolTransforms.Length - 1)
                 {

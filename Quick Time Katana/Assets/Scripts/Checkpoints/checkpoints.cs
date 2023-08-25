@@ -50,7 +50,11 @@ public class checkpoints : MonoBehaviour
             {
                 isEnemyAliveCurrent[i] = true;
                 isEnemyAliveWorld[i] = true;
-                enemies[i].GetComponent<EnemyController>().checkPointIndex = i;
+
+                if (enemies[i].GetComponent<EnemyController>() != null)
+                {
+                    enemies[i].GetComponent<EnemyController>().checkPointIndex = i;
+                }
             }
         }
 

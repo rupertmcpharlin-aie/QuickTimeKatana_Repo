@@ -21,6 +21,7 @@ TagManager:
   - Galen Horse
   - Horse
   - Checkpoints
+  - Maid
   layers:
   - Default
   - TransparentFX
@@ -33,7 +34,7 @@ TagManager:
   - Katana
   - Horse
   - Climable Environment
-  - 
+  - NPC
   - 
   - 
   - 
