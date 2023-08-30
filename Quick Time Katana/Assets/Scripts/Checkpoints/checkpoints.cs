@@ -64,9 +64,9 @@ public class checkpoints : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(playerController == null)
+        if (playerController == null)
         {
-            Instantiate(playerPrefab, GetCurrentCheckpoint().position, GetCurrentCheckpoint().rotation, null);
+            Instantiate(playerPrefab, GetCurrentCheckpoint().position, GetCurrentCheckpoint().rotation);
             AssignScripts();
         }
     }
@@ -120,6 +120,7 @@ public class checkpoints : MonoBehaviour
     public void AssignScripts()
     {
         playerController = GameObject.FindGameObjectWithTag("PlayerController").GetComponent<PlayerController>();
+        playerController.checkpointsScript = this;
     }
 
     public void DespawnDeadEnemies()
@@ -127,6 +128,8 @@ public class checkpoints : MonoBehaviour
         enemies = GameObject.FindGameObjectsWithTag("Enemy");
         for (int i = 0; i < enemies.Length; i++)
         {
+            Debug.Log(i);
+
             if (!isEnemyAliveWorld[enemies[i].GetComponent<EnemyController>().checkPointIndex])
             {
                 Destroy(enemies[i]);

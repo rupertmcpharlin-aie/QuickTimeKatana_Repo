@@ -110,6 +110,7 @@ public class PlayerController : MonoBehaviour
         crouched,
         stealthKill,
         combat,
+        cutScene,
         dead
     }
 
@@ -160,9 +161,6 @@ public class PlayerController : MonoBehaviour
     {
         //camera controls
         CameraManager();
-
-        //checkpoint manager
-        CheckPointManager();
 
         //when the player is exploring or crouched the player can:
         if (playerState == PlayerState.exploring || playerState == PlayerState.crouched)
@@ -223,8 +221,6 @@ public class PlayerController : MonoBehaviour
 
             deathCam.GetCinemachineComponent<CinemachineOrbitalTransposer>().m_XAxis.Value += combatCameraRotationSpeed * Time.deltaTime;
         }
-
-        
     }
 
     /********************************************************************************************************************************/
@@ -279,6 +275,12 @@ public class PlayerController : MonoBehaviour
 
             //scale distances
             lockOnDistance = targetDirection.magnitude;
+        }
+
+        if (playerState == PlayerState.cutScene)
+        {
+            //slowly rotate camera
+            combatCamera.GetCinemachineComponent<CinemachineOrbitalTransposer>().m_XAxis.Value += 0.5f * combatCameraRotationSpeed * Time.deltaTime;
         }
 
     }
@@ -347,14 +349,24 @@ public class PlayerController : MonoBehaviour
     }
 
     /*******************************************************************************************************************************/
-    //CHECKPOINT
-    public void CheckPointManager()
+    //CutScene
+
+    public void StartLadyHarringtonCutScene(Transform cutSceneTransform)
     {
-        /*if (checkpoints == null)
-        {
-            checkpoints = GetComponent<checkpoints>();
-        }*/
+        transform.position = cutSceneTransform.position;
+        playerMeshes.transform.rotation = cutSceneTransform.rotation;
+
+        SetPlayerState(PlayerState.cutScene);
+        animator.SetTrigger("SitAtTable");
+        Fungus.Flowchart.BroadcastFungusMessage("Lady Harrington ~ Dialogue 2");
+
+        combatCamera.Follow = GameObject.FindGameObjectWithTag("Table").transform;
+        combatCamera.LookAt = GameObject.FindGameObjectWithTag("Table").transform;
+        CameraTransition_CombatCam();
+
     }
+
+    
 
 
 

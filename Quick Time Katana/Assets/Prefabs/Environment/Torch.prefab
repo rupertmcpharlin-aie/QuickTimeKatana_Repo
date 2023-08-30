@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 877314102142723089}
   - component: {fileID: 877314102142723088}
   - component: {fileID: 877314102142723095}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -898,7 +898,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 903
+  m_VersionIndex: 915
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -1012,7 +1012,7 @@ GameObject:
   - component: {fileID: 877314103057047745}
   - component: {fileID: 877314103057047744}
   - component: {fileID: 877314103057047751}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1897,7 +1897,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 912
+  m_VersionIndex: 927
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -2006,7 +2006,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 877314103446979618}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Torch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2022,8 +2022,8 @@ Transform:
   m_GameObject: {fileID: 877314103446979617}
   m_LocalRotation: {x: 0, y: 0.3197863, z: 0, w: 0.94748974}
   m_LocalPosition: {x: 913.818, y: 154.79996, z: 699.471}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.66, y: 0.66, z: 0.66}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 877314102142723094}
   - {fileID: 877314103057047750}
@@ -2040,7 +2040,7 @@ GameObject:
   m_Component:
   - component: {fileID: 120429077208470307}
   - component: {fileID: 6900543817725531795}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Point Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2074,7 +2074,7 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 0.9716981, g: 0.38564625, b: 0.1054201, a: 1}
-  m_Intensity: 1
+  m_Intensity: 1.7
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208

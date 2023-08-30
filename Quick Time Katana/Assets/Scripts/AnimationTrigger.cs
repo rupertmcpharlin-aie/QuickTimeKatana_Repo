@@ -26,11 +26,16 @@ public class AnimationTrigger : MonoBehaviour
                 maid.SetDestination(maidDestination.position);
             }
 
-            if (!dialogueTriggered)
-            {
-                dialogueTriggered = true;
-                Fungus.Flowchart.BroadcastFungusMessage(dialogueTrigger);
-            }
+            
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.tag == "PlayerController" && !dialogueTriggered)
+        {
+            dialogueTriggered = true;
+            Fungus.Flowchart.BroadcastFungusMessage(dialogueTrigger);
         }
     }
 
