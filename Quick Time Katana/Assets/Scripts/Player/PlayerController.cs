@@ -398,6 +398,11 @@ public class PlayerController : MonoBehaviour
     {
         Fungus.Flowchart.BroadcastFungusMessage(message);
     }
+
+    public void LadyHarrington_SwapBodies()
+    {
+        GameObject.FindGameObjectWithTag("Lady Harrington").GetComponent<LadyHarringtonScript>().SwapBodies();
+    }
     
 
 

@@ -9,6 +9,9 @@ public class LadyHarringtonScript : MonoBehaviour
     [SerializeField] GameObject head;
     [SerializeField] GameObject currentQTEBackground;
 
+    [SerializeField] GameObject meshes;
+    [SerializeField] GameObject cutBody;
+
     [SerializeField] public bool inQTE;
 
     private void Update()
@@ -36,6 +39,12 @@ public class LadyHarringtonScript : MonoBehaviour
 
         playerController.combatCamera.Follow = playerController.transform;
         playerController.combatCamera.LookAt = playerController.transform;
+    }
+
+    public void SwapBodies()
+    {
+        meshes.SetActive(false);
+        cutBody.SetActive(true);
     }
 
 

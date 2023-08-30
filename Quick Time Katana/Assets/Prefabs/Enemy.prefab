@@ -11105,7 +11105,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5124885998126815845}
   m_Layer: 7
-  m_Name: CutStartingTopLeft
+  m_Name: CutStartingTopRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16002,7 +16002,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3436115141517772731}
   m_Layer: 7
-  m_Name: CutStartingTopRight
+  m_Name: CutStartingTopLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
