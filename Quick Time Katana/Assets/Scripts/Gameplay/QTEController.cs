@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -31,6 +32,16 @@ public class QTEController : MonoBehaviour
     [SerializeField] HiddenFang hiddenFangScript;
     [SerializeField] bool isHiddenFangActive;
     [SerializeField] int hiddenFangIndex;
+
+    [Space]
+    [Header("Lady Harrington Kill")]
+    [SerializeField] int harringtonSpareIndex;
+    [SerializeField] int harringtonSpareMaxIndex;
+    [Space]
+    [SerializeField] float harringtonColorValue;
+    [SerializeField] int harringtonRedMaxValue;
+    [SerializeField] int harringtonRedMinValue;
+    [SerializeField] float harringtonColourChangeSpeed;
 
     [Space]
     [Header("Audio")]
@@ -78,6 +89,21 @@ public class QTEController : MonoBehaviour
         {
             MakeCombatQTEELements();
             StealthInputManager();
+        }
+
+        if(playerController.playerState == PlayerState.cutSceneCombat)
+        {
+            MakeCombatQTEELements();
+            CutSceneCombatInputManager();
+
+            harringtonColorValue -= harringtonColourChangeSpeed * Time.deltaTime;
+
+            currentQTEBackground.GetComponent<Image>().color = new Color(harringtonColorValue/255, 0, 0);
+
+            if(harringtonColorValue <= harringtonRedMinValue)
+            {
+                StartCutScene_KillHarrington();
+            }
         }
     }
     /*****************************************************************************************************************************/
@@ -259,6 +285,67 @@ public class QTEController : MonoBehaviour
         }
     }
 
+    private void CutSceneCombatInputManager()
+    {
+        //CORRECT INPUT
+        if (Input.GetButtonDown(currentQTEElementValue))
+        {
+            //destroy current QTE Element and reset value
+            DestroyCurrentQTEElement();
+
+            //play spare harrington cutscene
+            if (harringtonSpareIndex == harringtonSpareMaxIndex)
+            {
+                //play cutscene
+                StartCutScene_SpareHarrington();
+            }
+            else
+            {
+                //INCREASE INDEX
+                harringtonSpareIndex++;
+
+                harringtonColorValue = harringtonRedMaxValue;
+                currentQTEBackground.GetComponent<Image>().color = new Color(harringtonColorValue, 0, 0);
+            }
+
+        }
+
+        //INCORRECT INPUT
+        foreach (GameObject QTEElement in QTEElements)
+        {
+            string tempString = QTEElement.GetComponent<QTEElementScript>().QTEElementValue;
+            //if there is a current value
+            if (currentQTEElementValue != null)
+            {
+                //buttons
+                if (tempString != currentQTEElementValue)
+                {
+                    if (Input.GetButtonDown(tempString))
+                    {
+                        StartCutScene_KillHarrington();
+                    }
+                }
+            }
+        }
+    }
+
+    public void StartCutScene_KillHarrington()
+    {
+        Debug.Log("Kill");
+        currentQTEBackground.SetActive(false);
+        playerController.SetPlayerState(PlayerState.cutScene);
+        playerController.CameraTransition_CutSceneCam();
+    }
+
+    public void StartCutScene_SpareHarrington()
+    {
+        Debug.Log("Spare");
+        currentQTEBackground.SetActive(false);
+        playerController.SetPlayerState(PlayerState.cutScene);
+        playerController.CameraTransition_CutSceneCam();
+
+    }
+
     /****************************************************************************************************************************/
 
     /// <summary>
@@ -320,7 +407,6 @@ public class QTEController : MonoBehaviour
         else if (currentQTEElement == null && isHiddenFangActive)
         {
             //instantiate
-            Debug.Log(hiddenFangIndex);
             currentQTEElement = Instantiate(hiddenFangScript.hiddenFangs[hiddenFangIndex][Random.Range(0, hiddenFangScript.hiddenFangs[hiddenFangIndex].Length)], currentQTEBackground.transform);
         }
 

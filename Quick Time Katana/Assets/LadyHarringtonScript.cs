@@ -7,15 +7,9 @@ public class LadyHarringtonScript : MonoBehaviour
     [SerializeField] PlayerController playerController;
     
     [SerializeField] GameObject head;
+    [SerializeField] GameObject currentQTEBackground;
 
-
-
-
-
-    private void Start()
-    {
-        
-    }
+    [SerializeField] public bool inQTE;
 
     private void Update()
     {
@@ -31,5 +25,20 @@ public class LadyHarringtonScript : MonoBehaviour
             head.transform.rotation = Quaternion.RotateTowards(head.transform.rotation, toRotationHead, 5f);
         }
     }
+
+    public void SetinQTE()
+    {
+        inQTE = true;
+        playerController.SetPlayerState(PlayerController.PlayerState.cutSceneCombat);
+
+        currentQTEBackground.SetActive(true);
+        playerController.qteController.currentQTEBackground = currentQTEBackground;
+
+        playerController.combatCamera.Follow = playerController.transform;
+        playerController.combatCamera.LookAt = playerController.transform;
+    }
+
+
+
 
 }

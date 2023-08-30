@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] public Animator animator;
     [SerializeField] public CharacterController characterController;
     [SerializeField] public checkpoints checkpointsScript;
+    [SerializeField] public CutSceneCombatScript cutSceneCombatScript;
     [Space]
     [SerializeField] public GameObject playerMeshes;
     [SerializeField] public GameObject torsoe;
@@ -99,6 +100,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] public CinemachineVirtualCamera mountedCamera;
     [Space]
     [SerializeField] public CinemachineVirtualCamera deathCam;
+    [Space]
+    [SerializeField] public CinemachineVirtualCamera cutSceneCam;
 
     /// <summary>
     /// ENUMS
@@ -111,6 +114,7 @@ public class PlayerController : MonoBehaviour
         stealthKill,
         combat,
         cutScene,
+        cutSceneCombat,
         dead
     }
 
@@ -141,6 +145,7 @@ public class PlayerController : MonoBehaviour
         combatCamera = GameObject.FindGameObjectWithTag("CombatCam").GetComponent<CinemachineVirtualCamera>();
         mountedCamera = GameObject.FindGameObjectWithTag("MountedCam").GetComponent<CinemachineVirtualCamera>();
         deathCam = GameObject.FindGameObjectWithTag("DeathCam").GetComponent<CinemachineVirtualCamera>();
+        cutSceneCam = GameObject.FindGameObjectWithTag("CutSceneCam").GetComponent<CinemachineVirtualCamera>();
 
         CameraTransition_FreeCam();
 
@@ -208,7 +213,12 @@ public class PlayerController : MonoBehaviour
         {
             //stealthy
             Stealth();
-        }        
+        }  
+        
+        if(playerState == PlayerState.cutSceneCombat)
+        {
+
+        }
 
         //dead player
         if(playerState == PlayerState.dead)
@@ -277,7 +287,7 @@ public class PlayerController : MonoBehaviour
             lockOnDistance = targetDirection.magnitude;
         }
 
-        if (playerState == PlayerState.cutScene)
+        if (playerState == PlayerState.cutScene || playerState == PlayerState.cutSceneCombat)
         {
             //slowly rotate camera
             combatCamera.GetCinemachineComponent<CinemachineOrbitalTransposer>().m_XAxis.Value += 0.5f * combatCameraRotationSpeed * Time.deltaTime;
@@ -346,6 +356,18 @@ public class PlayerController : MonoBehaviour
 
         deathCam.Follow = transform;
         deathCam.LookAt = transform;
+    }
+
+    public void CameraTransition_CutSceneCam()
+    {
+        freeCamera.Priority = 0;
+        combatCamera.Priority = 0;
+        mountedCamera.Priority = 0;
+        lockOnCamera.Priority = 0;
+        deathCam.Priority = 0;
+
+        cutSceneCam.Priority = 1;
+
     }
 
     /*******************************************************************************************************************************/

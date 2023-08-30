@@ -10702,6 +10702,7 @@ MonoBehaviour:
   animator: {fileID: 1838162601}
   characterController: {fileID: 8483586790030080982}
   checkpointsScript: {fileID: 0}
+  cutSceneCombatScript: {fileID: 0}
   playerMeshes: {fileID: 2595157478856661598}
   torsoe: {fileID: 7839910612082734952}
   bodyStanding: {fileID: 5690664233181461959}
@@ -10836,6 +10837,12 @@ MonoBehaviour:
   hiddenFangScript: {fileID: 1838162602}
   isHiddenFangActive: 0
   hiddenFangIndex: 0
+  harringtonSpareIndex: 0
+  harringtonSpareMaxIndex: 10
+  harringtonColorValue: 255
+  harringtonRedMaxValue: 255
+  harringtonRedMinValue: 0
+  harringtonColourChangeSpeed: 50
   swordSource: {fileID: 0}
   swordHits: []
   swordPitchRange: 0

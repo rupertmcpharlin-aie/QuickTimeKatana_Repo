@@ -24,6 +24,7 @@ TagManager:
   - Maid
   - Lady Harrington
   - Table
+  - CutSceneCam
   layers:
   - Default
   - TransparentFX
