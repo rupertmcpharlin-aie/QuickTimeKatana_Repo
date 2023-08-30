@@ -10754,6 +10754,7 @@ MonoBehaviour:
   combatCameraRotationSpeed: 10
   mountedCamera: {fileID: 0}
   deathCam: {fileID: 0}
+  cutSceneCam: {fileID: 0}
 --- !u!95 &1838162601
 Animator:
   serializedVersion: 4
@@ -10838,7 +10839,7 @@ MonoBehaviour:
   isHiddenFangActive: 0
   hiddenFangIndex: 0
   harringtonSpareIndex: 0
-  harringtonSpareMaxIndex: 10
+  harringtonSpareMaxIndex: 1
   harringtonColorValue: 255
   harringtonRedMaxValue: 255
   harringtonRedMinValue: 0

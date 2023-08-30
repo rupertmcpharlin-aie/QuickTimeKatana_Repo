@@ -2884,7 +2884,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &225946528
 GameObject:
@@ -3161,7 +3161,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: -11.12, y: 211.29, z: 0}
 --- !u!114 &271638367
 MonoBehaviour:
@@ -21623,13 +21623,13 @@ GameObject:
   - component: {fileID: 690808314}
   - component: {fileID: 690808313}
   - component: {fileID: 690808312}
-  - component: {fileID: 690808311}
-  - component: {fileID: 690808310}
-  - component: {fileID: 690808309}
   - component: {fileID: 690808325}
   - component: {fileID: 690808327}
   - component: {fileID: 690808328}
   - component: {fileID: 690808329}
+  - component: {fileID: 690808332}
+  - component: {fileID: 690808331}
+  - component: {fileID: 690808330}
   m_Layer: 0
   m_Name: Flowchart (1)
   m_TagString: Untagged
@@ -21650,11 +21650,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   version: 1
-  scrollPos: {x: 587.5, y: 324.5}
+  scrollPos: {x: 587.74744, y: 333.5309}
   variablesScrollPos: {x: 0, y: 0}
   variablesExpanded: 1
   blockViewHeight: 280
-  zoom: 1
+  zoom: 0.97
   scrollViewRect:
     serializedVersion: 2
     x: -343
@@ -21662,9 +21662,9 @@ MonoBehaviour:
     width: 1114
     height: 859
   selectedBlocks:
-  - {fileID: 690808322}
+  - {fileID: 690808313}
   selectedCommands:
-  - {fileID: 690808329}
+  - {fileID: 690808331}
   variables: []
   description: 
   stepPause: 0
@@ -21721,7 +21721,7 @@ MonoBehaviour:
     serializedVersion: 2
     x: -166
     y: -56
-    width: 109
+    width: 110.82474
     height: 40
   tint: {r: 1, g: 1, b: 1, a: 1}
   useCustomTint: 0
@@ -21778,7 +21778,7 @@ MonoBehaviour:
     serializedVersion: 2
     x: -165.5
     y: 29.5
-    width: 110
+    width: 111.85567
     height: 40
   tint: {r: 1, g: 1, b: 1, a: 1}
   useCustomTint: 0
@@ -22064,7 +22064,7 @@ MonoBehaviour:
     serializedVersion: 2
     x: 48.5
     y: 18.5
-    width: 214
+    width: 219.07216
     height: 40
   tint: {r: 1, g: 1, b: 1, a: 1}
   useCustomTint: 0
@@ -22113,7 +22113,7 @@ MonoBehaviour:
     serializedVersion: 2
     x: 56.5
     y: -62.5
-    width: 213
+    width: 218.04123
     height: 40
   tint: {r: 1, g: 1, b: 1, a: 1}
   useCustomTint: 0
@@ -22183,7 +22183,7 @@ MonoBehaviour:
     serializedVersion: 2
     x: -164.5
     y: 112.5
-    width: 111
+    width: 112.8866
     height: 40
   tint: {r: 1, g: 1, b: 1, a: 1}
   useCustomTint: 0
@@ -22193,77 +22193,6 @@ MonoBehaviour:
   eventHandler: {fileID: 690808307}
   commandList:
   - {fileID: 690808306}
-  suppressAllAutoSelections: 0
---- !u!114 &690808309
-MonoBehaviour:
-  m_ObjectHideFlags: 2
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 690808286}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d7d417659cd54a6787f70f763950c34, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  parentBlock: {fileID: 690808311}
-  suppressBlockAutoSelect: 0
-  message: Lady Harrington ~ Dialogue 5
---- !u!114 &690808310
-MonoBehaviour:
-  m_ObjectHideFlags: 2
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 690808286}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec422cd568a9c4a31ad7c36d0572b9da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemId: 25
-  indentLevel: 0
-  storyText: Thank-you young wolf, I saw how you saved my maid. I understand the
-    path you have set on is a bloody one. The gods look kindly on those that do not
-    spill innocent blood.
-  description: 
-  character: {fileID: 694864915}
-  portrait: {fileID: 0}
-  voiceOverClip: {fileID: 0}
-  showAlways: 1
-  showCount: 1
-  extendPrevious: 0
-  fadeWhenDone: 1
-  waitForClick: 1
-  stopVoiceover: 1
-  waitForVO: 0
-  setSayDialog: {fileID: 0}
---- !u!114 &690808311
-MonoBehaviour:
-  m_ObjectHideFlags: 2
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 690808286}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d3d73aef2cfc4f51abf34ac00241f60, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nodeRect:
-    serializedVersion: 2
-    x: 60.5
-    y: 232.5
-    width: 214
-    height: 40
-  tint: {r: 1, g: 1, b: 1, a: 1}
-  useCustomTint: 0
-  itemId: 24
-  blockName: Lady Harrington ~ Dialogue 5
-  description: 
-  eventHandler: {fileID: 690808309}
-  commandList:
-  - {fileID: 690808310}
   suppressAllAutoSelections: 0
 --- !u!114 &690808312
 MonoBehaviour:
@@ -22294,9 +22223,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nodeRect:
     serializedVersion: 2
-    x: 57.5
-    y: 153.5
-    width: 215
+    x: 60.59279
+    y: 155.53093
+    width: 220.10309
     height: 40
   tint: {r: 1, g: 1, b: 1, a: 1}
   useCustomTint: 0
@@ -22304,7 +22233,10 @@ MonoBehaviour:
   blockName: Lady Harrington ~ Dialogue 4
   description: 
   eventHandler: {fileID: 690808312}
-  commandList: []
+  commandList:
+  - {fileID: 690808332}
+  - {fileID: 690808331}
+  - {fileID: 690808330}
   suppressAllAutoSelections: 0
 --- !u!114 &690808314
 MonoBehaviour:
@@ -22532,7 +22464,7 @@ MonoBehaviour:
     serializedVersion: 2
     x: 55
     y: 87
-    width: 215
+    width: 220.10309
     height: 40
   tint: {r: 1, g: 1, b: 1, a: 1}
   useCustomTint: 0
@@ -22659,7 +22591,7 @@ MonoBehaviour:
       m_Calls: []
 --- !u!114 &690808327
 MonoBehaviour:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -22688,7 +22620,7 @@ MonoBehaviour:
   setSayDialog: {fileID: 0}
 --- !u!114 &690808328
 MonoBehaviour:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -22715,7 +22647,7 @@ MonoBehaviour:
   setSayDialog: {fileID: 0}
 --- !u!114 &690808329
 MonoBehaviour:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -22769,6 +22701,90 @@ MonoBehaviour:
   stringEvent:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &690808330
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 690808286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec422cd568a9c4a31ad7c36d0572b9da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemId: 35
+  indentLevel: 0
+  storyText: Thank-you young wolf, I saw how you saved my maid. I understand the
+    path you have set on is a bloody one. The gods look kindly on those that do not
+    spill innocent blood.{w = 0.5}
+  description: 
+  character: {fileID: 694864915}
+  portrait: {fileID: 0}
+  voiceOverClip: {fileID: 0}
+  showAlways: 1
+  showCount: 1
+  extendPrevious: 0
+  fadeWhenDone: 1
+  waitForClick: 0
+  stopVoiceover: 1
+  waitForVO: 0
+  setSayDialog: {fileID: 0}
+--- !u!114 &690808331
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 690808286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec422cd568a9c4a31ad7c36d0572b9da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemId: 34
+  indentLevel: 0
+  storyText: '{w=4}'
+  description: 
+  character: {fileID: 0}
+  portrait: {fileID: 0}
+  voiceOverClip: {fileID: 0}
+  showAlways: 1
+  showCount: 1
+  extendPrevious: 0
+  fadeWhenDone: 1
+  waitForClick: 0
+  stopVoiceover: 1
+  waitForVO: 0
+  setSayDialog: {fileID: 0}
+--- !u!114 &690808332
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 690808286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec422cd568a9c4a31ad7c36d0572b9da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemId: 33
+  indentLevel: 0
+  storyText: I thank-you for your hospitality. I apologise for any disturbance I
+    have caused. Please have a pleasant evening Lady Harrington.{w=0.1}
+  description: 
+  character: {fileID: 893988814}
+  portrait: {fileID: 0}
+  voiceOverClip: {fileID: 0}
+  showAlways: 1
+  showCount: 1
+  extendPrevious: 0
+  fadeWhenDone: 1
+  waitForClick: 0
+  stopVoiceover: 1
+  waitForVO: 0
+  setSayDialog: {fileID: 0}
 --- !u!1 &691648844
 GameObject:
   m_ObjectHideFlags: 0
@@ -87466,7 +87482,7 @@ PrefabInstance:
       objectReference: {fileID: 1627317517}
     - target: {fileID: 2127640480, guid: a2d56a8d0e14ed14ca7a90bdf7fce350, type: 3}
       propertyPath: m_Priority
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2127640480, guid: a2d56a8d0e14ed14ca7a90bdf7fce350, type: 3}
       propertyPath: m_Transitions.m_InheritPosition
@@ -87522,35 +87538,35 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7119846010438467648, guid: a2d56a8d0e14ed14ca7a90bdf7fce350, type: 3}
       propertyPath: m_FollowOffset.y
-      value: 1.804178
+      value: 3.02732
       objectReference: {fileID: 0}
     - target: {fileID: 7119846011053856496, guid: a2d56a8d0e14ed14ca7a90bdf7fce350, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 788.449
+      value: 340.2
       objectReference: {fileID: 0}
     - target: {fileID: 7119846011053856496, guid: a2d56a8d0e14ed14ca7a90bdf7fce350, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 156.05301
+      value: 109.62
       objectReference: {fileID: 0}
     - target: {fileID: 7119846011053856496, guid: a2d56a8d0e14ed14ca7a90bdf7fce350, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 557.15454
+      value: 35.4
       objectReference: {fileID: 0}
     - target: {fileID: 7119846011053856496, guid: a2d56a8d0e14ed14ca7a90bdf7fce350, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.71037406
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7119846011053856496, guid: a2d56a8d0e14ed14ca7a90bdf7fce350, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.19056918
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 7119846011053856496, guid: a2d56a8d0e14ed14ca7a90bdf7fce350, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.6543956
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 7119846011053856496, guid: a2d56a8d0e14ed14ca7a90bdf7fce350, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.17555206
+      value: -0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a2d56a8d0e14ed14ca7a90bdf7fce350, type: 3}
@@ -94075,7 +94091,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2770406606801274711, guid: 8813711567f1cf641946f9f0df9874fb, type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 2770406606801274711, guid: 8813711567f1cf641946f9f0df9874fb, type: 3}
       propertyPath: m_LocalPosition.x
@@ -95753,7 +95769,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 4e25bcb579324294693b20949c035a31, type: 2}
     - target: {fileID: 5578638765229273913, guid: b86e940d9db554c4c99b3722f3b0f34f, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5578638765229273913, guid: b86e940d9db554c4c99b3722f3b0f34f, type: 3}
       propertyPath: m_LocalPosition.x

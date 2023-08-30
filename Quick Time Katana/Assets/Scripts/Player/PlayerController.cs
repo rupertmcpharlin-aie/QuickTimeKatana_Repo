@@ -388,6 +388,16 @@ public class PlayerController : MonoBehaviour
 
     }
 
+
+    public void FadeToBlack()
+    {
+        checkpointsScript.FadeToBlack();
+    }
+
+    public void SendFungusMessage(string message)
+    {
+        Fungus.Flowchart.BroadcastFungusMessage(message);
+    }
     
 
 

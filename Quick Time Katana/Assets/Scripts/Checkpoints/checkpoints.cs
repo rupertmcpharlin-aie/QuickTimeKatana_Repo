@@ -136,4 +136,9 @@ public class checkpoints : MonoBehaviour
             }
         }
     }
+
+    public void FadeToBlack()
+    {
+        sceneTransitionBox.GetComponent<Animator>().SetTrigger("Fade_In_Trigger");
+    }
 }

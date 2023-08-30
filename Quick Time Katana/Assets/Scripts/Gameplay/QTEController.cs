@@ -332,18 +332,28 @@ public class QTEController : MonoBehaviour
     public void StartCutScene_KillHarrington()
     {
         Debug.Log("Kill");
-        currentQTEBackground.SetActive(false);
-        playerController.SetPlayerState(PlayerState.cutScene);
-        playerController.CameraTransition_CutSceneCam();
+        finalCutSceneCommon();
+
+
+        playerController.animator.SetTrigger("Harrington_Kill");
     }
 
     public void StartCutScene_SpareHarrington()
     {
         Debug.Log("Spare");
+        finalCutSceneCommon();
+
+
+        playerController.animator.SetTrigger("Harrington_Spare");
+
+    }
+
+    public void finalCutSceneCommon()
+    {
         currentQTEBackground.SetActive(false);
         playerController.SetPlayerState(PlayerState.cutScene);
         playerController.CameraTransition_CutSceneCam();
-
+        playerController.combatCamera.Follow = null;
     }
 
     /****************************************************************************************************************************/
