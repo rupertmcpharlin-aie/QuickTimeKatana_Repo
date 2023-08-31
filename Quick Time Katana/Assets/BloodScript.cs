@@ -23,7 +23,7 @@ public class BloodScript : MonoBehaviour
             if(collisionEvents[0].colliderComponent.GetComponent<MeshCollider>() != null)
             {
                 Instantiate(bloodSplatterPrefabs[Random.Range(0, bloodSplatterPrefabs.Length)], collisionEvents[0].intersection,
-                    collisionEvents[0].colliderComponent.GetComponent<MeshCollider>().gameObject.transform.rotation);
+                    collisionEvents[0].);
             }
             
         }
