@@ -470,7 +470,7 @@ public class PlayerController : MonoBehaviour
             Debug.Log(velocity);
 
             //move character
-            characterController.Move(2f*velocity * Time.deltaTime);
+            characterController.Move(velocity * Time.deltaTime);
         }
     }
 
