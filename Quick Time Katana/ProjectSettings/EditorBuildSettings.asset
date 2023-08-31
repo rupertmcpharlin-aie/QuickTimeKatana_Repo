@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Infiltrate_Castle_Harrington.unity
+    guid: c4f440933b3dd2b4d919fbb9e1a65df4
   m_configObjects: {}
