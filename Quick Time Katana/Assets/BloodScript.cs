@@ -20,8 +20,12 @@ public class BloodScript : MonoBehaviour
         int numCollisionEvents = particleSystem.GetCollisionEvents(other, collisionEvents);
         if(numCollisionEvents > 0)
         {
-            Collision col = collisionEvents[0].colliderComponent.GetComponent<Collision>();
-            Instantiate(bloodSplatterPrefabs[Random.Range(0, bloodSplatterPrefabs.Length)], collisionEvents[0].intersection, Quaternion.LookRotation(col.contacts[0].normal));
+            if(collisionEvents[0].colliderComponent.GetComponent<MeshCollider>() != null)
+            {
+                Instantiate(bloodSplatterPrefabs[Random.Range(0, bloodSplatterPrefabs.Length)], collisionEvents[0].intersection,
+                    collisionEvents[0].colliderComponent.GetComponent<MeshCollider>().gameObject.transform.rotation);
+            }
+            
         }
     }
 }

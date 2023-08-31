@@ -21,6 +21,7 @@ public class ClimableEnvironment : MonoBehaviour
         if (other.gameObject.tag == "PlayerController")
         {
             other.gameObject.GetComponent<PlayerController>().canClimb = true;
+            Physics.gravity = new Vector3(0, 0, 0);
         }
     }
 
@@ -29,6 +30,7 @@ public class ClimableEnvironment : MonoBehaviour
         if (other.gameObject.tag == "PlayerController")
         {
             other.gameObject.GetComponent<PlayerController>().canClimb = false;
+            Physics.gravity = new Vector3(0, -9.81f, 0);
         }
     }
 
