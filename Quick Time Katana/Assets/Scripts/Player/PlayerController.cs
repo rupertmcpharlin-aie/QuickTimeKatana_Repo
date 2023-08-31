@@ -151,6 +151,7 @@ public class PlayerController : MonoBehaviour
 
         environment = GameObject.FindGameObjectWithTag("Environment");
 
+        horse = GameObject.FindGameObjectWithTag("Horse");
         galen = GameObject.FindGameObjectWithTag("Galen Harrow");
         galen_body = GameObject.FindGameObjectWithTag("Galen Body");
         galen_horse = GameObject.FindGameObjectWithTag("Galen Horse");
