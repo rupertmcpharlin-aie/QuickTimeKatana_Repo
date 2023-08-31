@@ -467,6 +467,7 @@ public class PlayerController : MonoBehaviour
 
             //get velocity
             Vector3 velocity = movementDirection * speed;
+            Debug.Log(velocity);
 
             //move character
             characterController.Move(velocity * Time.deltaTime);
