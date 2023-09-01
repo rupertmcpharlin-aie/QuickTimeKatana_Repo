@@ -20,17 +20,8 @@ public class BloodScript : MonoBehaviour
         int numCollisionEvents = particleSystem.GetCollisionEvents(other, collisionEvents);
         if(numCollisionEvents > 0)
         {
-            Ray ray = new Ray(collisionEvents[0].intersection, collisionEvents[0].intersection - collisionEvents[0].colliderComponent.transform.position);
-            RaycastHit hit;
-            Physics.Raycast(ray, out hit, float.PositiveInfinity);
-            Debug.Log(hit);
-
-
-
             Vector3 pos = new Vector3(collisionEvents[0].intersection.x, collisionEvents[0].intersection.y, collisionEvents[0].intersection.z);
             Instantiate(bloodSplatterPrefabs[Random.Range(0, bloodSplatterPrefabs.Length)], pos, Quaternion.identity);
-            
-            
         }
     }
 }

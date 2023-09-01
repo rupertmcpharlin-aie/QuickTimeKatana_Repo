@@ -101,6 +101,8 @@ public class EnemyController : MonoBehaviour
         if(enemyState == EnemyState.alive)
         {
             Patrol();
+
+            AwarenessGroup();
         }
 
         //if the enemy is aware of the player
@@ -166,6 +168,31 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    public void AwarenessGroup()
+    {
+        //make group aware
+        for(int i = 0; i < awarenessGroup.Length; i++)
+        {
+            if (awarenessGroup[i].enemyState == EnemyState.awareOfPlayer || awarenessGroup[i].enemyState == EnemyState.dead)
+            {
+                for(int j = 0; j < awarenessGroup.Length; j++)
+                {
+                    if(i != j && awarenessGroup[j].enemyState == EnemyState.alive)
+                    {
+                        StartCoroutine("SetEnemyState_awareOfPlayer");
+                    }
+                    
+                }
+            }
+        }
+    }
+
+    IEnumerator SetEnemyState_awareOfPlayer()
+    {
+        yield return new WaitForSeconds(1f);
+        SetEnemyState(EnemyState.awareOfPlayer);
+    }
+
 
     /*********************************************************************************************************************************************/
     /// <summary>
@@ -200,14 +227,7 @@ public class EnemyController : MonoBehaviour
 
         //back off player if already engaged
 
-        //make group aware
-        foreach(EnemyController enemy in awarenessGroup)
-        {
-            if (enemy.enemyState == EnemyState.alive)
-            {
-                enemy.AwareOfPlayer();
-            }
-        }
+        
     }
 
     /*******************************************************************************************************************************************/

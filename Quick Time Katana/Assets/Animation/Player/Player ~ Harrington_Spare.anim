@@ -515,7 +515,7 @@ AnimationClip:
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 18.8
+    m_StopTime: 20.433332
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -1991,6 +1991,13 @@ AnimationClip:
   - time: 17.383333
     functionName: FadeToBlack
     data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 20.433332
+    functionName: SendFungusMessage
+    data: To Be Continued
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0

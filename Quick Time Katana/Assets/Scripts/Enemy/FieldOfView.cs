@@ -74,7 +74,7 @@ public class FieldOfView : MonoBehaviour
                     }
                 }
             }
-
+            /*
             if(enemyController.playerController.playerState != PlayerController.PlayerState.crouched &&
                 enemyController.playerController.playerState != PlayerController.PlayerState.stealthKill
                 &&
@@ -82,6 +82,7 @@ public class FieldOfView : MonoBehaviour
             {
                 enemyController.AwareOfPlayer();
             }
+            */
         }
     }
 }

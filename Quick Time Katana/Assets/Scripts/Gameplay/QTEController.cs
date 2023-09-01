@@ -119,12 +119,12 @@ public class QTEController : MonoBehaviour
         {
             StartCoroutine("CorrectInputFeedback");
 
-            /*//play metal SFX
+            //play metal SFX
             swordSource.pitch = 1;
             swordSource.clip = swordHits[Random.Range(0, swordHits.Length)];
             float pitchRandom = Random.Range(-swordPitchRange, swordPitchRange);
             swordSource.pitch += pitchRandom;
-            swordSource.Play();*/
+            swordSource.Play();
 
             //destroy current QTE Element and reset value
             DestroyCurrentQTEElement();
@@ -331,7 +331,6 @@ public class QTEController : MonoBehaviour
 
     public void StartCutScene_KillHarrington()
     {
-        Debug.Log("Kill");
         finalCutSceneCommon();
 
 
@@ -492,7 +491,6 @@ public class QTEController : MonoBehaviour
         enemyController.enemyAnimator.playbackTime = 0;
         enemyController.enemyAnimator.SetBool("isAlive", false);
 
-
         yield return new WaitForSeconds(1f);
 
         //player variables
@@ -514,8 +512,6 @@ public class QTEController : MonoBehaviour
         enemyController.enemyNextAttack = 0;
         enemyController.gameObject.GetComponent<NavMeshAgent>().speed = 0;
 
-        
-
         yield return new WaitForSeconds(1f);
 
         //player variables
@@ -527,6 +523,7 @@ public class QTEController : MonoBehaviour
     public void KillEnemy_Standard_TopRight()
     {
         //enable cut body
+        killSource.Play();
         enemyController.enemyMeshes.SetActive(false);
         enemyController.cutBodies_TopRight.SetActive(true);
     }
@@ -534,6 +531,7 @@ public class QTEController : MonoBehaviour
     public void KillEnemy_Standard_TopLeft()
     {
         //enable cut body
+        killSource.Play();
         enemyController.enemyMeshes.SetActive(false);
         enemyController.cutBodies_TopLeft.SetActive(true);
     }
@@ -541,6 +539,7 @@ public class QTEController : MonoBehaviour
     public void KillEnemyStealth()
     {
         //enable cut body
+        killSource.Play();
         enemyController.enemyMeshes.SetActive(false);
         enemyController.cutBodies_StealthKill[0].SetActive(true);
     }
@@ -548,6 +547,7 @@ public class QTEController : MonoBehaviour
     public void KillEnemyHiddenFang()
     {
         //enable cut body
+        killSource.Play();
         enemyController.enemyMeshes.SetActive(false);
         enemyController.cutBodies_HiddenFang[0].SetActive(true);
     }
