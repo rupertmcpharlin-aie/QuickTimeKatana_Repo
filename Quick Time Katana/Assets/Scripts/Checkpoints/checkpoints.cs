@@ -107,7 +107,7 @@ public class checkpoints : MonoBehaviour
 
         yield return new WaitForSeconds(fadeWaitTime);
 
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
 
         yield return new WaitForSeconds(.1f);
 
