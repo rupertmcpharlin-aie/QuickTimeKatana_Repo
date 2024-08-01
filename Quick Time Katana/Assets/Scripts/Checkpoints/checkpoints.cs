@@ -120,7 +120,7 @@ public class checkpoints : MonoBehaviour
     public void AssignScripts()
     {
         playerController = GameObject.FindGameObjectWithTag("PlayerController").GetComponent<PlayerController>();
-        playerController.checkpointsScript = this;
+        //playerController.checkpointsScript = this;
     }
 
     public void DespawnDeadEnemies()
